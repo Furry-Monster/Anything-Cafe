@@ -63,11 +63,13 @@ public class MonoBehaviourSingleton<T> : MonoBehaviour where T : MonoBehaviourSi
     {
         if (_instance == null)
         {
+            // 如果_instance引用为空，则指向该实例
             _instance = this as T;
             DontDestroyOnLoad(this.gameObject); // 在场景之间持久化单例
         }
         else if (_instance != this)
         {
+            // 如果_instance引用有问题，摧毁当前实例，不进行覆盖
             Debug.LogWarning($"Multiple instances of {typeof(T)} found. Destroying this one.");
             Destroy(this.gameObject);
         }

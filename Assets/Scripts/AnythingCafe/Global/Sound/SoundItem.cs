@@ -9,7 +9,7 @@ public enum SoundType
     UI,
 }
 
-public class SoundItem : MonoBehaviour
+public class SoundItem
 {
     public SoundType SoundType { get; set; }
 

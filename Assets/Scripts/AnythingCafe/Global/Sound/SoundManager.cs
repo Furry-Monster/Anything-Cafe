@@ -1,11 +1,13 @@
-using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
+
+
 
 public class SoundManager : MonoBehaviourSingleton<SoundManager>
 {
     private SoundPool _soundPool;
-    [SerializeField] private List<SoundItem> _soundItems;
+
+    [SerializeField]
+    private SerializableDictionary<string, SerializableKeyValuePair<SoundType, AudioClip>> _soundItemDict;
 
     public GameObject SourceParent;
 
@@ -13,11 +15,8 @@ public class SoundManager : MonoBehaviourSingleton<SoundManager>
     {
         base.Awake();
 
+        // ≥ı ºªØSoundPool
         if (SourceParent == null) SourceParent = this.gameObject;
-
-        if (_soundPool == null)
-        {
-            _soundPool = SoundPool.Instance.Initialize(SourceParent);
-        }
+        _soundPool ??= SoundPool.Instance.Initialize(SourceParent);
     }
 }

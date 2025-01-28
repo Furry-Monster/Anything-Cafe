@@ -303,7 +303,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f575de1c16cae5240a9cc5844cc05cf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _soundItems: []
+  SoundItemDict:
+    list: []
   SourceParent: {fileID: 753885177}
 --- !u!1 &867356330
 GameObject:

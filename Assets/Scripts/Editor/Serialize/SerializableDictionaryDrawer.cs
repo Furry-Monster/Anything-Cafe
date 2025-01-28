@@ -1,8 +1,12 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomPropertyDrawer(typeof(SerializeDictionary<,>))]
-public class SerializeDictionaryDrawer : PropertyDrawer
+/// <summary>
+/// <para>SerializeDictionary 的自定义属性Drawer绘制</para>
+/// <para> 用于再编辑器中显示SerializeDictionary的列表属性</para>
+/// </summary>
+[CustomPropertyDrawer(typeof(SerializableDictionary<,>))]
+public class SerializableDictionaryDrawer : PropertyDrawer
 {
     // 缓存的SerializedProperty，用于存储字典的列表属性
     private SerializedProperty _listProperty;

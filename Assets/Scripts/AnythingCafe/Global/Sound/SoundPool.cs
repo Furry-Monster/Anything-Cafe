@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 
+/// <summary>
+///  音频源对象池
+/// </summary>
 public class SoundPool : Singleton<SoundPool>
 {
     private bool _initialized = false;
@@ -45,11 +48,12 @@ public class SoundPool : Singleton<SoundPool>
         return Instance;
     }
 
+    #region 私有方法, 一般用于管理对象池逻辑
     /// <summary>
     /// 获取一个空闲的音频源对象
     /// </summary>
     /// <returns> 返回一个空闲的音频源对象 </returns>
-    public AudioSource GetSource(SoundType soundType)
+    private AudioSource GetSource(SoundType soundType)
     {
         // 回收空闲的音频源对象
         RecycleBusySources(soundType);
@@ -68,7 +72,7 @@ public class SoundPool : Singleton<SoundPool>
     /// <summary>
     /// 回收空闲的BusySource
     /// </summary>
-    public void RecycleBusySources(SoundType soundType)
+    private void RecycleBusySources(SoundType soundType)
     {
         var sourcesToRecycle = _busySources[soundType].Where(source => !source.isPlaying).ToList();
         foreach (var source in sourcesToRecycle)
@@ -84,7 +88,7 @@ public class SoundPool : Singleton<SoundPool>
     /// </summary>
     /// <param name="soundType"> 音频类型 </param>
     /// <param name="count"> 扩充数量，默认为10 </param>
-    public void ExpandSourceList(SoundType soundType, int count = 10)
+    private void ExpandSourceList(SoundType soundType, int count = 10)
     {
         for (var i = 0; i < count; i++)
         {
@@ -98,25 +102,27 @@ public class SoundPool : Singleton<SoundPool>
     /// 扩充所有类型的音频源对象池
     /// </summary>
     /// <param name="count"> 扩充数量，默认为10 </param>
-    public void ExpandSourceList(int count = 10)
+    private void ExpandSourceList(int count = 10)
     {
         foreach (var soundType in Enum.GetValues(typeof(SoundType)).Cast<SoundType>())
         {
             ExpandSourceList(soundType, count);
         }
     }
+    #endregion
 
+    #region 公共方法, 用于外部调用
     /// <summary>
     /// 播放音效
     /// </summary>
     /// <param name="sound"> 音效 </param>
-    /// <param name="loop"> 是否循环播放 </param>
-    public void PlaySound(SoundItem sound, bool loop = false)
+    public void PlaySound(SoundItem sound)
     {
         var source = GetSource(sound.SoundType);
         source.clip = sound.AudioClip;
-        source.loop = loop;
-        source.Play();
+        source.loop = sound.Loop;
+        source.volume = sound.Volume;
+        source.Play(sound.Delay);
         OnSoundPlay?.Invoke(source);
     }
 
@@ -167,4 +173,5 @@ public class SoundPool : Singleton<SoundPool>
             source.UnPause();
         }
     }
+    #endregion
 }

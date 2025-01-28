@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MonoBehaviourSingleton<T> : MonoBehaviour where T : MonoBehaviourSingleton<T>
+public class PersistentSingleton<T> : MonoBehaviour where T : PersistentSingleton<T>
 {
     private static T _instance;
     private static readonly object _lock = new object(); // 线程锁
@@ -34,12 +34,14 @@ public class MonoBehaviourSingleton<T> : MonoBehaviour where T : MonoBehaviourSi
                     }
 
                     // 如果找不到该脚本的实例
-                    // 则创建一个新的GameObject，添加该脚本的组件
+                    // 则创建一个新的GameObject，添加该脚本的组件，并设置为DontDestroyOnLoad
                     if (_instance == null)
                     {
                         var singleton = new GameObject();
                         _instance = singleton.AddComponent<T>();
                         singleton.name = typeof(T).ToString() + " (Singleton)";
+
+                        DontDestroyOnLoad(singleton);
 #if UNITY_EDITOR
                         Debug.Log($"[Singleton] An instance of {typeof(T)} is needed in the scene, so '{singleton}' was created with DontDestroyOnLoad.");
 #endif
@@ -63,6 +65,7 @@ public class MonoBehaviourSingleton<T> : MonoBehaviour where T : MonoBehaviourSi
         {
             // 如果_instance引用为空，则指向该实例
             _instance = this as T;
+            DontDestroyOnLoad(this.gameObject); // 在场景之间持久化单例
         }
         else if (_instance != this)
         {

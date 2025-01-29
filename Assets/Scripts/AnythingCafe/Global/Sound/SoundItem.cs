@@ -3,10 +3,10 @@ using UnityEngine;
 
 public enum SoundType
 {
-    None,
-    Music,
-    Ero,
     Ambient,
+    Ero,
+    Music,
+    None,
     UI,
 }
 

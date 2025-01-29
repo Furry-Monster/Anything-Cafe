@@ -16,7 +16,7 @@ public class SoundPool : Singleton<SoundPool>
     private Dictionary<SoundType, Stack<AudioSource>> _idleSources; // 空闲的音频源对象
     private Dictionary<SoundType, Stack<AudioSource>> _busySources; // 正在播放的音频源对象
 
-    public event Action<AudioSource> OnSoundPlay; // 音效播放事件
+    public event Action<AudioSource> OnSoundPlay;// 音效播放事件
     public event Action<AudioSource> OnSoundStop; // 音效停止事件
 
     /// <summary>
@@ -84,7 +84,7 @@ public class SoundPool : Singleton<SoundPool>
     }
 
     /// <summary>
-    /// 扩充音频源对象池
+    /// 扩充某一类型的音频源对象池
     /// </summary>
     /// <param name="soundType"> 音频类型 </param>
     /// <param name="count"> 扩充数量，默认为10 </param>
@@ -92,7 +92,12 @@ public class SoundPool : Singleton<SoundPool>
     {
         for (var i = 0; i < count; i++)
         {
-            var newSourceObject = new GameObject($"AudioSource{_idleSources[soundType].Count}", new[] { typeof(AudioSource) });
+            var newSourceObject = new GameObject(
+                "AudioSource" + $"{soundType.ToString()}{_idleSources[soundType].Count}",
+                new[]
+                {
+                    typeof(AudioSource)
+                });
             newSourceObject.transform.SetParent(_sourceParent.transform);
             _idleSources[soundType].Push(newSourceObject.GetComponent<AudioSource>());
         }

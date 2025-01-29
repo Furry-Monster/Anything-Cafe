@@ -39,7 +39,7 @@ public class PersistentSingleton<T> : MonoBehaviour where T : PersistentSingleto
                     {
                         var singleton = new GameObject();
                         _instance = singleton.AddComponent<T>();
-                        singleton.name = typeof(T).ToString() + " (Singleton)";
+                        singleton.name = typeof(T).ToString();
 
                         DontDestroyOnLoad(singleton);
 #if UNITY_EDITOR

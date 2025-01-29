@@ -1,9 +1,7 @@
 ﻿using System;
-using UnityEngine;
-using Object = System.Object;
 
 [Serializable]
-public struct SerializableKeyValuePair<TKey,TValue>
+public struct SerializableKeyValuePair<TKey, TValue>
 {
     public TKey Key;
     public TValue Value;

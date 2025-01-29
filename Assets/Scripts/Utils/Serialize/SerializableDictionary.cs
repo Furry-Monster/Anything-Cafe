@@ -18,7 +18,7 @@ public class SerializableDictionary<TKey, TValue> :
     ISerializationCallbackReceiver,
     IDictionary<TKey, TValue>
 {
-    [SerializeField] private List<SerializableKeyValuePair<TKey,TValue>> list = new List<SerializableKeyValuePair<TKey,TValue>>();
+    [SerializeField] private List<SerializableKeyValuePair<TKey, TValue>> list = new List<SerializableKeyValuePair<TKey, TValue>>();
 
     private Dictionary<TKey, int> KeyPositions => _keyPositions.Value;
     private Lazy<Dictionary<TKey, int>> _keyPositions;
@@ -52,7 +52,7 @@ public class SerializableDictionary<TKey, TValue> :
         get => list[KeyPositions[key]].Value;
         set
         {
-            var pair = new SerializableKeyValuePair<TKey,TValue>(key, value);
+            var pair = new SerializableKeyValuePair<TKey, TValue>(key, value);
             if (KeyPositions.ContainsKey(key))
             {
                 list[KeyPositions[key]] = pair;
@@ -75,7 +75,7 @@ public class SerializableDictionary<TKey, TValue> :
         else
         {
             KeyPositions[key] = list.Count;
-            list.Add(new SerializableKeyValuePair<TKey,TValue>(key, value));
+            list.Add(new SerializableKeyValuePair<TKey, TValue>(key, value));
         }
     }
 
@@ -145,7 +145,7 @@ public class SerializableDictionary<TKey, TValue> :
     {
         return list.Select(ToKeyValuePair).GetEnumerator();
 
-        static KeyValuePair<TKey, TValue> ToKeyValuePair(SerializableKeyValuePair<TKey,TValue> skvp)
+        static KeyValuePair<TKey, TValue> ToKeyValuePair(SerializableKeyValuePair<TKey, TValue> skvp)
         {
             return new KeyValuePair<TKey, TValue>(skvp.Key, skvp.Value);
         }

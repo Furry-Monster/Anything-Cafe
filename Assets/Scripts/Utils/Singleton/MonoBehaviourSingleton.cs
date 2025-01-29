@@ -39,7 +39,7 @@ public class MonoBehaviourSingleton<T> : MonoBehaviour where T : MonoBehaviourSi
                     {
                         var singleton = new GameObject();
                         _instance = singleton.AddComponent<T>();
-                        singleton.name = typeof(T).ToString() + " (Singleton)";
+                        singleton.name = typeof(T).ToString();
 #if UNITY_EDITOR
                         Debug.Log($"[Singleton] An instance of {typeof(T)} is needed in the scene, so '{singleton}' was created with DontDestroyOnLoad.");
 #endif

@@ -19,4 +19,5 @@ public enum ErrorSeverity
 public enum ErrorCode
 {
     GameInitFailed = 0,
+    SceneCantLoad = 1,
 }

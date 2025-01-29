@@ -43,7 +43,7 @@ public class PersistentSingleton<T> : MonoBehaviour where T : PersistentSingleto
 
                         DontDestroyOnLoad(singleton);
 #if UNITY_EDITOR
-                        Debug.Log($"[Singleton] An instance of {typeof(T)} is needed in the scene, so '{singleton}' was created with DontDestroyOnLoad.");
+                        Debug.Log($"[Singleton] An instance of {typeof(T)} is needed in the scene, so '{singleton.name}' was created with DontDestroyOnLoad.");
 #endif
                     }
                     else

@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 public interface ISceneHandler
 {
-    public Task OnSceneLoad();
+    public UniTask OnSceneLoad();
 
-    public Task OnSceneUnload();
+    public UniTask OnSceneUnload();
 }

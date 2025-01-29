@@ -35,10 +35,15 @@ public class GameManager : PersistentSingleton<GameManager>
                 // await component.OnSceneLoad();
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Debug.LogError(e);
-            Application.Quit();
+            if (ex is CustomErrorException customErrorException)
+            {
+                // 通过UIManager打开UI弹窗显示错误信息，并提示退出
+                throw ex;
+            }
+            // 通过UIManager打开UI弹窗显示错误信息，并提示退出
+            throw new CustomErrorException(ex.Message, new CustomErrorItem(ErrorSeverity.ForceQuit,ErrorCode.GameInitFailed));
         }
     }
 

@@ -24,7 +24,7 @@ public class GameManager : PersistentSingleton<GameManager>
                 throw ex;
             }
             // 通过UIManager打开UI弹窗显示错误信息，并提示退出
-            throw new CustomErrorException(ex.Message,
+            throw new CustomErrorException($"[GameManager] can't start game, because of error: {ex.Message}",
                 new CustomErrorItem(ErrorSeverity.ForceQuit, ErrorCode.GameInitFailed));
         }
     }

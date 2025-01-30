@@ -19,7 +19,7 @@ public class CustomErrorException : Exception
                 break;
             case ErrorSeverity.Error:
             case ErrorSeverity.ForceQuit:
-                Debug.LogWarning($"[{errorItem.Code.ToString()}] {message}");
+                Debug.LogError($"[{errorItem.Code.ToString()}] {message}");
                 break;
         }
     }

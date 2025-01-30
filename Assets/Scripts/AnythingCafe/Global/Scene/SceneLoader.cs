@@ -7,12 +7,14 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// 场景枚举,手动修改。
 /// 游戏打包时，记得在发布中勾选所有场景，并按SceneEnum中的顺序排序
+/// 每次创建新场景的时候，在SceneEnum中添加一个新的枚举值，并添加一个新的SceneHandler脚本
 /// </summary>
 public enum SceneEnum
 {
     TitleScene,
     PlayScene,
-    ScenarioScene
+    ScenarioScene,
+    GalleryScene,
 }
 
 /// <summary>
@@ -28,7 +30,6 @@ public class SceneLoader
     {
         try
         {
-            // TODO: 场景加载逻辑
             Scene activeScene;
             var sceneHandlerList1 =
                GameObject.FindGameObjectsWithTag("SceneHandler")
@@ -74,7 +75,7 @@ public class SceneLoader
         {
             throw ex is CustomErrorException
                 ? ex : new CustomErrorException(
-                    $"scene {_sceneEnum.ToString()} load error.{ex.Message}",
+                    $"[SceneLoader] Scene {_sceneEnum.ToString()} load error.{ex.Message}",
                     new CustomErrorItem(ErrorSeverity.Error, ErrorCode.SceneCantLoad));
         }
     }

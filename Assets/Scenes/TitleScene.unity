@@ -1486,7 +1486,7 @@ GameObject:
   - component: {fileID: 1295817081}
   - component: {fileID: 1295817082}
   m_Layer: 0
-  m_Name: Doctor
+  m_Name: Girl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

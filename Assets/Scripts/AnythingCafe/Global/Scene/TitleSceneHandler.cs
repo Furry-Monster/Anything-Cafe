@@ -1,5 +1,5 @@
-using System;
 using Cysharp.Threading.Tasks;
+using System;
 
 public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISceneHandler
 {

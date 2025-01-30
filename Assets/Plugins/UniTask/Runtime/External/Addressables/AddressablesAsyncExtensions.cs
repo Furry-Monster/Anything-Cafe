@@ -14,7 +14,7 @@ namespace Cysharp.Threading.Tasks
 {
     public static class AddressablesAsyncExtensions
     {
-#region AsyncOperationHandle
+        #region AsyncOperationHandle
 
         public static UniTask.Awaiter GetAwaiter(this AsyncOperationHandle handle)
         {
@@ -138,7 +138,7 @@ namespace Cysharp.Threading.Tasks
                 result.cancelImmediately = cancelImmediately;
                 result.autoReleaseWhenCanceled = autoReleaseWhenCanceled;
                 result.completed = false;
-                
+
                 if (cancelImmediately && cancellationToken.CanBeCanceled)
                 {
                     result.cancellationTokenRegistration = cancellationToken.RegisterWithoutCaptureExecutionContext(state =>
@@ -173,7 +173,7 @@ namespace Cysharp.Threading.Tasks
                 {
                     return;
                 }
-                
+
                 completed = true;
                 if (cancellationToken.IsCancellationRequested)
                 {
@@ -265,9 +265,9 @@ namespace Cysharp.Threading.Tasks
             }
         }
 
-#endregion
+        #endregion
 
-#region AsyncOperationHandle_T
+        #region AsyncOperationHandle_T
 
         public static UniTask<T>.Awaiter GetAwaiter<T>(this AsyncOperationHandle<T> handle)
         {
@@ -345,7 +345,7 @@ namespace Cysharp.Threading.Tasks
                 result.progress = progress;
                 result.autoReleaseWhenCanceled = autoReleaseWhenCanceled;
                 result.cancelImmediately = cancelImmediately;
-                
+
                 if (cancelImmediately && cancellationToken.CanBeCanceled)
                 {
                     result.cancellationTokenRegistration = cancellationToken.RegisterWithoutCaptureExecutionContext(state =>
@@ -476,7 +476,7 @@ namespace Cysharp.Threading.Tasks
             }
         }
 
-#endregion
+        #endregion
     }
 }
 

@@ -31,8 +31,6 @@ public class UIManager : PersistentSingleton<UIManager>
         }
     }
 
-    public bool IsLoading { get; private set; }
-
     protected override void Awake()
     {
         base.Awake();

@@ -376,8 +376,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -746,11 +746,11 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
-  m_Antialiasing: 0
+  m_RenderPostProcessing: 1
+  m_Antialiasing: 2
   m_AntialiasingQuality: 2
   m_StopNaN: 0
-  m_Dithering: 0
+  m_Dithering: 1
   m_ClearDepth: 1
   m_AllowXRRendering: 1
   m_AllowHDROutput: 1
@@ -2842,11 +2842,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0edf2c849c9eb64409caae6a432d603e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  persistentUis:
-    list:
-    - Key: 
-      Value: {fileID: 0}
-  _loadingUIs:
+  _persistentComponents:
+    list: []
+  _loadingComponents:
     list: []
   _graphicRaycaster: {fileID: 0}
 --- !u!1 &2070278165

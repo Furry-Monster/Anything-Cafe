@@ -29,6 +29,9 @@ public class SoundPool : Singleton<SoundPool>
     /// <returns> ·µ»ØSoundPoolÊµÀý </returns>
     public SoundPool Initialize([NotNull] GameObject sourceParent)
     {
+#if VERBOSE_LOG
+        Debug.Log($"[SoundPool] Initializing sound pool with source parent: {sourceParent.name}");
+#endif
         if (_initialized) return Instance;
 
         _initialized = true;
@@ -97,6 +100,9 @@ public class SoundPool : Singleton<SoundPool>
                 {
                     typeof(AudioSource)
                 });
+#if VERBOSE_LOG
+            Debug.Log($"[SoundPool] Created new audio source object: {newSourceObject.name}");
+#endif
             newSourceObject.transform.SetParent(_sourceParent.transform);
             _idleSources[soundType].Push(newSourceObject.GetComponent<AudioSource>());
         }
@@ -122,6 +128,9 @@ public class SoundPool : Singleton<SoundPool>
     /// <param name="sound"> ÒôÐ§ </param>
     public void PlaySound(SoundItem sound)
     {
+#if VERBOSE_LOG
+        Debug.Log($"[SoundPool] Playing sound: {sound.AudioClip.name}");
+#endif
         var source = GetSource(sound.SoundType);
         source.clip = sound.AudioClip;
         source.loop = sound.Loop;
@@ -136,6 +145,9 @@ public class SoundPool : Singleton<SoundPool>
     /// <param name="sound"></param>
     public void StopSound(SoundItem sound)
     {
+#if VERBOSE_LOG
+        Debug.Log($"[SoundPool] Stopping sound: {sound.AudioClip.name}");
+#endif
         foreach (var source in _busySources[sound.SoundType].Where(source => source.clip == sound.AudioClip))
         {
             source.Stop();
@@ -160,6 +172,9 @@ public class SoundPool : Singleton<SoundPool>
     /// <param name="sound"></param>
     public void PauseSound(SoundItem sound)
     {
+#if VERBOSE_LOG
+        Debug.Log($"[SoundPool] Pausing sound: {sound.AudioClip.name}");
+#endif
         foreach (var source in _busySources[sound.SoundType].Where(source => source.clip == sound.AudioClip))
         {
             source.Pause();
@@ -172,6 +187,9 @@ public class SoundPool : Singleton<SoundPool>
     /// <param name="sound"></param>
     public void ResumeSound(SoundItem sound)
     {
+#if VERBOSE_LOG
+        Debug.Log($"[SoundPool] Resuming sound: {sound.AudioClip.name}");
+#endif
         foreach (var source in _busySources[sound.SoundType].Where(source => source.clip == sound.AudioClip))
         {
             source.UnPause();

@@ -3,6 +3,7 @@ using UnityEngine;
 /// <summary>
 /// ÉùÒô¹ÜÀíÆ÷
 /// </summary>
+[AddComponentMenu("FrameMonster/Sound/SoundManager")]
 public class SoundManager : PersistentSingleton<SoundManager>
 {
     private SoundPool _soundPool;

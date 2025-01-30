@@ -523,7 +523,7 @@ GameObject:
   - component: {fileID: 477496641}
   - component: {fileID: 477496640}
   m_Layer: 5
-  m_Name: DiscrodBtn
+  m_Name: ThanksBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -974,6 +974,55 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &789590929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 789590931}
+  - component: {fileID: 789590930}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &789590930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 789590929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 77031b05e071b8a4e8653389e629e4d0, type: 2}
+--- !u!4 &789590931
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 789590929}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 867356331}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &808656352
 GameObject:
   m_ObjectHideFlags: 0
@@ -1088,6 +1137,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 566515169}
+  - {fileID: 789590931}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1076055776
@@ -1248,7 +1298,7 @@ GameObject:
   - component: {fileID: 1239112742}
   - component: {fileID: 1239112741}
   m_Layer: 5
-  m_Name: ItchBtn
+  m_Name: NoticeBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1616,7 +1666,7 @@ GameObject:
   - component: {fileID: 1337678735}
   - component: {fileID: 1337678734}
   m_Layer: 5
-  m_Name: SteamBtn
+  m_Name: SupportBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2792,6 +2842,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0edf2c849c9eb64409caae6a432d603e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _loadingUIs:
+    list: []
+  _graphicRaycaster: {fileID: 0}
 --- !u!1 &2070278165
 GameObject:
   m_ObjectHideFlags: 0

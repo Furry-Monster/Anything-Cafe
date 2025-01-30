@@ -1,15 +1,15 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class CommonUI : MonoBehaviour,ICommonUI
+public abstract class ClosableUI : MonoBehaviour, IReactiveUI
 {
-    public UniTask Open()
+    public virtual UniTask Open()
     {
         this.gameObject.SetActive(true);
         return new UniTask();
     }
 
-    public UniTask Close()
+    public virtual UniTask Close()
     {
         this.gameObject.SetActive(false);
         return new UniTask();

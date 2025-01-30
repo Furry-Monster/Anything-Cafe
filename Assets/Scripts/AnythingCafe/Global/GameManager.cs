@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-#pragma warning disable CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
+
 
 public class GameManager : PersistentSingleton<GameManager>
 {
@@ -21,7 +21,7 @@ public class GameManager : PersistentSingleton<GameManager>
             if (ex is CustomErrorException customErrorException)
             {
                 // 通过UIManager打开UI弹窗显示错误信息，并提示退出
-                throw ex;
+                throw;
             }
             // 通过UIManager打开UI弹窗显示错误信息，并提示退出
             throw new CustomErrorException($"[GameManager] can't start game, because of error: {ex.Message}",

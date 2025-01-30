@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 
 public interface ICommonUI
 {
-    UniTask Open();
+    UniTask Show(float duration);
 
-    UniTask Close();
+    UniTask Hide(float duration);
 }

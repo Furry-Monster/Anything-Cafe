@@ -2,12 +2,12 @@ using Cysharp.Threading.Tasks;
 
 public class ScenarioSceneHandler : MonoBehaviourSingleton<ScenarioSceneHandler>, ISceneHandler
 {
-    public UniTask OnSceneLoad()
+    public async UniTask OnSceneLoad()
     {
         throw new System.NotImplementedException();
     }
 
-    public UniTask OnSceneUnload()
+    public async UniTask OnSceneUnload()
     {
         throw new System.NotImplementedException();
     }

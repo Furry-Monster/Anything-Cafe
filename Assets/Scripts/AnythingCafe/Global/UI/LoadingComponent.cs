@@ -1,13 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public enum LoadingUIType
-{
-    BlackFade,
-    LoadingBar,
-}
-
-public abstract class LoadingUI : MonoBehaviour,ICommonUI
+public abstract class LoadingComponent : MonoBehaviour,ICommonComponent
 {
     public abstract UniTask Show(float duration);
 

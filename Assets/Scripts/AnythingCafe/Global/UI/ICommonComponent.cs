@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
 
-public interface ICommonUI
+public interface ICommonComponent
 {
     UniTask Show(float duration);
 

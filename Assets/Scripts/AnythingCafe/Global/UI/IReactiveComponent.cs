@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 
-public interface IReactiveUI
+public interface IReactiveComponent
 {
     UniTask Open();
 

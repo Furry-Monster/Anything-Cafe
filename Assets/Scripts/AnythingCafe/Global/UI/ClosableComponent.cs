@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public abstract class ClosableUI : MonoBehaviour, IReactiveUI
+public abstract class ClosableComponent : MonoBehaviour, IReactiveComponent
 {
     public virtual UniTask Open()
     {

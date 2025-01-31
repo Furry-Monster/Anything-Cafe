@@ -1,27 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = System.Object;
 
 [AddComponentMenu("FrameMonster/UI/UIManager")]
 public class UIManager : PersistentSingleton<UIManager>, IInitializable
 {
-    // 把Loading放在最上层，防止其他UI遮挡
-    [SerializeField] private SerializableDictionary<string, LoadingComponent> _loadingComponents; // 所有可用的Loading控件
+    // string: UI名称  int: UI层级  ReactiveComponent: 控件
+    [SerializeField] private SerializableDictionary<string, SerializableKeyValuePair<int, ReactiveComponent>> _globalComponents; // 全局可用的控件,在每个场景都会加载
 
-    [SerializeField] private GraphicRaycaster _graphicRaycaster;    // 用于处理UI事件的Raycaster
+    [SerializeField] private GraphicRaycaster _graphicRaycaster; // 用于处理UI事件的Raycaster
 
-    private readonly Dictionary<int, List<IReactiveComponent>> _allReactiveComponents; // 场景中所有的ClosableUI,int为UI层级
-    private readonly Stack<IReactiveComponent> _activeComponents;  // 正在显示的UI栈
-    private readonly List<IReactiveComponent> _closingComponents; // 正在关闭的UI队列,类似GC的机制
+    private readonly Dictionary<int, List<ReactiveComponent>> _allReactiveComponents = new(); // 场景中所有的ClosableUI,int为UI层级
+    private readonly LinkedList<ReactiveComponent> _activeComponents = new();  // 正在显示的UI,类似栈的机制
+    private readonly List<ReactiveComponent> _closingComponents = new(); // 正在关闭的UI队列,类似GC的机制
 
-    private LoadingComponent _currentLoadingComponent;
-
-    public IReactiveComponent CurrentReactiveComponent => _activeComponents.Count > 0 ? _activeComponents.Peek() : null;
-    public bool IsActive(IReactiveComponent component) => _activeComponents.Contains(component);
-    public bool IsLoading() => _currentLoadingComponent != null;
+    public ReactiveComponent CurrentActiveComponent => _activeComponents.FirstOrDefault();
+    public bool IsActive(ReactiveComponent component) => _activeComponents.Contains(component);
 
     /// <summary>
     /// 初始化UIManager
@@ -31,7 +28,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     {
         try
         {
-            // TODO: 检查所有持久化控件是否被正确地添加到_allReactiveComponents
+            ResetAllComponents();
         }
         catch (Exception ex)
         {
@@ -58,7 +55,9 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         _activeComponents.Clear();
         _closingComponents.Clear();
 
-        // 重新注册场景中的所有控件
+        // 重新注册所有可编辑控件
+        foreach (var component in _globalComponents.Values)
+            RegisterReactiveComponent(component.Key, component.Value);
     }
 
     /// <summary>
@@ -66,27 +65,47 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     /// </summary>
     /// <param name="uiLayer"> UI层级 </param>
     /// <param name="component"> 控件 </param>
-    public void RegisterReactiveComponent(int uiLayer, IReactiveComponent component)
+    public void RegisterReactiveComponent(int uiLayer, ReactiveComponent component)
     {
         // 整理字典
         if (!_allReactiveComponents.ContainsKey(uiLayer))
-            _allReactiveComponents[uiLayer] = new List<IReactiveComponent>();
-        if (_allReactiveComponents[uiLayer].Contains(component))
-            _allReactiveComponents[uiLayer].Remove(component);
+            _allReactiveComponents[uiLayer] = new List<ReactiveComponent>();
+        _allReactiveComponents[uiLayer].Remove(component);
         // 初始化并注册
         if (component is IInitializable initializable)
             initializable.Init();
         _allReactiveComponents[uiLayer].Add(component);
     }
 
-    public async UniTask OpenReactiveComponent(IReactiveComponent component)
+    /// <summary>
+    /// 打开一个控件
+    /// </summary>
+    /// <param name="component"> 控件 </param>
+    /// <returns> UniTask</returns>
+    public async UniTask OpenReactiveComponent(ReactiveComponent component)
     {
-
+        // 先清理掉正在关闭的控件和重复显示的控件
+        _closingComponents.Remove(component);
+        if (_activeComponents.Contains(component))
+            return;
+        // 等待显示
+        _activeComponents.AddFirst(component);
+        await component.Open();
     }
 
-    public async UniTask CloseReactiveComponent(IReactiveComponent component)
+    /// <summary>
+    /// 关闭一个控件
+    /// </summary>
+    /// <param name="component"> 控件 </param>
+    /// <returns>UniTask</returns>
+    public async UniTask CloseReactiveComponent(ReactiveComponent component)
     {
-
+        if (!_activeComponents.Contains(component) || _closingComponents.Contains(component))
+            return;
+        _closingComponents.Add(component);
+        _activeComponents.Remove(component);
+        await component.Close();
+        _closingComponents.Remove(component);
     }
 }
 

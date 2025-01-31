@@ -21,4 +21,6 @@ public enum ErrorCode
     GameInitFailed = 0,
     SceneCantLoad = 1,
     SceneOnLoadFailed = 2,
+    UIInitFailed = 3,
+
 }

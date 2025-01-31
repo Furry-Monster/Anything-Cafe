@@ -4,7 +4,7 @@ using UnityEngine;
 /// 声音管理器
 /// </summary>
 [AddComponentMenu("FrameMonster/Sound/SoundManager")]
-public class SoundManager : PersistentSingleton<SoundManager>
+public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
 {
     private SoundPool _soundPool;
 
@@ -13,13 +13,11 @@ public class SoundManager : PersistentSingleton<SoundManager>
 
     public GameObject SourceParent; // 所有Source对应的GameObject的父物体
 
-    protected override void Awake()
+    public void Init()
     {
-        base.Awake();
-
-        // 初始化SoundPool
+        // 初始化创建SoundPool
         if (SourceParent == null) SourceParent = this.gameObject;
-        _soundPool ??= SoundPool.Instance.Initialize(SourceParent);
+        _soundPool ??= SoundPool.Instance.Created(SourceParent);
     }
 
     #region 声音操作,包括播放、停止、暂停、恢复

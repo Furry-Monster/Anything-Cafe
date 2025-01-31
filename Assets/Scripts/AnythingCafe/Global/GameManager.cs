@@ -8,6 +8,16 @@ public class GameManager : PersistentSingleton<GameManager>
 {
     private List<GameObject> _validateIntegrityObjects; // TODO:将列表序列化，显示在Inspector面板中，方便编辑
 
+    // 只会在游戏启动时被调用一次，因为该类继承自可持久化单例
+    protected override void Awake()
+    {
+        base.Awake();
+
+        // TODO:初始化必需部分(加载语言本地化，调整分辨率适配，初始化UIManager，初始化AudioManager，播放音乐并显示加载界面)
+        UIManager.Instance.Init();
+        SoundManager.Instance.Init();
+    }
+
     private async void Start()
     {
         try
@@ -45,7 +55,7 @@ public class GameManager : PersistentSingleton<GameManager>
     /// <returns>异步UniTask任务</returns>
     private async UniTask ReadyTitleScene()
     {
-        var component = GameObject.FindWithTag("SceneHandler")?.GetComponent<ISceneHandler>();
+        var component = GameObject.FindWithTag("SceneHandler").GetComponent<ISceneHandler>();
         if (component == null) return;
         await component.OnSceneLoad();
     }

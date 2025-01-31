@@ -9,7 +9,7 @@ using UnityEngine;
 /// </summary>
 public class SoundPool : Singleton<SoundPool>
 {
-    private bool _initialized = false;
+    private bool _created = false;
 
     private GameObject _sourceParent;
     private Dictionary<SoundType, Stack<AudioSource>> _idleSources; // 空闲的音频源对象
@@ -19,7 +19,7 @@ public class SoundPool : Singleton<SoundPool>
     public event Action<AudioSource> OnSoundStop; // 音效停止事件
 
     /// <summary>
-    /// 初始化音频源对象池
+    /// 创建音频源对象池
     /// </summary>
     /// <param name="sourceParent">
     /// 音频源对象池GameObject的父物体，
@@ -27,14 +27,14 @@ public class SoundPool : Singleton<SoundPool>
     /// 默认设置为SoundManager组件对应的GameObject
     /// </param>
     /// <returns> 返回SoundPool实例 </returns>
-    public SoundPool Initialize([NotNull] GameObject sourceParent)
+    public SoundPool Created([NotNull] GameObject sourceParent)
     {
 #if VERBOSE_LOG
         Debug.Log($"[SoundPool] Initializing sound pool with source parent: {sourceParent.name}");
 #endif
-        if (_initialized) return Instance;
+        if (_created) return Instance;
 
-        _initialized = true;
+        _created = true;
         _sourceParent = sourceParent;
 
         // 初始化空闲和正在播放的音频源对象池

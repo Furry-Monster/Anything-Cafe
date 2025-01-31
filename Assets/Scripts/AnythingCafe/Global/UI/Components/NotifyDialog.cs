@@ -1,10 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
-using UnityEngine;
 using UnityEngine.UI;
 
-public class NotifyDialog : ReactiveComponent, IInitializable, IHasDataTemplate<NotifyDialogModel>
+public class NotifyDialog :
+    ReactiveComponent, 
+    IInitializable, 
+    IHasDataTemplate<NotifyDialogModel>,
+    ICanRequest
 {
     private Text _text;
     private Button _closeButton;
@@ -29,6 +30,21 @@ public class NotifyDialog : ReactiveComponent, IInitializable, IHasDataTemplate<
         Opening,
         Idling,
         Closing,
+    }
+
+    public void Request()
+    {
+        // ÇëÇó¹Ø±Õ
+        switch (_state)
+        {
+            case NotifyDialogState.Opening:
+            case NotifyDialogState.Closing:
+                break;
+            case NotifyDialogState.Idling:
+            default:
+                _ = UIManager.Instance.CloseReactiveComponent(this);
+                break;
+        }
     }
 }
 

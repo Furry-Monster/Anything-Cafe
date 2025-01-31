@@ -1,6 +1,9 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
+/// <summary>
+/// ReactiveComponent基于UniTask的实现
+/// </summary>
 public abstract class ReactiveComponent : MonoBehaviour, IReactiveComponent
 {
     public virtual UniTask Open()

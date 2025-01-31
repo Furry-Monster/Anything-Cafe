@@ -2956,9 +2956,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0edf2c849c9eb64409caae6a432d603e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _persistentComponents:
-    list: []
-  _loadingComponents:
+  _globalComponents:
     list: []
   _graphicRaycaster: {fileID: 0}
 --- !u!1 &2028202962

@@ -2,7 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ContentDialog : ClosableComponent, IInitializable, IHasDataTemplate<ContentDialogModel>
+public class ContentDialog : ReactiveComponent, IInitializable, IHasDataTemplate<ContentDialogModel>
 {
     private Text _text;
     private Button _leftBtn;

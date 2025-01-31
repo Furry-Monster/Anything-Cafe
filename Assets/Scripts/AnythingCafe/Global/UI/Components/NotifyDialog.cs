@@ -4,7 +4,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NotifyDialog : ClosableComponent, IInitializable, IHasDataTemplate<NotifyDialogModel>
+public class NotifyDialog : ReactiveComponent, IInitializable, IHasDataTemplate<NotifyDialogModel>
 {
     private Text _text;
     private Button _closeButton;

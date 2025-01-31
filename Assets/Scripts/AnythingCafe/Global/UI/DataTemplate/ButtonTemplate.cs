@@ -4,7 +4,7 @@ using System;
 public class ButtonDataTemplate
 {
     public string Text;
-    [CanBeNull] public string Tooltip;
+    public string Tooltip;
     public bool IsInteractable;
     public Func<bool> OnClick;
 

@@ -76,7 +76,8 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         // 整理字典
         if (!_allReactiveComponents.ContainsKey(uiLayer))
             _allReactiveComponents[uiLayer] = new List<ReactiveComponent>();
-        _allReactiveComponents[uiLayer].Remove(component);
+        if (_allReactiveComponents[uiLayer].Contains(component))
+            return;
         // 初始化并注册
         if (component is IInitializable initializable)
             initializable.Init();
@@ -136,17 +137,29 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
 
     private void ValidateGlobalComponents()
     {
-        // var uiNames = _globalComponents.Keys.ToList();
-        // var allGlobalComponents = GameObject.FindGameObjectsWithTag("GlobalComponent");
-        // foreach (var component in allGlobalComponents)
-        // {
-        //     if (!uiNames.Contains(component.name) || !component.TryGetComponent(out ReactiveComponent _))
-        //     {
-        //         throw new CustomErrorException(
-        //             $"[UIManager] Please check the global components:{component.name} is script and tag correct ?",
-        //             new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIValidateFailed));
-        //     }
-        // }
+        var globalUINames = _globalComponents.Keys.ToList();
+        var allGlobalComponents = GameObject.FindGameObjectsWithTag("GlobalComponent");
+        foreach (var component in allGlobalComponents)
+        {
+            if (!globalUINames.Contains(component.name) || !component.TryGetComponent(out ReactiveComponent _))
+            {
+                throw new CustomErrorException(
+                    $"[UIManager] Please check the global components:{component.name} is script and tag correct ?",
+                    new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIValidateFailed));
+            }
+        }
+
+        var loadingUINames = _loadingComponents.Keys.ToList();
+        var allLoadingComponents = GameObject.FindGameObjectsWithTag("LoadingComponent");
+        foreach (var component in allLoadingComponents)
+        {
+            if (!loadingUINames.Contains(component.name) || !component.TryGetComponent(out ReactiveComponent _))
+            {
+                throw new CustomErrorException(
+                    $"[UIManager] Please check the loading components:{component.name} is script and tag correct ?",
+                    new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIValidateFailed));
+            }
+        }
     }
 }
 

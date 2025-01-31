@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,37 +20,43 @@ public class NoticeDialog :
     private NoticeDialogModel _model;
     private NoticeDialogState _state;
 
-    public void Init()
-    {
-        _closeButton.onClick.RemoveAllListeners();
-        _closeButton.onClick.AddListener(() => _ = UIManager.Instance.CloseReactiveComponent(this));
-        gameObject.SetActive(false);
-    }
+    public void Init() => gameObject.SetActive(false);
 
     public void Init(NoticeDialogModel model)
     {
-        _model = model;
-        _state = NoticeDialogState.Idling;
-
-        _text.text = model.Text;
-        _closeButtonText.text = model.CloseButtonData.Text;
-        _closeButton.interactable = model.CloseButtonData.IsInteractable;
-        _closeButton.onClick.RemoveAllListeners();
-        _closeButton.onClick.AddListener(() =>
+        try
         {
-            // 请求关闭
-            switch (_state)
+            _model = model;
+            _state = NoticeDialogState.Idling;
+
+            _text.text = model.Text;
+            _closeButtonText.text = model.CloseButtonData.Text;
+            _closeButton.interactable = model.CloseButtonData.IsInteractable;
+            _closeButton.onClick.RemoveAllListeners();
+            _closeButton.onClick.AddListener(() =>
             {
-                case NoticeDialogState.Opening:
-                case NoticeDialogState.Closing:
-                    break;
-                case NoticeDialogState.Idling:
-                default:
-                    _ = UIManager.Instance.CloseReactiveComponent(this);
-                    break;
-            }
-        });
+                // 请求关闭
+                switch (_state)
+                {
+                    case NoticeDialogState.Opening:
+                    case NoticeDialogState.Closing:
+                        break;
+                    case NoticeDialogState.Idling:
+                    default:
+                        _ = UIManager.Instance.CloseReactiveComponent(this);
+                        break;
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            if (ex is CustomErrorException)
+                throw;
+            throw new CustomErrorException($"[NoticeDialog] Can't init Component. {ex.GetType()}, {ex.Message}",
+                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.ComponentInitFailed));
+        }
     }
+
 
     /// <summary>
     ///     打开对话框

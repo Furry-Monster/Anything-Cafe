@@ -23,4 +23,6 @@ public enum ErrorCode
     SceneOnLoadFailed = 2,
     UIInitFailed = 3,
     UIValidateFailed = 4,
+    ComponentInitFailed = 5,
+
 }

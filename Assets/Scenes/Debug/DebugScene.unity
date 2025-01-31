@@ -539,37 +539,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: ContentDialog
       objectReference: {fileID: 0}
+    - target: {fileID: 2955689492781739411, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
+      propertyPath: _canvasGroup
+      value: 
+      objectReference: {fileID: 497009696}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2501014218019092015, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2428092609806658060}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
---- !u!1 &2428092609806658059 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2501014218019092015, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
-  m_PrefabInstance: {fileID: 2428092609806658058}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2428092609806658060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2428092609806658059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c06b46420dc80c4fa5e3812472da2a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 0}
-  _content: {fileID: 0}
-  _leftBtn: {fileID: 0}
-  _leftBtnText: {fileID: 0}
-  _rightBtn: {fileID: 0}
-  _rightBtnText: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,7 +1,7 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class UIManager : PersistentSingleton<UIManager>, IInitializable
 {
     // string: UI名称  int: UI层级  ReactiveComponent: 控件
-    [SerializeField] private SerializableDictionary<string, SerializableKeyValuePair<int, ReactiveComponent>> _globalComponents; // 全局可用的控件,在每个场景都会加载
+    [SerializeField] private SerializableDictionary<string, SerializableKeyValuePair<int, GameObject>> _globalComponents; // 全局可用的控件,在每个场景都会加载
 
     [SerializeField] private GraphicRaycaster _graphicRaycaster; // 用于处理UI事件的Raycaster
 
@@ -28,6 +28,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     {
         try
         {
+            ValidateGlobalComponents();
             ResetAllComponents();
         }
         catch (Exception ex)
@@ -55,9 +56,9 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         _activeComponents.Clear();
         _closingComponents.Clear();
 
-        // 重新注册所有可编辑控件
+        // 重新注册所有全局控件
         foreach (var component in _globalComponents.Values)
-            RegisterReactiveComponent(component.Key, component.Value);
+            RegisterReactiveComponent(component.Key, component.Value.GetComponent<ReactiveComponent>());
     }
 
     /// <summary>
@@ -106,6 +107,21 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         _activeComponents.Remove(component);
         await component.Close();
         _closingComponents.Remove(component);
+    }
+
+    private void ValidateGlobalComponents()
+    {
+        var uiNames = _globalComponents.Keys.ToList();
+        var allGlobalComponents = GameObject.FindGameObjectsWithTag("GlobalComponent");
+        foreach (var component in allGlobalComponents)
+        {
+            if (!uiNames.Contains(component.name) || !component.TryGetComponent(out ReactiveComponent _))
+            {
+                throw new CustomErrorException(
+                    $"[UIManager] Please check the global components:{component.name} is script and tag correct ?",
+                    new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIValidateFailed));
+            }
+        }
     }
 }
 

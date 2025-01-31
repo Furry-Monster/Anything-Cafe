@@ -323,9 +323,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1779259044765207818}
+  - component: {fileID: 2955689492781739411}
   m_Layer: 5
   m_Name: ContentDialog
-  m_TagString: Untagged
+  m_TagString: GlobalComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -352,6 +353,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0.0017242, y: -25.322}
   m_SizeDelta: {x: 1025.4, y: 495.36}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2955689492781739411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2501014218019092015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c06b46420dc80c4fa5e3812472da2a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 0}
 --- !u!1 &2804510610181688951
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,5 +22,5 @@ public enum ErrorCode
     SceneCantLoad = 1,
     SceneOnLoadFailed = 2,
     UIInitFailed = 3,
-
+    UIValidateFailed = 4,
 }

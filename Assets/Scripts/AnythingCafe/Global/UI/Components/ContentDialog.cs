@@ -1,13 +1,15 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ContentDialog :
     ReactiveComponent,
     IInitializable,
-    IHasDataTemplate<ContentDialogModel>,
-    ICanRequest
+    IHasDataTemplate<ContentDialogModel>
 {
+    [SerializeField] private CanvasGroup _canvasGroup;
+
     private Text _text;
     private Button _leftBtn;
     private Text _leftBtnText;
@@ -23,6 +25,7 @@ public class ContentDialog :
     public void Init(ContentDialogModel model)
     {
         _model = model;
+        _state = ContentDialogState.Idling;
 
         _text.text = model.Text;
 
@@ -33,7 +36,16 @@ public class ContentDialog :
         _leftBtn.onClick.AddListener(() =>
         {
             _model.LeftButtonData.OnClick?.Invoke();
-            Close();
+            switch (_state)
+            {
+                case ContentDialogState.Opening:
+                case ContentDialogState.Closing:
+                    break;
+                case ContentDialogState.Idling:
+                default:
+                    _ = UIManager.Instance.CloseReactiveComponent(this);
+                    break;
+            }
         });
 
         // 设置右按钮
@@ -43,44 +55,103 @@ public class ContentDialog :
         _rightBtn.onClick.AddListener(() =>
         {
             _model.RightButtonData.OnClick?.Invoke();
-            Close();
+            switch (_state)
+            {
+                case ContentDialogState.Opening:
+                case ContentDialogState.Closing:
+                    break;
+                case ContentDialogState.Idling:
+                default:
+                    _ = UIManager.Instance.CloseReactiveComponent(this);
+                    break;
+            }
         });
 
     }
 
-    public override UniTask Open()
+    /// <summary>
+    /// 打开ContentDialog
+    /// </summary>
+    /// <returns></returns>
+    public override async UniTask Open()
     {
-        return base.Open();
+        _state = ContentDialogState.Opening;
+
+        // 显示动画
+        if (_sequence.IsActive()) _sequence.Kill();
+        _sequence = (Sequence)OpenSequence().Play();
+        await _sequence.AsyncWaitForCompletion();
+
+        _state = ContentDialogState.Idling;
     }
 
-    public override UniTask Close()
+    /// <summary>
+    ///  关闭ContentDialog
+    /// </summary>
+    /// <returns></returns>
+    public override async UniTask Close()
     {
-        return base.Close();
+        // 切换状态
+        _state = ContentDialogState.Closing;
+
+        if (_sequence.IsActive()) _sequence.Kill();
+        _sequence = (Sequence)CloseSequence().Play();
+        await _sequence.AsyncWaitForCompletion();
+
+        _state = ContentDialogState.Idling;
     }
 
+    /// <summary>
+    /// 打开动画序列
+    /// </summary>
+    /// <returns></returns>
+    private Tween OpenSequence() =>
+        DOTween.Sequence()
+            .OnPlay(() =>
+            {
+                _canvasGroup.interactable = false;
+                _leftBtn.interactable = false;
+                _rightBtn.interactable = false;
+            })
+            .OnKill(() =>
+            {
+                _canvasGroup.alpha = 1f;
+                gameObject.SetActive(false);
+            })
+            .Append(_canvasGroup.DOFade(0.0f, 0.5f));
+
+    /// <summary>
+    /// 关闭动画序列
+    /// </summary>
+    /// <returns></returns>
+    private Tween CloseSequence() =>
+        DOTween.Sequence()
+            .OnPlay(() =>
+            {
+                _canvasGroup.interactable = false;
+                _leftBtn.interactable = false;
+                _rightBtn.interactable = false;
+            })
+            .OnKill(() =>
+            {
+                _canvasGroup.alpha = 1f;
+                gameObject.SetActive(false);
+            }).Append(_canvasGroup.DOFade(0.0f, 0.5f));
+
+    /// <summary>
+    /// ContentDialog状态枚举
+    /// </summary>
     private enum ContentDialogState
     {
         Opening,
         Idling,
         Closing,
     }
-
-    public void Request()
-    {
-        // 请求关闭
-        switch (_state)
-        {
-            case ContentDialogState.Opening:
-            case ContentDialogState.Closing:
-                break;
-            case ContentDialogState.Idling:
-            default:
-                _ = UIManager.Instance.CloseReactiveComponent(this);
-                break;
-        }
-    }
 }
 
+/// <summary>
+/// ContentDialog数据模型
+/// </summary>
 public class ContentDialogModel
 {
     public string Text;

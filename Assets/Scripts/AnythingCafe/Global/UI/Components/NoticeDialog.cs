@@ -3,10 +3,10 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NotifyDialog :
+public class NoticeDialog :
     ReactiveComponent,
     IInitializable,
-    IHasDataTemplate<NotifyDialogModel>
+    IHasDataTemplate<NoticeDialogModel>
 {
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private GameObject _contentPanel;
@@ -16,8 +16,8 @@ public class NotifyDialog :
     private Text _closeButtonText;
 
     private Sequence _sequence;
-    private NotifyDialogModel _model;
-    private NotifyDialogState _state;
+    private NoticeDialogModel _model;
+    private NoticeDialogState _state;
 
     public void Init()
     {
@@ -26,10 +26,10 @@ public class NotifyDialog :
         gameObject.SetActive(false);
     }
 
-    public void Init(NotifyDialogModel model)
+    public void Init(NoticeDialogModel model)
     {
         _model = model;
-        _state = NotifyDialogState.Idling;
+        _state = NoticeDialogState.Idling;
 
         _text.text = model.Text;
         _closeButtonText.text = model.CloseButtonData.Text;
@@ -40,10 +40,10 @@ public class NotifyDialog :
             // 请求关闭
             switch (_state)
             {
-                case NotifyDialogState.Opening:
-                case NotifyDialogState.Closing:
+                case NoticeDialogState.Opening:
+                case NoticeDialogState.Closing:
                     break;
-                case NotifyDialogState.Idling:
+                case NoticeDialogState.Idling:
                 default:
                     _ = UIManager.Instance.CloseReactiveComponent(this);
                     break;
@@ -57,14 +57,14 @@ public class NotifyDialog :
     /// <returns></returns>
     public override async UniTask Open()
     {
-        _state = NotifyDialogState.Opening;
+        _state = NoticeDialogState.Opening;
 
         if (_sequence.IsActive()) _sequence.Kill();
         _sequence = (Sequence)OpenSequence();
         _sequence.Play();
         await _sequence.AsyncWaitForCompletion();
 
-        _state = NotifyDialogState.Idling;
+        _state = NoticeDialogState.Idling;
     }
 
     /// <summary>
@@ -73,14 +73,14 @@ public class NotifyDialog :
     /// <returns></returns>
     public override async UniTask Close()
     {
-        _state = NotifyDialogState.Closing;
+        _state = NoticeDialogState.Closing;
 
         if (_sequence.IsActive()) _sequence.Kill();
         _sequence = (Sequence)CloseSequence();
         _sequence.Play();
         await _sequence.AsyncWaitForCompletion();
 
-        _state = NotifyDialogState.Idling;
+        _state = NoticeDialogState.Idling;
     }
 
     /// <summary>
@@ -126,7 +126,7 @@ public class NotifyDialog :
     /// <summary>
     ///     状态枚举
     /// </summary>
-    private enum NotifyDialogState
+    private enum NoticeDialogState
     {
         Opening,
         Idling,
@@ -138,7 +138,7 @@ public class NotifyDialog :
 /// <summary>
 ///     按钮数据模板
 /// </summary>
-public class NotifyDialogModel
+public class NoticeDialogModel
 {
     public string Text;
     public ButtonDataTemplate CloseButtonData;

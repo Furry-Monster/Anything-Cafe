@@ -9,7 +9,9 @@ using UnityEngine.UI;
 public class UIManager : PersistentSingleton<UIManager>, IInitializable
 {
     // string: UI名称  int: UI层级  ReactiveComponent: 控件
-    [SerializeField] private SerializableDictionary<string, SerializableKeyValuePair<int, GameObject>> _globalComponents; // 全局可用的控件,在每个场景都会加载
+    [SerializeField] private SerializableDictionary<string, GameObject> _globalComponents; // 全局可用的控件,在每个场景都会加载
+
+    [SerializeField] private SerializableDictionary<string, GameObject> _loadingComponents; // 用于加载的控件
 
     [SerializeField] private GraphicRaycaster _graphicRaycaster; // 用于处理UI事件的Raycaster
 
@@ -23,7 +25,6 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     /// <summary>
     /// 初始化UIManager
     /// </summary>
-    /// <exception cref="CustomErrorException"> 如果初始化失败 </exception>
     public void Init()
     {
         try
@@ -56,9 +57,13 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         _activeComponents.Clear();
         _closingComponents.Clear();
 
-        // 重新注册所有全局控件
+        // 重新注册所有Global控件
         foreach (var component in _globalComponents.Values)
-            RegisterReactiveComponent(component.Key, component.Value.GetComponent<ReactiveComponent>());
+            RegisterReactiveComponent(1, component.GetComponent<ReactiveComponent>());
+
+        // 重新注册所有Loading控件
+        foreach (var component in _loadingComponents.Values)
+            RegisterReactiveComponent(2, component.GetComponent<ReactiveComponent>());
     }
 
     /// <summary>
@@ -109,19 +114,39 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         _closingComponents.Remove(component);
     }
 
+    public async UniTask OpenGlobalComponent(string name)
+    {
+
+    }
+
+    public async UniTask CloseGlobalComponent(string name)
+    {
+
+    }
+
+    public async UniTask ShowLoadingComponent()
+    {
+
+    }
+
+    public async UniTask HideLoadingComponent()
+    {
+
+    }
+
     private void ValidateGlobalComponents()
     {
-        var uiNames = _globalComponents.Keys.ToList();
-        var allGlobalComponents = GameObject.FindGameObjectsWithTag("GlobalComponent");
-        foreach (var component in allGlobalComponents)
-        {
-            if (!uiNames.Contains(component.name) || !component.TryGetComponent(out ReactiveComponent _))
-            {
-                throw new CustomErrorException(
-                    $"[UIManager] Please check the global components:{component.name} is script and tag correct ?",
-                    new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIValidateFailed));
-            }
-        }
+        // var uiNames = _globalComponents.Keys.ToList();
+        // var allGlobalComponents = GameObject.FindGameObjectsWithTag("GlobalComponent");
+        // foreach (var component in allGlobalComponents)
+        // {
+        //     if (!uiNames.Contains(component.name) || !component.TryGetComponent(out ReactiveComponent _))
+        //     {
+        //         throw new CustomErrorException(
+        //             $"[UIManager] Please check the global components:{component.name} is script and tag correct ?",
+        //             new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIValidateFailed));
+        //     }
+        // }
     }
 }
 

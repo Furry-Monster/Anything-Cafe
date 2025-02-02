@@ -10,21 +10,27 @@ public class LoadingCanvas :
 {
     public void Init()
     {
-        ValidateComponents();
+        ValidateSelf();
     }
 
-    public void CheckComponents(List<ReactiveComponent> reactiveComponents)
+    /// <summary>
+    /// 检查并更新ReactiveComponent列表
+    /// </summary>
+    /// <param name="reactiveComponents"> 当前UIManager中的ReactiveComponent列表 </param>
+    /// <returns> 更新后的ReactiveComponent列表 </returns>
+    public List<ReactiveComponent> CheckComponents(List<ReactiveComponent> reactiveComponents)
     {
         var childrenComponent = transform.GetComponentsInChildren<ReactiveComponent>().ToList();
-        foreach (var reactiveComponent in reactiveComponents.Where(rc => !childrenComponent.Contains(rc)))
+        if (childrenComponent.Count > reactiveComponents.Count)
         {
-            throw new CustomErrorException(
-                $"LoadingCanvas must have the ReactiveComponent {reactiveComponent.gameObject.name} in its children.",
-                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.CanvasValidateFailed));
+            // 取差集
+            var diff = childrenComponent.Except(reactiveComponents).ToList();
+            reactiveComponents.AddRange(diff);
+            return reactiveComponents;
         }
     }
 
-    private void ValidateComponents()
+    private void ValidateSelf()
     {
         var canvas = GetComponent<Canvas>();
         var canvasScaler = GetComponent<CanvasScaler>();

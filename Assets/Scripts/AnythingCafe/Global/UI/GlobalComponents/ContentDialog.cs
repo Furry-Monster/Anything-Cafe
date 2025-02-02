@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ContentDialog :
-    ReactiveComponent,
+    GlobalComponent,
     IInitializable,
     IHasDataTemplate<ContentDialogModel>
 {
@@ -151,7 +151,7 @@ public class ContentDialog :
 /// <summary>
 /// ContentDialog数据模型
 /// </summary>
-public class ContentDialogModel
+public class ContentDialogModel : IDataTemplate
 {
     public string Text;
     public ButtonDataTemplate LeftButtonData;

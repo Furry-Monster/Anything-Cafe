@@ -10,12 +10,12 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
 {
     // string: UI名称  int: UI层级  ReactiveComponent: 控件
     [Header("Global Components")]
-    [SerializeField] private SerializableDictionary<string, GameObject> _globalComponents; // 全局可用的控件,在每个场景都会加载
+    [SerializeField] private SerializableDictionary<string, GlobalComponent> _globalComponents; // 全局可用的控件,在每个场景都会加载
     [SerializeField] private GlobalCanvas _globalCanvas; // 全局Canvas
     [Space]
 
     [Header("Loading Components")]
-    [SerializeField] private SerializableDictionary<string, GameObject> _loadingComponents; // 用于加载的控件
+    [SerializeField] private SerializableDictionary<string, LoadingComponent> _loadingComponents; // 用于加载的控件
     [SerializeField] private LoadingCanvas _loadingCanvas;// 用于加载页面的Canvas
     [Space]
 
@@ -55,15 +55,19 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
                 new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UICanvasResetFailed));
         try
         {
+            // 初始化特殊Canvas
             _globalCanvas.Init();
             _loadingCanvas.Init();
 
-            _globalCanvas.CheckComponents(_globalComponents.Values
-                .Select(x => x.GetComponent<ReactiveComponent>())
-                .ToList());
-            _loadingCanvas.CheckComponents(_loadingComponents.Values
-                .Select(x => x.GetComponent<ReactiveComponent>())
-                .ToList());
+            // 检查缺失的控件
+            var diffGlobal = _globalCanvas.CheckComponents(_globalComponents.Values.ToList<ReactiveComponent>());
+            var diffLoading = _loadingCanvas.CheckComponents(_loadingComponents.Values.ToList<ReactiveComponent>());
+
+            // 添加缺失的控件
+            foreach (var component in diffGlobal)
+                _globalComponents.Add(component.name, component as GlobalComponent);
+            foreach (var component in diffLoading)
+                _loadingComponents.Add(component.name, component as LoadingComponent);
         }
         catch (Exception ex)
         {
@@ -147,24 +151,13 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         _closingComponents.Remove(component);
     }
 
-    public async UniTask OpenGlobal(string globalName)
+    public async UniTask OpenReactive<T, TK>(ReactiveComponent component)
+        where T : ReactiveComponent, IHasDataTemplate<TK>
+        where TK : IDataTemplate, new()
     {
 
     }
 
-    public async UniTask CloseGlobal(string globalName)
-    {
 
-    }
-
-    public async UniTask ShowLoading(string loadingName)
-    {
-
-    }
-
-    public async UniTask HideLoading(string loadingName)
-    {
-
-    }
 }
 

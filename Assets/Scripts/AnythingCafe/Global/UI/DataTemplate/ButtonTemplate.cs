@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using System;
 
-public class ButtonDataTemplate
+public class ButtonDataTemplate : IDataTemplate
 {
     public string Text;
     public string Tooltip;

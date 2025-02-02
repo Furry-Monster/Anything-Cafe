@@ -6,15 +6,7 @@ using UnityEngine;
 /// </summary>
 public abstract class ReactiveComponent : MonoBehaviour, IReactiveComponent
 {
-    public virtual UniTask Open()
-    {
-        this.gameObject.SetActive(true);
-        return new UniTask();
-    }
+    public abstract UniTask Open();
 
-    public virtual UniTask Close()
-    {
-        this.gameObject.SetActive(false);
-        return new UniTask();
-    }
+    public abstract UniTask Close();
 }

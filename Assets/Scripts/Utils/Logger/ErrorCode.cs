@@ -22,7 +22,8 @@ public enum ErrorCode
     SceneCantLoad = 1,
     SceneOnLoadFailed = 2,
     UIInitFailed = 3,
-    UIValidateFailed = 4,
+    CanvasValidateFailed = 4,
     ComponentInitFailed = 5,
+    UICanvasResetFailed = 6,
 
 }

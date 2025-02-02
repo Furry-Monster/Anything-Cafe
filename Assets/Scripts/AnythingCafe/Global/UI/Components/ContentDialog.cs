@@ -63,7 +63,7 @@ public class ContentDialog :
                 break;
             case ContentDialogState.Idling:
             default:
-                _ = UIManager.Instance.CloseReactiveComponent(this);
+                _ = UIManager.Instance.CloseReactive(this);
                 break;
         }
     }

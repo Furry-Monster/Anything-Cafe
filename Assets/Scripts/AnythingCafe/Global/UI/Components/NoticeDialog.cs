@@ -43,7 +43,7 @@ public class NoticeDialog :
                         break;
                     case NoticeDialogState.Idling:
                     default:
-                        _ = UIManager.Instance.CloseReactiveComponent(this);
+                        _ = UIManager.Instance.CloseReactive(this);
                         break;
                 }
             });

@@ -9,18 +9,22 @@ using UnityEngine.UI;
 public class UIManager : PersistentSingleton<UIManager>, IInitializable
 {
     // string: UI名称  int: UI层级  ReactiveComponent: 控件
+    [Header("Global Components")]
     [SerializeField] private SerializableDictionary<string, GameObject> _globalComponents; // 全局可用的控件,在每个场景都会加载
+    [SerializeField] private GlobalCanvas _globalCanvas; // 全局Canvas
+    [Space]
 
+    [Header("Loading Components")]
     [SerializeField] private SerializableDictionary<string, GameObject> _loadingComponents; // 用于加载的控件
+    [SerializeField] private LoadingCanvas _loadingCanvas;// 用于加载页面的Canvas
+    [Space]
 
+    [Header("Other Components")]
     [SerializeField] private GraphicRaycaster _graphicRaycaster; // 用于处理UI事件的Raycaster
 
     private readonly Dictionary<int, List<ReactiveComponent>> _allReactiveComponents = new(); // 场景中所有的ClosableUI,int为UI层级
     private readonly LinkedList<ReactiveComponent> _activeComponents = new();  // 正在显示的UI,类似栈的机制
     private readonly List<ReactiveComponent> _closingComponents = new(); // 正在关闭的UI队列,类似GC的机制
-
-    public ReactiveComponent CurrentActiveComponent => _activeComponents.FirstOrDefault();
-    public bool IsActive(ReactiveComponent component) => _activeComponents.Contains(component);
 
     /// <summary>
     /// 初始化UIManager
@@ -29,7 +33,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     {
         try
         {
-            ValidateGlobalComponents();
+            ResetCanvas();
             ResetAllComponents();
         }
         catch (Exception ex)
@@ -42,10 +46,33 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     }
 
     /// <summary>
-    /// 设置GraphicRaycaster的enabled
+    /// 重置Canvas
     /// </summary>
-    /// <param name="isEnabled"></param>
-    public void EnableGraphicRaycaster(bool isEnabled) => _graphicRaycaster.enabled = isEnabled;
+    public void ResetCanvas()
+    {
+        if (_globalCanvas == null || _loadingCanvas == null)
+            throw new CustomErrorException("[UIManager] Canvas is set NULL!",
+                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UICanvasResetFailed));
+        try
+        {
+            _globalCanvas.Init();
+            _loadingCanvas.Init();
+
+            _globalCanvas.CheckComponents(_globalComponents.Values
+                .Select(x => x.GetComponent<ReactiveComponent>())
+                .ToList());
+            _loadingCanvas.CheckComponents(_loadingComponents.Values
+                .Select(x => x.GetComponent<ReactiveComponent>())
+                .ToList());
+        }
+        catch (Exception ex)
+        {
+            if (ex is CustomErrorException)
+                throw;
+            throw new CustomErrorException($"[UIManager] Can't reset Canvas, {ex.Message}",
+                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UICanvasResetFailed));
+        }
+    }
 
     /// <summary>
     /// 重置场景中的控件注册
@@ -64,6 +91,11 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         // 重新注册所有Loading控件
         foreach (var component in _loadingComponents.Values)
             RegisterReactiveComponent(2, component.GetComponent<ReactiveComponent>());
+
+        // 寻找并注册其他控件
+        var sceneComponents = FindObjectsOfType<ReactiveComponent>();
+        foreach (var component in sceneComponents)
+            RegisterReactiveComponent(0, component);
     }
 
     /// <summary>
@@ -89,7 +121,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     /// </summary>
     /// <param name="component"> 控件 </param>
     /// <returns> UniTask</returns>
-    public async UniTask OpenReactiveComponent(ReactiveComponent component)
+    public async UniTask OpenReactive(ReactiveComponent component)
     {
         // 先清理掉正在关闭的控件和重复显示的控件
         _closingComponents.Remove(component);
@@ -105,7 +137,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     /// </summary>
     /// <param name="component"> 控件 </param>
     /// <returns>UniTask</returns>
-    public async UniTask CloseReactiveComponent(ReactiveComponent component)
+    public async UniTask CloseReactive(ReactiveComponent component)
     {
         if (!_activeComponents.Contains(component) || _closingComponents.Contains(component))
             return;
@@ -115,51 +147,24 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         _closingComponents.Remove(component);
     }
 
-    public async UniTask OpenGlobalComponent(string name)
+    public async UniTask OpenGlobal(string globalName)
     {
 
     }
 
-    public async UniTask CloseGlobalComponent(string name)
+    public async UniTask CloseGlobal(string globalName)
     {
 
     }
 
-    public async UniTask ShowLoadingComponent()
+    public async UniTask ShowLoading(string loadingName)
     {
 
     }
 
-    public async UniTask HideLoadingComponent()
+    public async UniTask HideLoading(string loadingName)
     {
 
-    }
-
-    private void ValidateGlobalComponents()
-    {
-        var globalUINames = _globalComponents.Keys.ToList();
-        var allGlobalComponents = GameObject.FindGameObjectsWithTag("GlobalComponent");
-        foreach (var component in allGlobalComponents)
-        {
-            if (!globalUINames.Contains(component.name) || !component.TryGetComponent(out ReactiveComponent _))
-            {
-                throw new CustomErrorException(
-                    $"[UIManager] Please check the global components:{component.name} is script and tag correct ?",
-                    new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIValidateFailed));
-            }
-        }
-
-        var loadingUINames = _loadingComponents.Keys.ToList();
-        var allLoadingComponents = GameObject.FindGameObjectsWithTag("LoadingComponent");
-        foreach (var component in allLoadingComponents)
-        {
-            if (!loadingUINames.Contains(component.name) || !component.TryGetComponent(out ReactiveComponent _))
-            {
-                throw new CustomErrorException(
-                    $"[UIManager] Please check the loading components:{component.name} is script and tag correct ?",
-                    new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIValidateFailed));
-            }
-        }
     }
 }
 

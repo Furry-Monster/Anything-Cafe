@@ -32,14 +32,14 @@ public class GameManager : PersistentSingleton<GameManager>
         }
     }
 
-    private async UniTask ValidateIntegrity()
-    {
-        // TODO: 检测游戏资源完整性
-    }
-
     private async UniTask PrepareGame()
     {
         // TODO: 准备游戏资源,初始化游戏
+    }
+
+    private async UniTask ValidateIntegrity()
+    {
+        // TODO: 检测游戏资源完整性
     }
 
     /// <summary>

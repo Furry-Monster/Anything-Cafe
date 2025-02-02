@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class NoticeDialog :
-    ReactiveComponent,
+    GlobalComponent,
     IInitializable,
     IHasDataTemplate<NoticeDialogModel>
 {
@@ -145,7 +145,7 @@ public class NoticeDialog :
 /// <summary>
 ///     按钮数据模板
 /// </summary>
-public class NoticeDialogModel
+public class NoticeDialogModel : IDataTemplate
 {
     public string Text;
     public ButtonDataTemplate CloseButtonData;

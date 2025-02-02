@@ -18,7 +18,7 @@ public class GlobalCanvas :
     /// </summary>
     /// <param name="reactiveComponents"> 当前UIManager中的ReactiveComponent列表 </param>
     /// <returns> 更新后的ReactiveComponent列表 </returns>
-    public List<ReactiveComponent> CheckComponents(List<ReactiveComponent> reactiveComponents)
+    public void CheckComponents(List<ReactiveComponent> reactiveComponents)
     {
         var childrenComponent = transform.GetComponentsInChildren<ReactiveComponent>().ToList();
 
@@ -26,16 +26,20 @@ public class GlobalCanvas :
         {
             // 取差集
             var diff = childrenComponent.Except(reactiveComponents).ToList();
-            reactiveComponents.AddRange(diff);
+            foreach (var component in diff)
+                throw new CustomErrorException(
+                    $"[GlobalCanvas] ReactiveComponent {component.gameObject.name} is NOT in the GlobalComponent list.But exist in the scene",
+                    new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.UICanvasInitFailed));
         }
         else if (childrenComponent.Count < reactiveComponents.Count)
         {
             // 取交集
             var intersect = childrenComponent.Intersect(reactiveComponents).ToList();
-            reactiveComponents = intersect;
+            foreach (var component in intersect)
+                throw new CustomErrorException(
+                    $"[GlobalCanvas] ReactiveComponent {component.gameObject.name} is NOT in the scene list.But exist in the GlobalComponent",
+                    new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.UICanvasInitFailed));
         }
-
-        return reactiveComponents;
     }
 
     private void ValidateSelf()
@@ -50,7 +54,7 @@ public class GlobalCanvas :
 
         if (requiredComponents.Any(component => component == null))
         {
-            throw new CustomErrorException("LoadingCanvas must have a Canvas, CanvasScaler, GraphicRaycaster, and CanvasGroup component.",
+            throw new CustomErrorException("[GlobalCanvas] GlobalCanvas must have a Canvas, CanvasScaler, GraphicRaycaster, and CanvasGroup component.",
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.CanvasValidateFailed));
         }
     }

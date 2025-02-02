@@ -60,14 +60,8 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
             _loadingCanvas.Init();
 
             // 检查缺失的控件
-            var diffGlobal = _globalCanvas.CheckComponents(_globalComponents.Values.ToList<ReactiveComponent>());
-            var diffLoading = _loadingCanvas.CheckComponents(_loadingComponents.Values.ToList<ReactiveComponent>());
-
-            // 添加缺失的控件
-            foreach (var component in diffGlobal)
-                _globalComponents.Add(component.name, component as GlobalComponent);
-            foreach (var component in diffLoading)
-                _loadingComponents.Add(component.name, component as LoadingComponent);
+            _globalCanvas.CheckComponents(_globalComponents.Values.ToList<ReactiveComponent>());
+            _loadingCanvas.CheckComponents(_loadingComponents.Values.ToList<ReactiveComponent>());
         }
         catch (Exception ex)
         {

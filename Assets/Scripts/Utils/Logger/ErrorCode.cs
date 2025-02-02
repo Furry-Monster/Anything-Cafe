@@ -25,5 +25,6 @@ public enum ErrorCode
     CanvasValidateFailed = 4,
     ComponentInitFailed = 5,
     UICanvasResetFailed = 6,
+    UICanvasInitFailed = 7,
 
 }

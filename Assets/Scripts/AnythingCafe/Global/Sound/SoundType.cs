@@ -3,6 +3,6 @@
     Ambient,
     Ero,
     Music,
-    None,
+    SFX,
     UI,
 }

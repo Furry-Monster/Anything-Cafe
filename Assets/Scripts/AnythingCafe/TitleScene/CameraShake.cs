@@ -47,13 +47,13 @@ public class CameraShake : MonoBehaviour
         var u = Fade(xIn);
         var v = Fade(yIn);
 
-        var a = (p[x] + y) & 255;
-        var b = (p[x + 1] + y) & 255;
+        var a = (P[x] + y) & 255;
+        var b = (P[x + 1] + y) & 255;
 
         return Mathf.Lerp(
             v,
-            Mathf.Lerp(u, Grad(p[a], xIn, yIn), Grad(p[b], xIn - 1, yIn)),
-            Mathf.Lerp(u, Grad(p[a + 1], xIn, yIn - 1), Grad(p[b + 1], xIn - 1, yIn - 1))
+            Mathf.Lerp(u, Grad(P[a], xIn, yIn), Grad(P[b], xIn - 1, yIn)),
+            Mathf.Lerp(u, Grad(P[a + 1], xIn, yIn - 1), Grad(P[b + 1], xIn - 1, yIn - 1))
             );
     }
 
@@ -70,8 +70,8 @@ public class CameraShake : MonoBehaviour
         return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
     }
 
-    private static readonly int[] p = new int[512];
-    private static readonly int[] permutation = { 151,160,137,91,90,15, // Hash lookup table as defined by Ken Perlin.  This is a randomly
+    private static readonly int[] P = new int[512];
+    private static readonly int[] Permutation = { 151,160,137,91,90,15, // Hash lookup table as defined by Ken Perlin.  This is a randomly
         131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,
         8,99,37,240,21,10,23,190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,
         32,57,177,33,88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,
@@ -89,7 +89,7 @@ public class CameraShake : MonoBehaviour
     static CameraShake()
     {
         for (var i = 0; i < 256; i++)
-            p[256 + i] = p[i] = permutation[i];
+            P[256 + i] = P[i] = Permutation[i];
     }
 
     #endregion

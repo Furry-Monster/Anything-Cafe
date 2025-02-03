@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7833979853635236258}
   - component: {fileID: 5222701343843461803}
   - component: {fileID: 3189587353089140551}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: ButtonLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 705489730427802769}
   - component: {fileID: 5715419959263269261}
   - component: {fileID: 340442215549518654}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: ButtonRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -253,7 +253,7 @@ GameObject:
   - component: {fileID: 8666066095295108845}
   - component: {fileID: 6674960771291976292}
   - component: {fileID: 7418331405388218198}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -324,13 +324,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1779259044765207818}
   - component: {fileID: 2955689492781739411}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: ContentDialog
   m_TagString: GlobalComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1779259044765207818
 RectTransform:
   m_ObjectHideFlags: 0
@@ -375,7 +375,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8940167775262464141}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -412,7 +412,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5536631766927729858}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -449,7 +449,7 @@ GameObject:
   - component: {fileID: 8986498299743809932}
   - component: {fileID: 1378590043790939478}
   - component: {fileID: 8417593208156188331}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -505,8 +505,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Nope
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7482b9a046ebe2c4fa8b7782f432405a, type: 2}
+  m_sharedMaterial: {fileID: 3728182503039802053, guid: 7482b9a046ebe2c4fa8b7782f432405a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -583,7 +583,7 @@ GameObject:
   - component: {fileID: 5556543879728973571}
   - component: {fileID: 4196656849661086424}
   - component: {fileID: 3101908013251157850}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -639,8 +639,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Yes
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9cc1752b975a9fa409019218e0b6884a, type: 2}
+  m_sharedMaterial: {fileID: 4382649203596686057, guid: 9cc1752b975a9fa409019218e0b6884a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

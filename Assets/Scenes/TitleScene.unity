@@ -255,30 +255,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: NoticeDialog
       objectReference: {fileID: 0}
-    - target: {fileID: 1480323393942784196, guid: 416fca6d831b1a14a86cc8a8679bed22, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1480323393942784196, guid: 416fca6d831b1a14a86cc8a8679bed22, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3315915217828871699, guid: 416fca6d831b1a14a86cc8a8679bed22, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4617870923331621862, guid: 416fca6d831b1a14a86cc8a8679bed22, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5207844375796768050, guid: 416fca6d831b1a14a86cc8a8679bed22, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6749830450980784440, guid: 416fca6d831b1a14a86cc8a8679bed22, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 7221339797962187318, guid: 416fca6d831b1a14a86cc8a8679bed22, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1957,6 +1933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b22d60954eb3834086d1e3d0b48d18f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsFirstInTitleScene: 1
 --- !u!1 &1337678732
 GameObject:
   m_ObjectHideFlags: 0
@@ -2512,8 +2489,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: NEW GAME
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9cc1752b975a9fa409019218e0b6884a, type: 2}
+  m_sharedMaterial: {fileID: 4382649203596686057, guid: 9cc1752b975a9fa409019218e0b6884a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2975,8 +2952,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: CONTINUE
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7482b9a046ebe2c4fa8b7782f432405a, type: 2}
+  m_sharedMaterial: {fileID: 3728182503039802053, guid: 7482b9a046ebe2c4fa8b7782f432405a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3178,18 +3155,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2028202966}
     m_Modifications:
-    - target: {fileID: 469517119072697284, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1226982769666658854, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1658487823389521634, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 1779259044765207818, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -3274,34 +3239,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ContentDialog
       objectReference: {fileID: 0}
-    - target: {fileID: 2501014218019092015, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 2501014218019092015, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2804510610181688951, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 2955689492781739411, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
       propertyPath: _canvasGroup
       value: 
       objectReference: {fileID: 2028202967}
-    - target: {fileID: 4137982539940929993, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7598995894338545371, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8541589280423200185, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

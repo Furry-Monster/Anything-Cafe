@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7221339797962187318}
   - component: {fileID: 9113552169457295178}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: NoticeDialog
   m_TagString: GlobalComponent
   m_Icon: {fileID: 0}
@@ -64,7 +64,7 @@ GameObject:
   - component: {fileID: 6245872568036170761}
   - component: {fileID: 4599314246019259135}
   - component: {fileID: 8982996437409701730}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,8 +120,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Okay
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7482b9a046ebe2c4fa8b7782f432405a, type: 2}
+  m_sharedMaterial: {fileID: 3728182503039802053, guid: 7482b9a046ebe2c4fa8b7782f432405a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -196,7 +196,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3665182019452607641}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 2347363698344025551}
   - component: {fileID: 2415579585754402202}
   - component: {fileID: 228098028588365693}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -306,7 +306,7 @@ GameObject:
   - component: {fileID: 6553569932922367374}
   - component: {fileID: 4870724994120085207}
   - component: {fileID: 4373635356609307882}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: CloseButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}

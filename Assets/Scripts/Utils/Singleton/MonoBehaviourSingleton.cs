@@ -80,7 +80,7 @@ public class MonoBehaviourSingleton<T> : MonoBehaviour where T : MonoBehaviourSi
         {
             _instance = null;
 #if UNITY_EDITOR
-            Debug.Log($"[Singleton] Destroying {typeof(T)} Singleton.");
+            Debug.Log($"[MonoSingleton] Destroying {typeof(T)} Singleton.");
 #endif
         }
     }

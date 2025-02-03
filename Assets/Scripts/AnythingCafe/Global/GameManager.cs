@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class GameManager : PersistentSingleton<GameManager>
 {
+    [HideInInspector] public bool IsFirstInTitleScene = true; // 是否是第一次进入Title场景
+
     private List<GameObject> _validateIntegrityObjects; // TODO:将列表序列化，显示在Inspector面板中，方便编辑
 
     private async void Start()

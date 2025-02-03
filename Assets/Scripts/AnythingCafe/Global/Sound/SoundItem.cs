@@ -1,13 +1,6 @@
 using UnityEngine;
 
-public enum SoundType
-{
-    Ambient,
-    Ero,
-    Music,
-    None,
-    UI,
-}
+
 
 public record SoundItem(SoundType SoundType, AudioClip AudioClip, bool Loop, float Volume, ulong Delay)
 {

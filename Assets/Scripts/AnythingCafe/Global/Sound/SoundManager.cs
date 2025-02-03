@@ -11,7 +11,8 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     [SerializeField]
     private SerializableDictionary<string, SerializableKeyValuePair<SoundType, AudioClip>> _soundItemDict;
 
-    public GameObject SourceParent; // 所有Source对应的GameObject的父物体
+    [SerializeField] 
+    private GameObject SourceParent; // 所有Source对应的GameObject的父物体
 
     public void Init()
     {

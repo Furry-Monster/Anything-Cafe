@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4279123752da5884f8a3db9c3507e7bf, type: 3}
+  m_Name: Interact
+  m_EditorClassIdentifier: 
+  CursorTextures:
+  - {fileID: 2800000, guid: 9f757bb38e5013e4b85a126c6ef68a8a, type: 3}
+  - {fileID: 2800000, guid: 28b17b9a91944164bba39a0ac5defe6c, type: 3}
+  - {fileID: 2800000, guid: eefa6daf8eb72e345ac89a04c7825a62, type: 3}
+  CursorOffset: {x: 0, y: 0}
+  FrameRate: 0

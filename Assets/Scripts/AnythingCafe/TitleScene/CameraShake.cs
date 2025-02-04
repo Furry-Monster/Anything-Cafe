@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 /// <summary>
 /// 给相机添加摇晃效果
@@ -16,7 +13,7 @@ public class CameraShake : MonoBehaviour
 
     private void OnEnable()
     {
-        _seed = Random.value;
+        _seed = UnityEngine.Random.value;
     }
 
     private void Update()

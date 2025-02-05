@@ -45,7 +45,7 @@ public class CursorManager :
         {
             if (ex is CustomErrorException)
                 throw;
-            throw new CustomErrorException("[CursorManager] Init failed",
+            throw new CustomErrorException("[CursorManager] LoadTemplate failed",
                 new CustomErrorItem(ErrorSeverity.Error, ErrorCode.CursorManagerInitFailed));
         }
     }

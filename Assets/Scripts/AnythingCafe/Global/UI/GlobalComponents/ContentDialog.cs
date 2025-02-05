@@ -26,7 +26,7 @@ public class ContentDialog :
 
     public void Init() => gameObject.SetActive(false);
 
-    public void Init(ContentDialogModel model)
+    public void LoadTemplate(ContentDialogModel model)
     {
         try
         {

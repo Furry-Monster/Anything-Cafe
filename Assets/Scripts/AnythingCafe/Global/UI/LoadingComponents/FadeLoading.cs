@@ -1,34 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FadeLoading :
     LoadingComponent,
     IInitializable,
     IHasDataTemplate<FadeLoadingModel>
 {
+    [Header("General")]
     [SerializeField] private CanvasGroup _canvasGroup;
 
-    public void Init()
+    [Space]
+    [Header("Components")]
+    [SerializeField] private Text _messageText;
+
+    private Sequence _sequence;
+    private FadeLoadingModel _model;
+    private FadeLoadingState _state;
+
+    public void Init() => gameObject.SetActive(false);
+
+    public void LoadTemplate(FadeLoadingModel model)
+    {
+        _model = model;
+        _state = FadeLoadingState.Idling;
+
+        _messageText.text = _model.Message;
+    }
+
+    public async override UniTask Open()
+    {
+        
+    }
+
+    public async override UniTask Close()
     {
 
     }
 
-    public void Init(FadeLoadingModel param)
-    {
-
-    }
-
-    public override UniTask Open()
-    {
-        return base.Open();
-    }
-
-    public override UniTask Close()
-    {
-        return base.Close();
-    }
+    
 
     private enum FadeLoadingState
     {
@@ -40,5 +53,5 @@ public class FadeLoading :
 
 public class FadeLoadingModel : IDataTemplate
 {
-    private string _message;
+    public string Message;
 }

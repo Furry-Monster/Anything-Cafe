@@ -25,7 +25,7 @@ public class NoticeDialog :
 
     public void Init() => gameObject.SetActive(false);
 
-    public void Init(NoticeDialogModel model)
+    public void LoadTemplate(NoticeDialogModel model)
     {
         try
         {

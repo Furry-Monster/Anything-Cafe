@@ -37,6 +37,7 @@ public class GameManager : PersistentSingleton<GameManager>
     private async UniTask PrepareGame()
     {
         // TODO: 准备游戏资源,初始化游戏
+        CursorManager.Instance.Init();
     }
 
     private async UniTask ValidateIntegrity()

@@ -9,12 +9,15 @@ public class NoticeDialog :
     IInitializable,
     IHasDataTemplate<NoticeDialogModel>
 {
+    [Header("General")]
     [SerializeField] private CanvasGroup _canvasGroup;
-    [SerializeField] private GameObject _contentPanel;
 
-    private Text _text;
-    private Button _closeButton;
-    private Text _closeButtonText;
+    [Space]
+    [Header("Components")]
+    [SerializeField] private GameObject _contentPanel;
+    [SerializeField] private Text _text;
+    [SerializeField] private Button _closeButton;
+    [SerializeField] private Text _closeButtonText;
 
     private Sequence _sequence;
     private NoticeDialogModel _model;

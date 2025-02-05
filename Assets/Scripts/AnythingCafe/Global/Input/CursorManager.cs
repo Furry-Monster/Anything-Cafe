@@ -61,6 +61,7 @@ public class CursorManager :
             return;
         _currentCursorDict[cursorLayer] = targetCursor;
 
+        // 处理动画更新：
         _onCursorMgrUpdate -= UpdateCursorAnimation;
         // 切换光标图标，并设置动画帧率
         _cursorFrame = 0;

@@ -9,13 +9,16 @@ public class ContentDialog :
     IInitializable,
     IHasDataTemplate<ContentDialogModel>
 {
+    [Header("General")]
     [SerializeField] private CanvasGroup _canvasGroup;
 
-    private Text _text;
-    private Button _leftBtn;
-    private Text _leftBtnText;
-    private Button _rightBtn;
-    private Text _rightBtnText;
+    [Space]
+    [Header("Components")]
+    [SerializeField] private Text _text;
+    [SerializeField] private Button _leftBtn;
+    [SerializeField] private Text _leftBtnText;
+    [SerializeField] private Button _rightBtn;
+    [SerializeField] private Text _rightBtnText;
 
     private Sequence _sequence;
     private ContentDialogModel _model;
@@ -36,13 +39,39 @@ public class ContentDialog :
             _leftBtnText.text = model.LeftButtonData.Text;
             _leftBtn.interactable = model.LeftButtonData.IsInteractable;
             _leftBtn.onClick.RemoveAllListeners();
-            _leftBtn.onClick.AddListener(OnCloseRequest);
+            _leftBtn.onClick.AddListener(() =>
+            {
+                // 请求关闭
+                switch (_state)
+                {
+                    case ContentDialogState.Opening:
+                    case ContentDialogState.Closing:
+                        break;
+                    case ContentDialogState.Idling:
+                    default:
+                        _ = UIManager.Instance.CloseReactive(this);
+                        break;
+                }
+            });
 
             // 设置右按钮
             _rightBtnText.text = model.RightButtonData.Text;
             _rightBtn.interactable = model.RightButtonData.IsInteractable;
             _rightBtn.onClick.RemoveAllListeners();
-            _rightBtn.onClick.AddListener(OnCloseRequest);
+            _rightBtn.onClick.AddListener(() =>
+            {
+                // 请求关闭
+                switch (_state)
+                {
+                    case ContentDialogState.Opening:
+                    case ContentDialogState.Closing:
+                        break;
+                    case ContentDialogState.Idling:
+                    default:
+                        _ = UIManager.Instance.CloseReactive(this);
+                        break;
+                }
+            });
         }
         catch (Exception ex)
         {
@@ -50,21 +79,6 @@ public class ContentDialog :
                 throw;
             throw new CustomErrorException($"[ContentDialog] Can't init Component. {ex.GetType()}, {ex.Message}",
                 new CustomErrorItem(ErrorSeverity.Error, ErrorCode.ComponentInitFailed));
-        }
-    }
-
-    private void OnCloseRequest()
-    {
-        _model.LeftButtonData.OnClick?.Invoke();
-        switch (_state)
-        {
-            case ContentDialogState.Opening:
-            case ContentDialogState.Closing:
-                break;
-            case ContentDialogState.Idling:
-            default:
-                _ = UIManager.Instance.CloseReactive(this);
-                break;
         }
     }
 

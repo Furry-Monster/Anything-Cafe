@@ -40,6 +40,7 @@ public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISce
         if (GameManager.Instance.IsFirstInTitleScene)
         {
             // TODO：显示提示和商标
+
             GameManager.Instance.IsFirstInTitleScene = false;
         }
 

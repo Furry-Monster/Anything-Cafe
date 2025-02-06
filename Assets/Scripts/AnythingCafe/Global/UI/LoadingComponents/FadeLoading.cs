@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class FadeLoading :
     LoadingComponent,
@@ -15,7 +15,7 @@ public class FadeLoading :
 
     [Space]
     [Header("Components")]
-    [SerializeField] private Text _messageText;
+    [SerializeField] private TextMeshProUGUI _messageText;
 
     private Sequence _sequence;
     private FadeLoadingModel _model;

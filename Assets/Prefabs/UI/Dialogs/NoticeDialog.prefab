@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7221339797962187318
 RectTransform:
   m_ObjectHideFlags: 0
@@ -54,8 +54,8 @@ MonoBehaviour:
   _canvasGroup: {fileID: 0}
   _contentPanel: {fileID: 4617870923331621862}
   _text: {fileID: 0}
-  _closeButton: {fileID: 0}
-  _closeButtonText: {fileID: 0}
+  _closeButton: {fileID: 4373635356609307882}
+  _closeButtonText: {fileID: 8982996437409701730}
 --- !u!1 &3315915217828871699
 GameObject:
   m_ObjectHideFlags: 0

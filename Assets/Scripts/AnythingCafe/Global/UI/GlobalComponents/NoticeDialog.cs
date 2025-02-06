@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,9 +16,9 @@ public class NoticeDialog :
     [Space]
     [Header("Components")]
     [SerializeField] private GameObject _contentPanel;
-    [SerializeField] private Text _text;
+    [SerializeField] private TextMeshProUGUI _text;
     [SerializeField] private Button _closeButton;
-    [SerializeField] private Text _closeButtonText;
+    [SerializeField] private TextMeshProUGUI _closeButtonText;
 
     private Sequence _sequence;
     private NoticeDialogModel _model;

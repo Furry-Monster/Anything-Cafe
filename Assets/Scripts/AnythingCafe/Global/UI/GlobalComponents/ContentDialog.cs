@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,11 +15,11 @@ public class ContentDialog :
 
     [Space]
     [Header("Components")]
-    [SerializeField] private Text _text;
+    [SerializeField] private TextMeshProUGUI _text;
     [SerializeField] private Button _leftBtn;
-    [SerializeField] private Text _leftBtnText;
+    [SerializeField] private TextMeshProUGUI _leftBtnText;
     [SerializeField] private Button _rightBtn;
-    [SerializeField] private Text _rightBtnText;
+    [SerializeField] private TextMeshProUGUI _rightBtnText;
 
     private Sequence _sequence;
     private ContentDialogModel _model;

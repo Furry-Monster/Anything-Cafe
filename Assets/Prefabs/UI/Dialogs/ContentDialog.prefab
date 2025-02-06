@@ -330,7 +330,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1779259044765207818
 RectTransform:
   m_ObjectHideFlags: 0
@@ -367,10 +367,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _canvasGroup: {fileID: 0}
   _text: {fileID: 0}
-  _leftBtn: {fileID: 0}
-  _leftBtnText: {fileID: 0}
-  _rightBtn: {fileID: 0}
-  _rightBtnText: {fileID: 0}
+  _leftBtn: {fileID: 3189587353089140551}
+  _leftBtnText: {fileID: 3101908013251157850}
+  _rightBtn: {fileID: 340442215549518654}
+  _rightBtnText: {fileID: 8417593208156188331}
 --- !u!1 &2804510610181688951
 GameObject:
   m_ObjectHideFlags: 0

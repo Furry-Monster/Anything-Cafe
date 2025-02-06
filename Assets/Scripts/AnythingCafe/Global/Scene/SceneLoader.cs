@@ -9,9 +9,9 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class SceneLoader
 {
-    private readonly SceneEnum _sceneEnum;
+    private readonly SceneID _sceneId;
 
-    public SceneLoader(SceneEnum sceneEnum) => _sceneEnum = sceneEnum;
+    public SceneLoader(SceneID sceneId) => _sceneId = sceneId;
 
     public async UniTask LoadScene()
     {
@@ -37,7 +37,7 @@ public class SceneLoader
                 // TODO: 不需要卸载场景，直接加载Loading的UI（记得在OnSceneUnload里写加载LoadingUI的逻辑）
             }
 
-            await SceneManager.LoadSceneAsync(_sceneEnum.ToString());
+            await SceneManager.LoadSceneAsync(_sceneId.ToString());
 
             var sceneHandlerList2 =
                 GameObject.FindGameObjectsWithTag("SceneHandler")
@@ -62,7 +62,7 @@ public class SceneLoader
         {
             throw ex is CustomErrorException
                 ? ex : new CustomErrorException(
-                    $"[SceneLoader] Scene {_sceneEnum.ToString()} load error.{ex.Message}",
+                    $"[SceneLoader] Scene {_sceneId.ToString()} load error.{ex.Message}",
                     new CustomErrorItem(ErrorSeverity.Error, ErrorCode.SceneCantLoad));
         }
     }

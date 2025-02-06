@@ -45,6 +45,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         }
     }
 
+    #region API（重置，注册，打开，关闭）
     /// <summary>
     /// 重置Canvas
     /// </summary>
@@ -145,13 +146,66 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         _closingComponents.Remove(component);
     }
 
-    public async UniTask OpenReactive<T, TK>(ReactiveComponent component)
-        where T : ReactiveComponent, IHasDataTemplate<TK>
-        where TK : IDataTemplate, new()
+    /// <summary>
+    /// 打开全局UI
+    /// </summary>
+    /// <param name="uiName"> UI名称 </param>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
+    public async UniTask OpenGlobal(string uiName)
     {
-
+        var component = _globalComponents[uiName];
+        if (component == null)
+            throw new CustomErrorException($"[UIManager] Can't find global ui {uiName}!",
+                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
+        await OpenReactive(component.GetComponent<ReactiveComponent>());
     }
 
+    /// <summary>
+    ///  打开Loading UI
+    /// </summary>
+    /// <param name="uiName"> UI名称 </param>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
+    public async UniTask OpenLoading(string uiName)
+    {
+        var component = _loadingComponents[uiName];
+        if (component == null)
+            throw new CustomErrorException($"[UIManager] Can't find loading ui {uiName}!",
+                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
+        await OpenReactive(component.GetComponent<ReactiveComponent>());
+    }
 
+    /// <summary>
+    ///  关闭全局UI
+    /// </summary>
+    /// <param name="uiName"> UI名称 </param>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
+    public async UniTask CloseGlobal(string uiName)
+    {
+        var component = _globalComponents[uiName];
+        if (component == null)
+            throw new CustomErrorException($"[UIManager] Can't find global ui {uiName}!",
+                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
+        await CloseReactive(component.GetComponent<ReactiveComponent>());
+    }
+
+    /// <summary>
+    ///  关闭Loading UI
+    /// </summary>
+    /// <param name="uiName"> UI名称 </param>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
+    public async UniTask CloseLoading(string uiName)
+    {
+        var component = _loadingComponents[uiName];
+        if (component == null)
+            throw new CustomErrorException($"[UIManager] Can't find loading ui {uiName}!",
+                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
+        await CloseReactive(component.GetComponent<ReactiveComponent>());
+    }
+
+    #endregion
 }
 

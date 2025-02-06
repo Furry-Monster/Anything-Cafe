@@ -31,7 +31,7 @@ public class CameraShake : MonoBehaviour
     #region 柏林噪声
 
     // TODO:废弃自定义柏林噪声
-    
+
     [Obsolete]
     private float PerlinNoise(float xIn, float yIn)
     {

@@ -14,4 +14,5 @@ public enum ErrorCode
     UICanvasResetFailed = 6,
     UICanvasInitFailed = 7,
     CursorManagerInitFailed = 8,
+    ComponentNotFound = 9,
 }

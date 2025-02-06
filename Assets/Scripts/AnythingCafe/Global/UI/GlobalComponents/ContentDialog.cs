@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using System;
 using TMPro;
 using UnityEngine;
@@ -15,7 +17,7 @@ public class ContentDialog :
 
     [Space]
     [Header("Components")]
-    [SerializeField] private TextMeshProUGUI _text;
+    [SerializeField] private GameObject _contentPanel;
     [SerializeField] private Button _leftBtn;
     [SerializeField] private TextMeshProUGUI _leftBtnText;
     [SerializeField] private Button _rightBtn;
@@ -33,8 +35,6 @@ public class ContentDialog :
         {
             _model = model;
             _state = ContentDialogState.Idling;
-
-            _text.text = model.Text;
 
             // 设置左按钮
             _leftBtnText.text = model.LeftButtonData.Text;
@@ -93,7 +93,7 @@ public class ContentDialog :
 
         // 显示动画
         if (_sequence.IsActive()) _sequence.Kill();
-        _sequence = (Sequence)OpenSequence().Play();
+        _sequence = ShowSequence().Play();
         await _sequence.AsyncWaitForCompletion();
 
         _state = ContentDialogState.Idling;
@@ -109,48 +109,53 @@ public class ContentDialog :
         _state = ContentDialogState.Closing;
 
         if (_sequence.IsActive()) _sequence.Kill();
-        _sequence = (Sequence)CloseSequence().Play();
+        _sequence = HideSequence().Play();
         await _sequence.AsyncWaitForCompletion();
 
         _state = ContentDialogState.Idling;
     }
 
     /// <summary>
-    /// 打开动画序列
+    /// Open 动画序列
     /// </summary>
     /// <returns></returns>
-    private Tween OpenSequence() =>
-        DOTween.Sequence()
-            .OnPlay(() =>
-            {
-                _canvasGroup.interactable = false;
-                _leftBtn.interactable = false;
-                _rightBtn.interactable = false;
-            })
-            .OnKill(() =>
-            {
-                _canvasGroup.alpha = 1f;
-                gameObject.SetActive(false);
-            })
-            .Append(_canvasGroup.DOFade(0.0f, 0.5f));
+    private Sequence ShowSequence()
+    {
+        return DOTween.Sequence().OnKill(() =>
+        {
+            _canvasGroup.interactable = true;
+            _leftBtn.interactable = _model.LeftButtonData.IsInteractable;
+            _rightBtn.interactable = _model.RightButtonData.IsInteractable;
+            _contentPanel.transform.localScale = Vector3.one;
+        }).OnPlay(() =>
+        {
+            _canvasGroup.alpha = 0.0f;
+            _canvasGroup.interactable = false;
+            _leftBtn.interactable = false;
+            _rightBtn.interactable = false;
+            _contentPanel.transform.localScale = Vector3.one * 0.7f;
+            gameObject.SetActive(true);
+        }).Append(_canvasGroup.DOFade(1f, 0.3f))
+            .Join(_contentPanel.transform.DOScale(1f, 0.35f).SetEase(Ease.OutBack));
+    }
 
     /// <summary>
-    /// 关闭动画序列
+    /// Close 动画序列
     /// </summary>
     /// <returns></returns>
-    private Tween CloseSequence() =>
-        DOTween.Sequence()
-            .OnPlay(() =>
-            {
-                _canvasGroup.interactable = false;
-                _leftBtn.interactable = false;
-                _rightBtn.interactable = false;
-            })
-            .OnKill(() =>
-            {
-                _canvasGroup.alpha = 1f;
-                gameObject.SetActive(false);
-            }).Append(_canvasGroup.DOFade(0.0f, 0.5f));
+    private Sequence HideSequence()
+    {
+        return DOTween.Sequence().OnPlay(() =>
+        {
+            _canvasGroup.interactable = false;
+            _leftBtn.interactable = false;
+            _rightBtn.interactable = false;
+        }).OnKill(() =>
+        {
+            _canvasGroup.alpha = 1f;
+            gameObject.SetActive(false);
+        }).Append(_canvasGroup.DOFade(0.0f, 0.5f));
+    }
 
     /// <summary>
     /// ContentDialog状态枚举
@@ -168,7 +173,6 @@ public class ContentDialog :
 /// </summary>
 public class ContentDialogModel : IDataTemplate
 {
-    public string Text;
     public ButtonDataTemplate LeftButtonData;
     public ButtonDataTemplate RightButtonData;
 }

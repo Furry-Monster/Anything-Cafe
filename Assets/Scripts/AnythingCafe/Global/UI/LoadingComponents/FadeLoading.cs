@@ -19,39 +19,63 @@ public class FadeLoading :
 
     private Sequence _sequence;
     private FadeLoadingModel _model;
-    private FadeLoadingState _state;
 
     public void Init() => gameObject.SetActive(false);
 
     public void LoadTemplate(FadeLoadingModel model)
     {
         _model = model;
-        _state = FadeLoadingState.Idling;
 
         _messageText.text = _model.Message;
     }
 
-    public async override UniTask Open()
+    public override async UniTask Open()
     {
-        
+        if (_sequence.IsActive()) _sequence.Kill();
+        _sequence = ShowSequence();
+        _sequence.Play();
+        await _sequence.AsyncWaitForCompletion();
     }
 
-    public async override UniTask Close()
+    public override async UniTask Close()
     {
-
+        if (_sequence.IsActive()) _sequence.Kill();
+        _sequence = HideSequence();
+        _sequence.Play();
+        await _sequence.AsyncWaitForCompletion();
     }
 
-    
-
-    private enum FadeLoadingState
+    /// <summary>
+    /// Fade打开Loading
+    /// </summary>
+    /// <returns> 动画序列 </returns>
+    private Sequence ShowSequence()
     {
-        Opening,
-        Idling,
-        Closing,
+        return DOTween.Sequence().OnPlay(() =>
+        {
+            _canvasGroup.interactable = false;
+        }).OnKill(() =>
+        {
+            _canvasGroup.interactable = true;
+        }).Append(_canvasGroup.DOFade(1, _model.FadeInDuration));
+    }
+
+    /// <summary>
+    /// Fade关闭Loading
+    /// </summary>
+    /// <returns> 动画序列 </returns>
+    private Sequence HideSequence()
+    {
+        return DOTween.Sequence().OnPlay(() =>
+        {
+            _canvasGroup.interactable = false;
+        }).Append(_canvasGroup.DOFade(0, _model.FadeOutDuration));
     }
 }
 
 public class FadeLoadingModel : IDataTemplate
 {
     public string Message;
+    public float FadeInDuration;
+    public float FadeOutDuration;
 }

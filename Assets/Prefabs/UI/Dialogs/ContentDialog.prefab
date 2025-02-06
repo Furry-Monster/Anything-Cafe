@@ -366,7 +366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canvasGroup: {fileID: 0}
-  _text: {fileID: 0}
+  _contentPanel: {fileID: 4137982539940929993}
   _leftBtn: {fileID: 3189587353089140551}
   _leftBtnText: {fileID: 3101908013251157850}
   _rightBtn: {fileID: 340442215549518654}

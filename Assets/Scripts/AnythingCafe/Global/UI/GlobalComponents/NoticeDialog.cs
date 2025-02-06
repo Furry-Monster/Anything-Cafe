@@ -16,7 +16,6 @@ public class NoticeDialog :
     [Space]
     [Header("Components")]
     [SerializeField] private GameObject _contentPanel;
-    [SerializeField] private TextMeshProUGUI _text;
     [SerializeField] private Button _closeButton;
     [SerializeField] private TextMeshProUGUI _closeButtonText;
 
@@ -33,7 +32,7 @@ public class NoticeDialog :
             _model = model;
             _state = NoticeDialogState.Idling;
 
-            _text.text = model.Text;
+            // 设置按钮 
             _closeButtonText.text = model.CloseButtonData.Text;
             _closeButton.interactable = model.CloseButtonData.IsInteractable;
             _closeButton.onClick.RemoveAllListeners();
@@ -71,7 +70,7 @@ public class NoticeDialog :
         _state = NoticeDialogState.Opening;
 
         if (_sequence.IsActive()) _sequence.Kill();
-        _sequence = (Sequence)OpenSequence();
+        _sequence = ShowSequence();
         _sequence.Play();
         await _sequence.AsyncWaitForCompletion();
 
@@ -87,7 +86,7 @@ public class NoticeDialog :
         _state = NoticeDialogState.Closing;
 
         if (_sequence.IsActive()) _sequence.Kill();
-        _sequence = (Sequence)CloseSequence();
+        _sequence = HideSequence();
         _sequence.Play();
         await _sequence.AsyncWaitForCompletion();
 
@@ -98,8 +97,9 @@ public class NoticeDialog :
     ///     打开动画序列
     /// </summary>
     /// <returns></returns>
-    private Tween OpenSequence() =>
-        DOTween.Sequence()
+    private Sequence ShowSequence()
+    {
+        return DOTween.Sequence()
             .OnKill(() =>
             {
                 _canvasGroup.interactable = true;
@@ -114,17 +114,17 @@ public class NoticeDialog :
                 _contentPanel.transform.localScale = Vector3.one * 0.7f;
                 gameObject.SetActive(true);
             })
-            .Append(_canvasGroup
-                    .DOFade(1f, 0.3f))
-                    .Join(_contentPanel.transform.DOScale(1f, 0.35f)
-                    .SetEase(Ease.OutBack));
+            .Append(_canvasGroup.DOFade(1f, 0.3f))
+            .Join(_contentPanel.transform.DOScale(1f, 0.35f).SetEase(Ease.OutBack));
+    }
 
     /// <summary>
     ///     关闭动画序列
     /// </summary>
     /// <returns></returns>
-    private Tween CloseSequence() =>
-        DOTween.Sequence().OnPlay(() =>
+    private Sequence HideSequence()
+    {
+        return DOTween.Sequence().OnPlay(() =>
         {
             _canvasGroup.interactable = false;
             _closeButton.interactable = false;
@@ -133,6 +133,7 @@ public class NoticeDialog :
             _canvasGroup.alpha = 1f;
             gameObject.SetActive(false);
         }).Append(_canvasGroup.DOFade(0.0f, 0.5f));
+    }
 
     /// <summary>
     ///     状态枚举
@@ -151,6 +152,5 @@ public class NoticeDialog :
 /// </summary>
 public class NoticeDialogModel : IDataTemplate
 {
-    public string Text;
     public ButtonDataTemplate CloseButtonData;
 }

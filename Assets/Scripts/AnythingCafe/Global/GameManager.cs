@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 
@@ -14,6 +15,7 @@ public class GameManager : PersistentSingleton<GameManager>
     {
         try
         {
+            DOTween.Init(null, null, LogBehaviour.ErrorsOnly); // 此处可以自定义Tween动画的默认参数
             UIManager.Instance.Init();
             SoundManager.Instance.Init();
 

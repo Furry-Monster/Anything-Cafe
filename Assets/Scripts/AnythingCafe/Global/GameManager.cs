@@ -27,13 +27,19 @@ public class GameManager : PersistentSingleton<GameManager>
         {
             if (ex is CustomErrorException customErrorException)
             {
-                // 通过UIManager打开UI弹窗显示错误信息，并提示退出
+                // TODO:通过UIManager打开UI弹窗显示错误信息，并提示退出
                 throw;
             }
-            // 通过UIManager打开UI弹窗显示错误信息，并提示退出
+            // TODO:通过UIManager打开UI弹窗显示错误信息，并提示退出
             throw new CustomErrorException($"[GameManager] can't start game, because of error: {ex.Message}",
                 new CustomErrorItem(ErrorSeverity.ForceQuit, ErrorCode.GameInitFailed));
         }
+    }
+
+    public void OnApplicationQuit()
+    {
+        // TODO: 清理游戏资源
+        DOTween.Clear();
     }
 
     private async UniTask PrepareGame()

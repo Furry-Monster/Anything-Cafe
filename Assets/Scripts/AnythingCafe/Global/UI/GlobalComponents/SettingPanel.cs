@@ -1,7 +1,9 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 
-public class ThanksUI : TitleComponent
+public class SettingPanel :
+    GlobalComponent,
+    IInitializable
 {
     private Sequence _sequence;
 
@@ -17,12 +19,12 @@ public class ThanksUI : TitleComponent
         return base.Close();
     }
 
-    private Sequence PopUpSequence()
+    private Sequence DropIn()
     {
         return DOTween.Sequence();
     }
 
-    private Sequence PopDownSequence()
+    private Sequence RiseBack()
     {
         return DOTween.Sequence();
     }

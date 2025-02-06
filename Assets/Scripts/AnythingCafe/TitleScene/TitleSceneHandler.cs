@@ -7,19 +7,19 @@ public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISce
     [Header("Audio")]
     [SerializeField] private string _titleBGM; // TODO: 从soundManager存储的Music中获取可用的Music枚举，并在Inspector上显示
 
-    [Header("Layout")]
+    [Header("UI Layout")]
     [SerializeField]
-    private GameObject _warningUI;
+    private WarningUI _warningUI;
     [SerializeField]
-    private GameObject _titleUI;
+    private TitleUI _titleUI;
     [SerializeField]
-    private GameObject _galleryUI;
+    private ThanksUI _thanksUI;
     [SerializeField]
-    private GameObject _settingUI;
+    private SupportUI _supportUI;
+
+    [Header("Game Objects")]
     [SerializeField]
-    private GameObject _thanksUI;
-    [SerializeField]
-    private GameObject _supportUI;
+    private GameObject _backGround;
 
     public async UniTask OnSceneLoad()
     {
@@ -50,16 +50,25 @@ public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISce
 
     private async UniTask ShowTitleScript()
     {
-        // TODO: 显示标题场景
+        // 显示WarningUI，仅在第一次进入TitleScene时显示
         if (GameManager.Instance.IsFirstInTitleScene)
         {
-            // TODO：显示Warning
+#if UNITY_EDITOR
+            _warningUI.OnCloseStart += () =>
+            {
+                _backGround.SetActive(true);
+                _titleUI.gameObject.SetActive(true);
+                GameManager.Instance.IsFirstInTitleScene = false;
+            };
 
+            _backGround.SetActive(false);
+            _titleUI.gameObject.SetActive(false);
 
-
-            GameManager.Instance.IsFirstInTitleScene = false;
+            await _warningUI.Open();
+            await UniTask.Delay(TimeSpan.FromSeconds(3));
+            await _warningUI.Close();
+#endif
         }
-
-
+        
     }
 }

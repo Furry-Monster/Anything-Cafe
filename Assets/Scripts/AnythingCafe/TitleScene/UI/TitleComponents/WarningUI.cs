@@ -1,6 +1,8 @@
+using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WarningUI :
     TitleComponent,
@@ -10,18 +12,25 @@ public class WarningUI :
     [SerializeField]
     private CanvasGroup _canvasGroup;
 
+    [Header("Components")]
+    [SerializeField]
+    private Text _text;
+
     private Sequence _sequence;
+    public Action OnCloseStart; // warningUI¹Ø±Õ»Øµ÷
 
     public void Init() => gameObject.SetActive(false);
 
     /// <summary>
     /// Open the warning UI.
     /// </summary>
-    /// <returns></returns>
+    /// <returns> UniTask </returns>
     public override async UniTask Open()
     {
+        gameObject.SetActive(true);
+
         if (_sequence.IsActive()) _sequence.Kill();
-        _sequence = FadeIn();
+        _sequence = TextEmerge();
         _sequence.Play();
         await _sequence.AsyncWaitForCompletion();
     }
@@ -29,30 +38,39 @@ public class WarningUI :
     /// <summary>
     /// Close the warning UI.
     /// </summary>
-    /// <returns></returns>
+    /// <returns> UniTask </returns>
     public override async UniTask Close()
     {
+        OnCloseStart?.Invoke();
+
         if (_sequence.IsActive()) _sequence.Kill();
         _sequence = FadeOut();
         _sequence.Play();
         await _sequence.AsyncWaitForCompletion();
     }
 
-    /// <summary>
-    /// Start the fade in animation.
-    /// </summary>
-    /// <returns></returns>
-    private Sequence FadeIn() =>
+    private Sequence TextEmerge() =>
         DOTween.Sequence()
-            .OnPlay(() => _canvasGroup.interactable = false)
-            .Append(_canvasGroup.DOFade(1, 0.5f));
+            .OnPlay(() =>
+            {
+                gameObject.SetActive(true);
+                _canvasGroup.alpha = 1;
+                _canvasGroup.interactable = false;
+                _text.color = Color.black;
+            })
+            .Append(_text.DOColor(Color.red, 2f));
 
     /// <summary>
     /// Start the fade out animation.
     /// </summary>
-    /// <returns></returns>
+    /// <returns> Sequence </returns>
     private Sequence FadeOut() =>
         DOTween.Sequence()
-            .OnKill(() => _canvasGroup.interactable = true)
+            .OnKill(() =>
+            {
+                _canvasGroup.interactable = true;
+                gameObject.SetActive(false);
+            })
+            .Append(_text.DOColor(Color.black, 2f))
             .Append(_canvasGroup.DOFade(0, 0.5f));
 }

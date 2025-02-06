@@ -17,7 +17,7 @@ public class WarningUI :
     private Text _text;
 
     private Sequence _sequence;
-    public Action OnCloseStart; // warningUI关闭回调
+    public Action OnCloseEnd; // warningUI关闭回调
 
     public void Init() => gameObject.SetActive(false);
 
@@ -41,7 +41,7 @@ public class WarningUI :
     /// <returns> UniTask </returns>
     public override async UniTask Close()
     {
-        OnCloseStart?.Invoke();
+        OnCloseEnd?.Invoke();
 
         if (_sequence.IsActive()) _sequence.Kill();
         _sequence = FadeOut();
@@ -69,8 +69,10 @@ public class WarningUI :
             .OnKill(() =>
             {
                 _canvasGroup.interactable = true;
+                _canvasGroup.alpha = 1;
                 gameObject.SetActive(false);
             })
             .Append(_text.DOColor(Color.black, 2f))
-            .Append(_canvasGroup.DOFade(0, 0.5f));
+            .Append(_canvasGroup.DOFade(0, 0.5f))
+            .InsertCallback(2f, () => OnCloseEnd?.Invoke());
 }

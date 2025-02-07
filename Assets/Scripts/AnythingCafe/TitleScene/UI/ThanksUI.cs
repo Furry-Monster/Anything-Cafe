@@ -2,7 +2,9 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
-public class ThanksUI : TitleSceneComponent
+public class ThanksUI : 
+    TitleSceneComponent,
+    IInitializable
 {
     private RectTransform _thanksPanel;
 

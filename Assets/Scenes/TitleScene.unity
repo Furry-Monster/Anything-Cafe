@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NoticeDialog
       objectReference: {fileID: 0}
+    - target: {fileID: 1480323393942784196, guid: 416fca6d831b1a14a86cc8a8679bed22, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7221339797962187318, guid: 416fca6d831b1a14a86cc8a8679bed22, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -621,7 +625,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &438058641
 RectTransform:
   m_ObjectHideFlags: 0
@@ -981,9 +985,9 @@ GameObject:
   - component: {fileID: 623646476}
   - component: {fileID: 623646475}
   - component: {fileID: 623646477}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: SettingPanel
-  m_TagString: Untagged
+  m_TagString: GlobalComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1449,7 +1453,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1388840655
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1727,8 +1731,8 @@ MonoBehaviour:
     - Key: title
       Value:
         Key: 2
-        Value: {fileID: 8300000, guid: 5673e8a0cfcf78449b4f585e83b6c020, type: 3}
-  _sourceParent: {fileID: 0}
+        Value: {fileID: 8300000, guid: 64bd21f6fad60e54aa231be0bcdab986, type: 3}
+  _sourceParent: {fileID: 1653469487}
 --- !u!4 &1653469489
 Transform:
   m_ObjectHideFlags: 0
@@ -2180,7 +2184,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2113589704
 RectTransform:
   m_ObjectHideFlags: 0

@@ -104,6 +104,9 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     /// <param name="component"> ¿Ø¼þ </param>
     public void RegisterReactiveComponent(int uiLayer, ReactiveComponent component)
     {
+#if UNITY_EDITOR
+        Debug.Log($"[UIManager] Register ReactiveComponent {component.name} at layer {uiLayer}");
+#endif
         // ÕûÀí×Öµä
         if (!_allReactiveComponents.ContainsKey(uiLayer))
             _allReactiveComponents[uiLayer] = new List<ReactiveComponent>();

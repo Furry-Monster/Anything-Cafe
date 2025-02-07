@@ -1,7 +1,9 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 
-public class SupportUI : TitleSceneComponent
+public class SupportUI :
+    TitleSceneComponent,
+    IInitializable
 {
     private Sequence _sequence;
 

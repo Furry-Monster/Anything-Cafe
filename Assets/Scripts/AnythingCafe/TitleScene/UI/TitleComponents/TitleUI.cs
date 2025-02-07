@@ -1,12 +1,32 @@
-using TMPro;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class TitleUI :
     TitleComponent,
     IInitializable
 {
+    [Header("General")]
+    [SerializeField]
+    private CanvasGroup _canvasGroup;
+
+    private Sequence _sequence;
+
     public void Init() => gameObject.SetActive(true);
+
+    public override async UniTask Open()
+    {
+        if (_sequence.IsActive()) _sequence.Kill();
+        _sequence = DOTween.Sequence()
+            .OnPlay(() =>
+            {
+                _canvasGroup.interactable = true;
+                gameObject.SetActive(true);
+            })
+            .Append(_canvasGroup.DOFade(1, 0.5f));
+        _sequence.Play();
+        await _sequence.AsyncWaitForCompletion();
+    }
 
     public void OnThanksClick()
     {

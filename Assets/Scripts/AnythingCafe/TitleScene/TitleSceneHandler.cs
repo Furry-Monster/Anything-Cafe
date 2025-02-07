@@ -54,20 +54,20 @@ public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISce
         if (GameManager.Instance.IsFirstInTitleScene)
         {
 #if UNITY_EDITOR
-            _warningUI.OnCloseEnd += () => _backGround.SetActive(true);
+            _warningUI.OnTextClosed += () => _backGround.SetActive(true);
 
             _backGround.SetActive(false);
             _titleUI.gameObject.SetActive(false);
 
             await _warningUI.Open();
-            await UniTask.Delay(TimeSpan.FromSeconds(3));
+            await UniTask.Delay(TimeSpan.FromSeconds(2.5f));
             await _warningUI.Close();
 
-            _titleUI.gameObject.SetActive(true);
+            await _titleUI.Open();
 
             GameManager.Instance.IsFirstInTitleScene = false;
 #endif
         }
-        
+
     }
 }

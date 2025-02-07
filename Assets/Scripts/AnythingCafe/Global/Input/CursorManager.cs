@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class CursorManager :
@@ -16,11 +17,18 @@ public class CursorManager :
 
     private Action _onCursorMgrUpdate;
 
-    public CursorItem CurrentCursor => _cursorDict[
-        _currentCursorDict
-            .Last(keyValuePair => keyValuePair.Value != CursorID.None)
-            .Value
-    ];
+    public CursorItem CurrentCursor
+    {
+        get
+        {
+            var lastLayer = _currentCursorDict
+                .LastOrDefault(kvp => kvp.Value != CursorID.None);
+
+            return lastLayer.Equals(default(KeyValuePair<CursorLayer, CursorID>))
+                ? _cursorDict[CursorID.Default]
+                : _cursorDict[lastLayer.Value];
+        }
+    }
 
 #if ENABLE_LEGACY_INPUT_MANAGER // 旧输入管理器
     public Vector2 CursorPosition => Input.mousePosition;
@@ -32,13 +40,11 @@ public class CursorManager :
     public Vector2 CursorWorldPosition => Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 #endif
 
-    public void Init()
+    public async void Init()
     {
         try
         {
-            _currentCursorDict = Enum.GetValues(typeof(CursorLayer))
-                .Cast<CursorLayer>()
-                .ToDictionary(cursorLayer => cursorLayer, _ => CursorID.None);
+            await InitializeCursorDictionary();
             SetCursor(CursorID.Default, CursorLayer.Base);
         }
         catch (Exception ex)
@@ -72,7 +78,6 @@ public class CursorManager :
         // 若光标有动画，则注册更新事件，否则只会在上一句更新图标
         if (CurrentCursor.FrameCount > 1)
             _onCursorMgrUpdate += UpdateCursorAnimation;
-
     }
 
     /// <summary>
@@ -82,6 +87,20 @@ public class CursorManager :
     public void ResetCursor(CursorLayer cursorLayer = CursorLayer.Temp) => SetCursor(CursorID.None, cursorLayer);
 
     private void Update() => _onCursorMgrUpdate?.Invoke();
+
+    /// <summary>
+    /// 异步初始化光标字典,加载光标预加载资源
+    /// </summary>
+    /// <returns></returns>
+    private async UniTask InitializeCursorDictionary()
+    {
+        _currentCursorDict = Enum.GetValues(typeof(CursorLayer))
+            .Cast<CursorLayer>()
+            .ToDictionary(layer => layer, _ => CursorID.None);
+
+        // TODO: 可以在这里添加光标资源的预加载逻辑
+        await UniTask.CompletedTask;
+    }
 
     /// <summary>
     /// 更新光标动画

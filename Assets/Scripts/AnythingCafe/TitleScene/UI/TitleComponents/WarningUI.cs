@@ -1,6 +1,6 @@
-using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +17,7 @@ public class WarningUI :
     private Text _text;
 
     private Sequence _sequence;
-    public Action OnCloseEnd; // warningUI关闭回调
+    public Action OnTextClosed; // warningUI关闭回调
 
     public void Init() => gameObject.SetActive(false);
 
@@ -27,8 +27,6 @@ public class WarningUI :
     /// <returns> UniTask </returns>
     public override async UniTask Open()
     {
-        gameObject.SetActive(true);
-
         if (_sequence.IsActive()) _sequence.Kill();
         _sequence = TextEmerge();
         _sequence.Play();
@@ -41,8 +39,6 @@ public class WarningUI :
     /// <returns> UniTask </returns>
     public override async UniTask Close()
     {
-        OnCloseEnd?.Invoke();
-
         if (_sequence.IsActive()) _sequence.Kill();
         _sequence = FadeOut();
         _sequence.Play();
@@ -58,7 +54,7 @@ public class WarningUI :
                 _canvasGroup.interactable = false;
                 _text.color = Color.black;
             })
-            .Append(_text.DOColor(Color.red, 2f));
+            .Append(_text.DOColor(Color.red, 1f));
 
     /// <summary>
     /// Start the fade out animation.
@@ -66,13 +62,9 @@ public class WarningUI :
     /// <returns> Sequence </returns>
     private Sequence FadeOut() =>
         DOTween.Sequence()
-            .OnKill(() =>
-            {
-                _canvasGroup.interactable = true;
-                _canvasGroup.alpha = 1;
-                gameObject.SetActive(false);
-            })
-            .Append(_text.DOColor(Color.black, 2f))
-            .Append(_canvasGroup.DOFade(0, 0.5f))
-            .InsertCallback(2f, () => OnCloseEnd?.Invoke());
+            .OnKill(() => gameObject.SetActive(false))
+            .Append(_text.DOColor(Color.black, 1.0f))
+            .InsertCallback(1.0f, () => OnTextClosed?.Invoke())
+            .InsertCallback(1.1f, () => _text.gameObject.SetActive(false)) // 关闭文字，避免错误显示
+            .Append(_canvasGroup.DOFade(0, 0.5f));
 }

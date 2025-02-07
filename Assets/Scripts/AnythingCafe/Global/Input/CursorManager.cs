@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class CursorManager :
@@ -17,34 +16,29 @@ public class CursorManager :
 
     private Action _onCursorMgrUpdate;
 
-    public CursorItem CurrentCursor
-    {
-        get
-        {
-            var lastLayer = _currentCursorDict
-                .LastOrDefault(kvp => kvp.Value != CursorID.None);
+    public CursorItem CurrentCursor => _cursorDict[
+        _currentCursorDict
+            .Last(keyValuePair => keyValuePair.Value != CursorID.None)
+            .Value
+    ];
 
-            return lastLayer.Equals(default(KeyValuePair<CursorLayer, CursorID>))
-                ? _cursorDict[CursorID.Default]
-                : _cursorDict[lastLayer.Value];
-        }
-    }
-
-#if ENABLE_LEGACY_INPUT_MANAGER // ¾ÉÊäÈë¹ÜÀíÆ÷
+#if ENABLE_LEGACY_INPUT_MANAGER // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public Vector2 CursorPosition => Input.mousePosition;
 
     public Vector2 CursorWorldPosition => Camera.main.ScreenToWorldPoint(Input.mousePosition);
-#elif ENABLE_INPUT_SYSTEM // ÐÂÊäÈëÏµÍ³
+#elif ENABLE_INPUT_SYSTEM // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³
     public Vector2 CursorPosition => Mouse.current.position.ReadValue();
 
     public Vector2 CursorWorldPosition => Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 #endif
 
-    public async void Init()
+    public void Init()
     {
         try
         {
-            await InitializeCursorDictionary();
+            _currentCursorDict = Enum.GetValues(typeof(CursorLayer))
+                .Cast<CursorLayer>()
+                .ToDictionary(cursorLayer => cursorLayer, _ => CursorID.None);
             SetCursor(CursorID.Default, CursorLayer.Base);
         }
         catch (Exception ex)
@@ -57,59 +51,46 @@ public class CursorManager :
     }
 
     /// <summary>
-    /// ÉèÖÃÖ¸¶¨²ãµÄ¹â±ê
+    /// ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½
     /// </summary>
-    /// <param name="targetCursor"> Ö¸¶¨µÄ¹â±êSO </param>
-    /// <param name="cursorLayer"> ¹â±ê²ã¼¶ </param>
+    /// <param name="targetCursor"> Ö¸ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½SO </param>
+    /// <param name="cursorLayer"> ï¿½ï¿½ï¿½ã¼¶ </param>
     public void SetCursor(CursorID targetCursor, CursorLayer cursorLayer = CursorLayer.Temp)
     {
         if (_currentCursorDict[cursorLayer] == targetCursor)
             return;
         _currentCursorDict[cursorLayer] = targetCursor;
 
-        // ´¦Àí¶¯»­¸üÐÂ£º
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½
         _onCursorMgrUpdate -= UpdateCursorAnimation;
-        // ÇÐ»»¹â±êÍ¼±ê£¬²¢ÉèÖÃ¶¯»­Ö¡ÂÊ
+        // ï¿½Ð»ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ê£¬ï¿½ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½Ö¡ï¿½ï¿½
         _cursorFrame = 0;
         _frameTimer = CurrentCursor.FrameRate;
         Cursor.SetCursor(CurrentCursor.CursorTextures[0], CurrentCursor.CursorOffset, CursorMode.ForceSoftware);
         Cursor.visible = true;
         UpdateCursorAnimation();
-        // Èô¹â±êÓÐ¶¯»­£¬Ôò×¢²á¸üÐÂÊÂ¼þ£¬·ñÔòÖ»»áÔÚÉÏÒ»¾ä¸üÐÂÍ¼±ê
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½
         if (CurrentCursor.FrameCount > 1)
             _onCursorMgrUpdate += UpdateCursorAnimation;
+
     }
 
     /// <summary>
-    /// ÖØÖÃÖ¸¶¨²ãµÄ¹â±ê
+    /// ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½
     /// </summary>
-    /// <param name="cursorLayer"> ¹â±ê²ã¼¶ </param>
+    /// <param name="cursorLayer"> ï¿½ï¿½ï¿½ã¼¶ </param>
     public void ResetCursor(CursorLayer cursorLayer = CursorLayer.Temp) => SetCursor(CursorID.None, cursorLayer);
 
     private void Update() => _onCursorMgrUpdate?.Invoke();
 
     /// <summary>
-    /// Òì²½³õÊ¼»¯¹â±ê×Öµä,¼ÓÔØ¹â±êÔ¤¼ÓÔØ×ÊÔ´
-    /// </summary>
-    /// <returns></returns>
-    private async UniTask InitializeCursorDictionary()
-    {
-        _currentCursorDict = Enum.GetValues(typeof(CursorLayer))
-            .Cast<CursorLayer>()
-            .ToDictionary(layer => layer, _ => CursorID.None);
-
-        // TODO: ¿ÉÒÔÔÚÕâÀïÌí¼Ó¹â±ê×ÊÔ´µÄÔ¤¼ÓÔØÂß¼­
-        await UniTask.CompletedTask;
-    }
-
-    /// <summary>
-    /// ¸üÐÂ¹â±ê¶¯»­
+    /// ï¿½ï¿½ï¿½Â¹ï¿½ê¶¯ï¿½ï¿½
     /// </summary>
     private void UpdateCursorAnimation()
     {
         _frameTimer -= Time.deltaTime;
 
-        // Èç¹û¹â±ê¶¯»­²¥·ÅÍê±Ï£¬ÇÐ»»µ½ÏÂÒ»Ö¡
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ê¶¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï£ï¿½ï¿½Ð»ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ö¡
         if (_frameTimer.CompareTo(0.0f) > 0) return;
         _cursorFrame = (_cursorFrame + 1) % CurrentCursor.FrameCount;
         _frameTimer = CurrentCursor.FrameRate;

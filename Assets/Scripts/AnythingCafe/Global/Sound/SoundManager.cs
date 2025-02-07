@@ -12,13 +12,13 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     private SerializableDictionary<string, SerializableKeyValuePair<SoundType, AudioClip>> _soundItemDict;
 
     [SerializeField]
-    private GameObject SourceParent; // 所有Source对应的GameObject的父物体
+    private GameObject _sourceParent; // 所有Source对应的GameObject的父物体
 
     public void Init()
     {
         // 初始化创建SoundPool
-        if (SourceParent == null) SourceParent = this.gameObject;
-        _soundPool ??= SoundPool.Instance.Created(SourceParent);
+        if (_sourceParent == null) _sourceParent = this.gameObject;
+        _soundPool ??= SoundPool.Instance.Created(_sourceParent);
     }
 
     #region 声音操作,包括播放、停止、暂停、恢复

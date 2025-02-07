@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class WarningUI :
-    TitleComponent,
+    TitleSceneComponent,
     IInitializable
 {
     [Header("General")]

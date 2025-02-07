@@ -42,11 +42,12 @@ public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISce
 
     public async UniTask OnSceneUnload()
     {
-
+        SoundManager.Instance.StopAllSounds();
     }
 
     private async UniTask InitScene()
     {
+
     }
 
     private async UniTask ShowScene()
@@ -54,7 +55,7 @@ public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISce
         // 显示WarningUI，仅在第一次进入TitleScene时显示
         if (GameManager.Instance.IsFirstInTitleScene)
         {
-#if !UNITY_EDITOR
+#if UNITY_EDITOR
             _warningUI.OnTextClosed += () => _backGround.SetActive(true);
 
             _backGround.SetActive(false);
@@ -65,6 +66,8 @@ public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISce
             await _warningUI.Close();
 
             await _titleUI.Open();
+
+            SoundManager.Instance.PlaySound("title",true);
 
             GameManager.Instance.IsFirstInTitleScene = false;
 #endif

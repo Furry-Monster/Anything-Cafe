@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
 
-public class TitleComponent : ReactiveComponent
+public class TitleSceneComponent : ReactiveComponent
 {
 
     public override UniTask Open()

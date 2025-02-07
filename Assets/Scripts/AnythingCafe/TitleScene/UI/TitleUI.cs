@@ -1,10 +1,11 @@
+using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TitleUI :
-    TitleComponent,
+    TitleSceneComponent,
     IInitializable
 {
     [Header("General")]
@@ -32,31 +33,57 @@ public class TitleUI :
         await _sequence.AsyncWaitForCompletion();
     }
 
-    public void OnThanksClick(Button sender)
+    public async void OnThanksClick()
     {
-
-
+        try
+        {
+            await UIManager.Instance.OpenReactive<ThanksUI>();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[TitleUI] {ex.Message}");
+        }
     }
 
-    public void OnSupportClick()
+    public async void OnSupportClick()
     {
-
+        try
+        {
+            await UIManager.Instance.OpenReactive<SupportUI>();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[TitleUI] {ex.Message}");
+        }
     }
 
-    public void OnNoticeClick()
+    public async void OnNoticeClick()
     {
-
+        try
+        {
+            await UIManager.Instance.OpenGlobal<NoticeDialog>();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[TitleUI] {ex.Message}");
+        }
     }
 
     public void OnAboutClick()
     {
-
         Application.OpenURL("https://www.google.com");
     }
 
-    public void OnNewGameClick()
+    public async void OnStartClick()
     {
-
+        try
+        {
+            await GameSceneManager.Instance.LoadScene(SceneID.PlayScene);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"[TitleUI] {e.Message}");
+        }
     }
 
     public void OnContinueClick()
@@ -64,17 +91,32 @@ public class TitleUI :
 
     }
 
-    public void OnGalleryClick()
+    public async void OnGalleryClick()
     {
+        try
+        {
+            await GameSceneManager.Instance.LoadScene(SceneID.GalleryScene);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[TitleUI] {ex.Message}");
+        }
     }
 
-    public void OnSettingClick()
+    public async void OnSettingClick()
     {
+        try
+        {
+            await UIManager.Instance.OpenGlobal<SettingPanel>();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[TitleUI] {ex.Message}");
+        }
     }
 
     public void OnExitClick()
     {
-
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

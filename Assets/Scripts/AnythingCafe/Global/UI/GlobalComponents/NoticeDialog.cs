@@ -29,6 +29,7 @@ public class NoticeDialog :
     {
         try
         {
+            Debug.Log($"[LoadTemplate] {model.ToString()}");
             _model = model;
             _state = NoticeDialogState.Idling;
 
@@ -62,7 +63,7 @@ public class NoticeDialog :
 
 
     /// <summary>
-    ///     打开对话框
+    /// 打开对话框
     /// </summary>
     /// <returns></returns>
     public override async UniTask Open()
@@ -78,7 +79,7 @@ public class NoticeDialog :
     }
 
     /// <summary>
-    ///     关闭对话框
+    /// 关闭对话框
     /// </summary>
     /// <returns></returns>
     public override async UniTask Close()

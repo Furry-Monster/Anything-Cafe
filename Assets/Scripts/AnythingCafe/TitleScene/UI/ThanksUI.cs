@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
-public class ThanksUI : 
+public class ThanksUI :
     TitleSceneComponent,
     IInitializable
 {
@@ -53,5 +53,10 @@ public class ThanksUI :
                 gameObject.SetActive(false);
             })
             .Append(_thanksPanel.DOAnchorPosX(1000, 0.5f));
+    }
+
+    public async UniTask OnCloseClick()
+    {
+        await UIManager.Instance.CloseReactive(this);
     }
 }

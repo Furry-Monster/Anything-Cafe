@@ -1,8 +1,7 @@
-using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TitleUI :
     TitleSceneComponent,
@@ -61,7 +60,16 @@ public class TitleUI :
     {
         try
         {
-            await UIManager.Instance.OpenGlobal<NoticeDialog>();
+            // TODO:让模型可以在外部被编辑
+            var noticeData = new NoticeDialogModel
+            {
+                CloseButtonData =
+                {
+                    IsInteractable = true,
+                    Text = "I Know"
+                }
+            };
+            await UIManager.Instance.OpenGlobal<NoticeDialog, NoticeDialogModel>(noticeData);
         }
         catch (Exception ex)
         {

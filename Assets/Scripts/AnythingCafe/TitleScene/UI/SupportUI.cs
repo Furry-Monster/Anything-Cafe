@@ -28,4 +28,9 @@ public class SupportUI :
     {
         return DOTween.Sequence();
     }
+
+    public async UniTask OnCloseClick()
+    {
+        await UIManager.Instance.CloseReactive(this);
+    }
 }

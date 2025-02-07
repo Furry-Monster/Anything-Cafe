@@ -213,7 +213,9 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     #region 快捷方式（打开，关闭）
     public async UniTask OpenReactive<T>() where T : ReactiveComponent
     {
-        var component = _allReactiveComponents.Values.SelectMany(c => c).FirstOrDefault(c => c.GetComponent<T>() != null);
+        var component = _allReactiveComponents.Values
+            .SelectMany(c => c)
+            .FirstOrDefault(c => c.GetComponent<T>() != null);
         if (component == null)
             throw new CustomErrorException($"[UIManager] Can't find ui {typeof(T).Name}!",
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
@@ -222,7 +224,8 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
 
     public async UniTask OpenGlobal<T>() where T : ReactiveComponent
     {
-        var component = _globalComponents.Values.FirstOrDefault(c => c.GetComponent<T>() != null);
+        var component = _globalComponents.Values
+            .FirstOrDefault(c => c.GetComponent<T>() != null);
         if (component == null)
             throw new CustomErrorException($"[UIManager] Can't find global ui {typeof(T).Name}!",
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
@@ -231,7 +234,8 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
 
     public async UniTask OpenLoading<T>() where T : ReactiveComponent
     {
-        var component = _loadingComponents.Values.FirstOrDefault(c => c.GetComponent<T>() != null);
+        var component = _loadingComponents.Values
+            .FirstOrDefault(c => c.GetComponent<T>() != null);
         if (component == null)
             throw new CustomErrorException($"[UIManager] Can't find loading ui {typeof(T).Name}!",
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
@@ -240,7 +244,9 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
 
     public async UniTask CloseReactive<T>() where T : ReactiveComponent
     {
-        var component = _allReactiveComponents.Values.SelectMany(c => c).FirstOrDefault(c => c.GetComponent<T>() != null);
+        var component = _allReactiveComponents.Values
+            .SelectMany(c => c)
+            .FirstOrDefault(c => c.GetComponent<T>() != null);
         if (component == null)
             throw new CustomErrorException($"[UIManager] Can't find ui {typeof(T).Name}!",
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
@@ -249,7 +255,8 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
 
     public async UniTask CloseGlobal<T>() where T : ReactiveComponent
     {
-        var component = _globalComponents.Values.FirstOrDefault(c => c.GetComponent<T>() != null);
+        var component = _globalComponents.Values
+            .FirstOrDefault(c => c.GetComponent<T>() != null);
         if (component == null)
             throw new CustomErrorException($"[UIManager] Can't find global ui {typeof(T).Name}!",
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
@@ -258,11 +265,73 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
 
     public async UniTask CloseLoading<T>() where T : ReactiveComponent
     {
-        var component = _loadingComponents.Values.FirstOrDefault(c => c.GetComponent<T>() != null);
+        var component = _loadingComponents.Values
+            .FirstOrDefault(c => c.GetComponent<T>() != null);
         if (component == null)
             throw new CustomErrorException($"[UIManager] Can't find loading ui {typeof(T).Name}!",
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
         await CloseReactive(component.GetComponent<ReactiveComponent>());
+    }
+    #endregion
+
+    #region 快捷方式（With DataTemplate）
+
+    public async UniTask OpenReactive<T, TData>(TData data)
+        where T : ReactiveComponent
+        where TData : IDataTemplate, new()
+    {
+        var component = _allReactiveComponents.Values
+            .SelectMany(c => c)
+            .FirstOrDefault(c => c.GetComponent<T>() != null);
+        if (component == null)
+            throw new CustomErrorException($"[UIManager] Can't find ui {typeof(T).Name}!",
+                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
+
+        // 加载数据模板
+        if (component is IHasDataTemplate<TData> dataComponent)
+            dataComponent.LoadTemplate(data);
+        else
+            Debug.LogWarning($"[UIManager] {component.name} doesn't implement IHasDataTemplate<TData>!");
+
+        await OpenReactive(component);
+    }
+
+    public async UniTask OpenGlobal<T, TData>(TData data)
+        where T : ReactiveComponent
+        where TData : IDataTemplate, new()
+    {
+        var component = _globalComponents.Values
+            .FirstOrDefault(c => c.GetComponent<T>() != null);
+        if (component == null)
+            throw new CustomErrorException($"[UIManager] Can't find global ui {typeof(T).Name}!",
+                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
+
+        // 加载数据模板
+        if (component is IHasDataTemplate<TData> dataComponent)
+            dataComponent.LoadTemplate(data);
+        else
+            Debug.LogWarning($"[UIManager] {component.name} doesn't implement IHasDataTemplate<TData>!");
+
+        await OpenReactive(component.GetComponent<ReactiveComponent>());
+    }
+
+    public async UniTask OpenLoading<T, TData>(TData data)
+        where T : ReactiveComponent
+        where TData : IDataTemplate, new()
+    {
+        var component = _loadingComponents.Values
+            .FirstOrDefault(c => c.GetComponent<T>());
+        if (component == null)
+            throw new CustomErrorException($"[UIManager] Can't find loading ui {typeof(T).Name}!",
+                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
+
+        // 加载数据模板
+        if (component is IHasDataTemplate<TData> dataComponent)
+            dataComponent.LoadTemplate(data);
+        else
+            Debug.LogWarning($"[UIManager] {component.name} doesn't implement IHasDataTemplate<TData>!");
+
+        await OpenReactive(component.GetComponent<ReactiveComponent>());
     }
     #endregion
 }

@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISceneHandler
 {
+
     [Header("Audio")]
-    [SerializeField] private string _titleBGM; // TODO: 从soundManager存储的Music中获取可用的Music枚举，并在Inspector上显示
+    [SerializeField]
+    private string _titleBGM;
 
     [Header("UI Layout")]
     [SerializeField]
@@ -26,7 +28,7 @@ public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISce
         try
         {
             await InitScene();
-            await ShowTitleScript();
+            await ShowScene();
         }
         catch (Exception ex)
         {
@@ -45,15 +47,14 @@ public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISce
 
     private async UniTask InitScene()
     {
-        // TODO: 初始化场景
     }
 
-    private async UniTask ShowTitleScript()
+    private async UniTask ShowScene()
     {
         // 显示WarningUI，仅在第一次进入TitleScene时显示
         if (GameManager.Instance.IsFirstInTitleScene)
         {
-#if UNITY_EDITOR
+#if !UNITY_EDITOR
             _warningUI.OnTextClosed += () => _backGround.SetActive(true);
 
             _backGround.SetActive(false);

@@ -1,5 +1,5 @@
-using System;
 using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,7 +29,7 @@ public class GameSceneManager :
     /// <param name="loadingName"></param>
     /// <returns> 异步操作 </returns>
     /// <exception cref="CustomErrorException"> 场景加载失败 </exception>
-    public async UniTask LoadScene(SceneID sceneToLoad,string loadingName)
+    public async UniTask LoadScene(SceneID sceneToLoad, string loadingName)
     {
         if (_isLoading)
         {
@@ -43,13 +43,13 @@ public class GameSceneManager :
             LoadingProgress = 0;
             OnSceneLoadStart?.Invoke(sceneToLoad);
 
-            if (loadingName != null) 
+            if (loadingName != null)
                 await UIManager.Instance.ShowLoading(loadingName);
 
             await UnloadCurrentScene();
             await LoadNewScene(sceneToLoad);
 
-            if (loadingName != null) 
+            if (loadingName != null)
                 await UIManager.Instance.HideLoading(loadingName);
 
             OnSceneLoadComplete?.Invoke(sceneToLoad);
@@ -112,7 +112,7 @@ public class GameSceneManager :
         await PreloadSceneResources();
 
         loadOperation.allowSceneActivation = true;
-        
+
         while (!loadOperation.isDone)
             await UniTask.Yield();
         await InitializeNewScene();

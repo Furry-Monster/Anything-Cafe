@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TitleUI :
     TitleComponent,
@@ -12,7 +13,10 @@ public class TitleUI :
 
     private Sequence _sequence;
 
-    public void Init() => gameObject.SetActive(true);
+    public void Init()
+    {
+        gameObject.SetActive(true);
+    }
 
     public override async UniTask Open()
     {
@@ -28,8 +32,9 @@ public class TitleUI :
         await _sequence.AsyncWaitForCompletion();
     }
 
-    public void OnThanksClick()
+    public void OnThanksClick(Button sender)
     {
+
 
     }
 
@@ -43,7 +48,11 @@ public class TitleUI :
 
     }
 
-    public void OnAboutClick() => Application.OpenURL("https://www.google.com");
+    public void OnAboutClick()
+    {
+
+        Application.OpenURL("https://www.google.com");
+    }
 
     public void OnNewGameClick()
     {
@@ -57,17 +66,15 @@ public class TitleUI :
 
     public void OnGalleryClick()
     {
-
     }
 
     public void OnSettingClick()
     {
-
     }
 
     public void OnExitClick()
     {
-        // TODO: 打开提示框，询问是否退出游戏
+
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

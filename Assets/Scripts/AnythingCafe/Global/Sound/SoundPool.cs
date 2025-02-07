@@ -1,4 +1,3 @@
-#define VERBOSE_LOG // 开启日志输出
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
@@ -134,6 +133,9 @@ public class SoundPool : Singleton<SoundPool>
         Debug.Log($"[SoundPool] Playing sound: {sound.AudioClip.name}");
 #endif
         var source = GetSource(sound.SoundType);
+#if VERBOSE_LOG
+        Debug.Log($"Get source: {source.name}");
+#endif
         source.clip = sound.AudioClip;
         source.loop = sound.Loop;
         source.volume = sound.Volume;

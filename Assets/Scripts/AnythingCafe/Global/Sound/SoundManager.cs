@@ -35,6 +35,7 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
         {
             // 查找后包装一个
             var soundItem = new SoundItem(soundKvp.Key, soundKvp.Value, loop, volume, delay);
+            Debug.Log($"[SoundManager] Play sound {soundName} with loop {loop} and volume {volume} with delay {delay}ms");
             _soundPool.PlaySound(soundItem);
         }
         else

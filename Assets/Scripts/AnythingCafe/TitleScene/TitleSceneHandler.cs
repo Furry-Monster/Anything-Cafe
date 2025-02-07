@@ -42,7 +42,7 @@ public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISce
 
     public async UniTask OnSceneUnload()
     {
-        SoundManager.Instance.StopAllSounds();
+
     }
 
     private async UniTask InitScene()

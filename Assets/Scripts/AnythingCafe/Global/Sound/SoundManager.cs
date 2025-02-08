@@ -9,9 +9,6 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     private SoundPool _soundPool;
 
     [SerializeField]
-    private SerializableDictionary<string, SerializableKeyValuePair<SoundType, AudioClip>> _soundItemDict;
-
-    [SerializeField]
     private GameObject _sourceParent; // 所有Source对应的GameObject的父物体
 
     public void Init()
@@ -22,48 +19,34 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     }
 
     #region 声音操作,包括播放、停止、暂停、恢复
+
     /// <summary>
     /// 播放声音
     /// </summary>
-    /// <param name="soundName"> 声音名称 </param>
+    /// <param name="type"> 声音类型 </param>
+    /// <param name="clip"> 音频Clip </param>
     /// <param name="loop"> 是否循环 </param>
     /// <param name="volume"> 音量 </param>
     /// <param name="delay"> 延迟播放 </param>
-    public void PlaySound(string soundName, bool loop = false, float volume = 1.0f, ulong delay = 0ul)
+    public void PlaySound(SoundType type, AudioClip clip, bool loop = false, float volume = 1.0f, ulong delay = 0ul)
     {
-        if (_soundItemDict.TryGetValue(soundName, out var soundKvp))
-        {
-            // 查找后包装一个
-            var soundItem = new SoundItem(soundKvp.Key, soundKvp.Value, loop, volume, delay);
-            Debug.Log($"[SoundManager] Play sound {soundName} with loop {loop} and volume {volume} with delay {delay}ms");
-            _soundPool.PlaySound(soundItem);
-        }
-        else
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning($"[SoundManager] Missing audio item for {soundName}, please check the SoundManager on {gameObject.name}");
-#endif
-        }
+        // 查找后包装一个
+        var soundItem = new SoundItem(type, clip, loop, volume, delay);
+        Debug.Log($"[SoundManager] Play sound [{type}]{clip.name} with loop {loop} and volume {volume} with delay {delay}ms");
+        _soundPool.PlaySound(soundItem);
     }
 
     /// <summary>
     /// 停止声音
     /// </summary>
-    /// <param name="soundName"> 声音名称 </param>
-    public void StopSound(string soundName)
+    /// <param name="type"> 声音类型 </param>
+    /// <param name="clip"> 音频Clip </param>
+    public void StopSound(SoundType type, AudioClip clip)
     {
-        if (_soundItemDict.TryGetValue(soundName, out var soundKvp))
-        {
-            // 查找后包装一个
-            var soundItem = new SoundItem(soundKvp.Key, soundKvp.Value, false, 0, 0);
-            _soundPool.StopSound(soundItem);
-        }
-        else
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning($"[SoundManager] Missing audio item for {soundName}, please check the SoundManager on {gameObject.name}");
-#endif
-        }
+
+        // 查找后包装一个
+        var soundItem = new SoundItem(type, clip, false, 0, 0);
+        _soundPool.StopSound(soundItem);
     }
 
     /// <summary>
@@ -74,41 +57,28 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     /// <summary>
     /// 暂停声音
     /// </summary>
-    /// <param name="soundName"> 声音名称 </param>
-    public void PauseSound(string soundName)
+    /// <param name="type"> 声音类型 </param>
+    /// <param name="clip"> 音频Clip </param>
+    public void PauseSound(SoundType type, AudioClip clip)
     {
-        if (_soundItemDict.TryGetValue(soundName, out var soundKvp))
-        {
-            // 查找后包装一个
-            var soundItem = new SoundItem(soundKvp.Key, soundKvp.Value, false, 0, 0);
-            _soundPool.PauseSound(soundItem);
-        }
-        else
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning($"[SoundManager] Missing audio item for {soundName}, please check the SoundManager on {gameObject.name}");
-#endif
-        }
+        // 查找后包装一个
+        var soundItem = new SoundItem(type, clip, false, 0, 0);
+        _soundPool.PauseSound(soundItem);
+
     }
 
     /// <summary>
     /// 恢复声音
     /// </summary>
-    /// <param name="soundName"> 声音名称 </param>
-    public void ResumeSound(string soundName)
+    /// <param name="type"> 声音类型 </param>
+    /// <param name="clip"> 音频Clip </param>
+    public void ResumeSound(SoundType type, AudioClip clip)
     {
-        if (_soundItemDict.TryGetValue(soundName, out var soundKvp))
-        {
-            // 查找后包装一个
-            var soundItem = new SoundItem(soundKvp.Key, soundKvp.Value, false, 0, 0);
-            _soundPool.ResumeSound(soundItem);
-        }
-        else
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning($"[SoundManager] Missing audio item for {soundName}, please check the SoundManager on {gameObject.name}");
-#endif
-        }
+
+        // 查找后包装一个
+        var soundItem = new SoundItem(type, clip, false, 0, 0);
+        _soundPool.ResumeSound(soundItem);
     }
     #endregion
+
 }

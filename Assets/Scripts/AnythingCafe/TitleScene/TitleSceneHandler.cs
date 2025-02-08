@@ -7,7 +7,7 @@ public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISce
 
     [Header("Audio")]
     [SerializeField]
-    private string _titleBGM;
+    private MusicSoundMeta _titleBGM;
 
     [Header("UI Layout")]
     [SerializeField]
@@ -67,7 +67,7 @@ public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISce
 
             await _titleUI.Open();
 
-            SoundManager.Instance.PlaySound("title",true);
+            SoundManager.Instance.PlaySound(_titleBGM.Type, _titleBGM.Clip, _titleBGM.Loop, _titleBGM.DefaultVolume);
 
             GameManager.Instance.IsFirstInTitleScene = false;
 #endif

@@ -37,15 +37,25 @@ public class SupportUI :
 
     private Sequence EmergeIn()
     {
-        return DOTween.Sequence();
+        return DOTween.Sequence()
+            .OnPlay(() =>
+            {
+                gameObject.SetActive(true);
+            })
+            .Append(transform.DOScale(Vector3.one, 0.5f).From(Vector3.zero).SetEase(Ease.OutBack));
     }
 
     private Sequence EmergeOut()
     {
-        return DOTween.Sequence();
+        return DOTween.Sequence()
+            .OnKill(() =>
+            {
+                gameObject.SetActive(false);
+            })
+            .Append(transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InBack));
     }
 
-    public async UniTask OnCloseClick() => 
+    public async UniTask OnCloseClick() =>
         await UIManager.Instance.CloseReactive(this);
 
 }

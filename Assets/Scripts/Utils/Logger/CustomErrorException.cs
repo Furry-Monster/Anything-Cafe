@@ -8,7 +8,7 @@ public class CustomErrorException : Exception
     public CustomErrorException(string message, CustomErrorItem errorItem)
         : base(message)
     {
-        this.ErrorItem = errorItem;
+        ErrorItem = errorItem;
         switch (errorItem.Severity)
         {
             case ErrorSeverity.Info:

@@ -21,7 +21,6 @@ public class NoticeDialog :
 
     private Sequence _sequence;
     private NoticeDialogModel _model;
-    private NoticeDialogState _state;
 
     public void Init() => gameObject.SetActive(false);
 
@@ -31,26 +30,12 @@ public class NoticeDialog :
         {
             Debug.Log($"[LoadTemplate] {model.ToString()}");
             _model = model;
-            _state = NoticeDialogState.Idling;
 
             // 设置按钮 
             _closeButtonText.text = model.CloseButtonData.Text;
             _closeButton.interactable = model.CloseButtonData.IsInteractable;
             _closeButton.onClick.RemoveAllListeners();
-            _closeButton.onClick.AddListener(() =>
-            {
-                // 请求关闭
-                switch (_state)
-                {
-                    case NoticeDialogState.Opening:
-                    case NoticeDialogState.Closing:
-                        break;
-                    case NoticeDialogState.Idling:
-                    default:
-                        _ = UIManager.Instance.CloseReactive(this);
-                        break;
-                }
-            });
+            _closeButton.onClick.AddListener(() => _ = UIManager.Instance.CloseReactive(this));
         }
         catch (Exception ex)
         {
@@ -68,14 +53,11 @@ public class NoticeDialog :
     /// <returns></returns>
     public override async UniTask Open()
     {
-        _state = NoticeDialogState.Opening;
 
         if (_sequence.IsActive()) _sequence.Kill();
         _sequence = ShowSequence();
         _sequence.Play();
         await _sequence.AsyncWaitForCompletion();
-
-        _state = NoticeDialogState.Idling;
     }
 
     /// <summary>
@@ -84,14 +66,10 @@ public class NoticeDialog :
     /// <returns></returns>
     public override async UniTask Close()
     {
-        _state = NoticeDialogState.Closing;
-
         if (_sequence.IsActive()) _sequence.Kill();
         _sequence = HideSequence();
         _sequence.Play();
         await _sequence.AsyncWaitForCompletion();
-
-        _state = NoticeDialogState.Idling;
     }
 
     /// <summary>
@@ -135,17 +113,6 @@ public class NoticeDialog :
             gameObject.SetActive(false);
         }).Append(_canvasGroup.DOFade(0.0f, 0.5f));
     }
-
-    /// <summary>
-    ///     状态枚举
-    /// </summary>
-    private enum NoticeDialogState
-    {
-        Opening,
-        Idling,
-        Closing,
-    }
-
 }
 
 /// <summary>

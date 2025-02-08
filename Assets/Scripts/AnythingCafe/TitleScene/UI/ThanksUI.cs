@@ -1,12 +1,15 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ThanksUI :
     TitleSceneComponent,
     IInitializable
 {
-    private RectTransform _thanksPanel;
+    [Header("Components")]
+    [SerializeField] private RectTransform _thanksPanel;
+    [SerializeField] private Button _closeBtn;
 
     private Sequence _sequence;
 
@@ -15,6 +18,8 @@ public class ThanksUI :
         gameObject.SetActive(false);
 
         _thanksPanel = GetComponent<RectTransform>();
+
+        _closeBtn.onClick.AddListener(() => _ = OnCloseClick());
     }
 
     public override async UniTask Open()
@@ -42,7 +47,7 @@ public class ThanksUI :
             {
                 gameObject.SetActive(true);
             })
-            .Append(_thanksPanel.DOAnchorPosX(0, 0.5f));
+            .Append(_thanksPanel.DOAnchorPosX(500, 0.5f));
     }
 
     private Sequence RightPopDownSequence()
@@ -52,11 +57,10 @@ public class ThanksUI :
             {
                 gameObject.SetActive(false);
             })
-            .Append(_thanksPanel.DOAnchorPosX(1000, 0.5f));
+            .Append(_thanksPanel.DOAnchorPosX(2000, 0.5f));
     }
 
-    public async UniTask OnCloseClick()
-    {
+    public async UniTask OnCloseClick() =>
         await UIManager.Instance.CloseReactive(this);
-    }
+
 }

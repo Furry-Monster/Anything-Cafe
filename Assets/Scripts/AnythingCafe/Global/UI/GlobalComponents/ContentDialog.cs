@@ -23,7 +23,6 @@ public class ContentDialog :
 
     private Sequence _sequence;
     private ContentDialogModel _model;
-    private ContentDialogState _state;
 
     public void Init() => gameObject.SetActive(false);
 
@@ -32,45 +31,18 @@ public class ContentDialog :
         try
         {
             _model = model;
-            _state = ContentDialogState.Idling;
 
             // ÉèÖÃ×ó°´Å¥
             _leftBtnText.text = model.LeftButtonData.Text;
             _leftBtn.interactable = model.LeftButtonData.IsInteractable;
             _leftBtn.onClick.RemoveAllListeners();
-            _leftBtn.onClick.AddListener(() =>
-            {
-                // ÇëÇó¹Ø±Õ
-                switch (_state)
-                {
-                    case ContentDialogState.Opening:
-                    case ContentDialogState.Closing:
-                        break;
-                    case ContentDialogState.Idling:
-                    default:
-                        _ = UIManager.Instance.CloseReactive(this);
-                        break;
-                }
-            });
+            _leftBtn.onClick.AddListener(() => _ = UIManager.Instance.CloseReactive(this));
 
             // ÉèÖÃÓÒ°´Å¥
             _rightBtnText.text = model.RightButtonData.Text;
             _rightBtn.interactable = model.RightButtonData.IsInteractable;
             _rightBtn.onClick.RemoveAllListeners();
-            _rightBtn.onClick.AddListener(() =>
-            {
-                // ÇëÇó¹Ø±Õ
-                switch (_state)
-                {
-                    case ContentDialogState.Opening:
-                    case ContentDialogState.Closing:
-                        break;
-                    case ContentDialogState.Idling:
-                    default:
-                        _ = UIManager.Instance.CloseReactive(this);
-                        break;
-                }
-            });
+            _rightBtn.onClick.AddListener(() => _ = UIManager.Instance.CloseReactive(this));
         }
         catch (Exception ex)
         {
@@ -87,14 +59,10 @@ public class ContentDialog :
     /// <returns></returns>
     public override async UniTask Open()
     {
-        _state = ContentDialogState.Opening;
-
         // ÏÔÊ¾¶¯»­
         if (_sequence.IsActive()) _sequence.Kill();
         _sequence = ShowSequence().Play();
         await _sequence.AsyncWaitForCompletion();
-
-        _state = ContentDialogState.Idling;
     }
 
     /// <summary>
@@ -103,14 +71,9 @@ public class ContentDialog :
     /// <returns></returns>
     public override async UniTask Close()
     {
-        // ÇÐ»»×´Ì¬
-        _state = ContentDialogState.Closing;
-
         if (_sequence.IsActive()) _sequence.Kill();
         _sequence = HideSequence().Play();
         await _sequence.AsyncWaitForCompletion();
-
-        _state = ContentDialogState.Idling;
     }
 
     /// <summary>
@@ -153,16 +116,6 @@ public class ContentDialog :
             _canvasGroup.alpha = 1f;
             gameObject.SetActive(false);
         }).Append(_canvasGroup.DOFade(0.0f, 0.5f));
-    }
-
-    /// <summary>
-    /// ContentDialog×´Ì¬Ã¶¾Ù
-    /// </summary>
-    private enum ContentDialogState
-    {
-        Opening,
-        Idling,
-        Closing,
     }
 }
 

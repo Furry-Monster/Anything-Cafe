@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f593f8cd8ba973479f8100fef6728be, type: 3}
   m_Name: DefaultBtnSound
   m_EditorClassIdentifier: 
-  ClickSound: 
-  HoverSound: 
+  ClickSound: {fileID: 8300000, guid: 125c7c84c6447334c8f07a43827182e5, type: 3}
+  HoverSound: {fileID: 8300000, guid: 79406179d60b1a845b08a741c3707f7a, type: 3}
   DefaultVolume: 0.8
   DefaultPitch: 1

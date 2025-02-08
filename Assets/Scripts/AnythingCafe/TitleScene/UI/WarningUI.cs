@@ -19,7 +19,15 @@ public class WarningUI :
     private Sequence _sequence;
     public Action OnTextClosed; // warningUI¹Ø±Õ»Øµ÷
 
-    public void Init() => gameObject.SetActive(false);
+    public bool IsInitialized { get; set; }
+
+    public void Init()
+    {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
+        gameObject.SetActive(false);
+    }
 
     /// <summary>
     /// Open the warning UI.

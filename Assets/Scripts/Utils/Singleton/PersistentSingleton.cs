@@ -14,7 +14,7 @@ public class PersistentSingleton<T> : MonoBehaviour where T : PersistentSingleto
             {
                 // 退出游戏时，返回null,同时打印日志，防止出现
                 // 【退出游戏瞬间的访问空引用，又没有错误日志打印】 的情况
-                Debug.LogWarning($"[Singleton] Instance '{typeof(T)}' already destroyed on application quit. Won't create again - returning null.");
+                Debug.LogWarning($"[PersistentSingleton] Instance '{typeof(T)}' already destroyed on application quit. Won't create again - returning null.");
                 return null;
             }
 
@@ -29,7 +29,7 @@ public class PersistentSingleton<T> : MonoBehaviour where T : PersistentSingleto
 
                     if (FindObjectsOfType<T>().Length > 1)
                     {
-                        Debug.LogError($"[Singleton] Something went really wrong - there should never be more than 1 singleton! Reopening the scene might fix it.");
+                        Debug.LogError($"[PersistentSingleton] Something went really wrong - there should never be more than 1 singleton! Reopening the scene might fix it.");
                         return _instance;
                     }
 
@@ -43,13 +43,13 @@ public class PersistentSingleton<T> : MonoBehaviour where T : PersistentSingleto
 
                         DontDestroyOnLoad(singleton);
 #if UNITY_EDITOR
-                        Debug.Log($"[Singleton] An instance of {typeof(T)} is needed in the scene, so '{singleton.name}' was created with DontDestroyOnLoad.");
+                        Debug.Log($"[PersistentSingleton] An instance of {typeof(T)} is needed in the scene, so '{singleton.name}' was created with DontDestroyOnLoad.");
 #endif
                     }
                     else
                     {
 #if UNITY_EDITOR
-                        Debug.Log($"[Singleton] Using instance already created: {_instance.gameObject.name}");
+                        Debug.Log($"[PersistentSingleton] Using instance already created: {_instance.gameObject.name}");
 #endif
                     }
                 }
@@ -83,7 +83,7 @@ public class PersistentSingleton<T> : MonoBehaviour where T : PersistentSingleto
         {
             _instance = null;
 #if UNITY_EDITOR
-            Debug.Log($"[Singleton] Destroying {typeof(T)} Singleton.");
+            Debug.Log($"[PersistentSingleton] Destroying {typeof(T)} Singleton.");
 #endif
         }
     }

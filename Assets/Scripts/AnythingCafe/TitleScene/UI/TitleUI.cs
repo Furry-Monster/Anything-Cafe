@@ -13,8 +13,13 @@ public class TitleUI :
 
     private Sequence _sequence;
 
+    public bool IsInitialized { get; set; }
+
     public void Init()
     {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
         gameObject.SetActive(true);
     }
 

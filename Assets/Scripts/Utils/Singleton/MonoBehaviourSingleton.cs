@@ -14,7 +14,7 @@ public class MonoBehaviourSingleton<T> : MonoBehaviour where T : MonoBehaviourSi
             {
                 // 退出游戏时，返回null,同时打印日志，防止出现
                 // 【退出游戏瞬间的访问空引用，又没有错误日志打印】 的情况
-                Debug.LogWarning($"[Singleton] Instance '{typeof(T)}' already destroyed on application quit. Won't create again - returning null.");
+                Debug.LogWarning($"[MonoSingleton] Instance '{typeof(T)}' already destroyed on application quit. Won't create again - returning null.");
                 return null;
             }
 
@@ -29,7 +29,7 @@ public class MonoBehaviourSingleton<T> : MonoBehaviour where T : MonoBehaviourSi
 
                     if (FindObjectsOfType<T>().Length > 1)
                     {
-                        Debug.LogError($"[Singleton] Something went really wrong - there should never be more than 1 singleton! Reopening the scene might fix it.");
+                        Debug.LogError($"[MonoSingleton] Something went really wrong - there should never be more than 1 singleton! Reopening the scene might fix it.");
                         return _instance;
                     }
 
@@ -41,13 +41,13 @@ public class MonoBehaviourSingleton<T> : MonoBehaviour where T : MonoBehaviourSi
                         _instance = singleton.AddComponent<T>();
                         singleton.name = typeof(T).ToString();
 #if UNITY_EDITOR
-                        Debug.Log($"[Singleton] An instance of {typeof(T)} is needed in the scene, so '{singleton}' was created with DontDestroyOnLoad.");
+                        Debug.Log($"[MonoSingleton] An instance of {typeof(T)} is needed in the scene, so '{singleton}' was created with DontDestroyOnLoad.");
 #endif
                     }
                     else
                     {
 #if UNITY_EDITOR
-                        Debug.Log($"[Singleton] Using instance already created: {_instance.gameObject.name}");
+                        Debug.Log($"[MonoSingleton] Using instance already created: {_instance.gameObject.name}");
 #endif
                     }
                 }
@@ -67,7 +67,7 @@ public class MonoBehaviourSingleton<T> : MonoBehaviour where T : MonoBehaviourSi
         else if (_instance != this)
         {
             // 如果_instance引用有问题，摧毁当前实例，不进行覆盖
-            Debug.LogWarning($"Multiple instances of {typeof(T)} found. Destroying this one.");
+            Debug.LogWarning($"[MonoSingleton] Multiple instances of {typeof(T)} found. Destroying this one.");
             Destroy(this.gameObject);
         }
     }

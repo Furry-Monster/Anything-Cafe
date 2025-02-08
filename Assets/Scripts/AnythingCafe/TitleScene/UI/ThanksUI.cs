@@ -13,8 +13,13 @@ public class ThanksUI :
 
     private Sequence _sequence;
 
+    public bool IsInitialized { get; set; }
+
     public void Init()
     {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
         gameObject.SetActive(false);
 
         _thanksPanel = GetComponent<RectTransform>();
@@ -57,7 +62,7 @@ public class ThanksUI :
             {
                 gameObject.SetActive(false);
             })
-            .Append(_thanksPanel.DOAnchorPosX(2000, 0.5f));
+            .Append(_thanksPanel.DOAnchorPosX(1700, 0.5f));
     }
 
     public async UniTask OnCloseClick() =>

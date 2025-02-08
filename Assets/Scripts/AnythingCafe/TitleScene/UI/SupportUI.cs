@@ -12,8 +12,13 @@ public class SupportUI :
 
     private Sequence _sequence;
 
+    public bool IsInitialized { get; set; }
+
     public void Init()
     {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
         gameObject.SetActive(false);
 
         _closeBtn.onClick.AddListener(() => _ = OnCloseClick());

@@ -8,8 +8,13 @@ public class LoadingCanvas :
     MonoBehaviourSingleton<LoadingCanvas>,
     IInitializable
 {
+    public bool IsInitialized { get; set; }
+
     public void Init()
     {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
         ValidateSelf();
     }
 

@@ -11,8 +11,13 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     [SerializeField]
     private GameObject _sourceParent; // 所有Source对应的GameObject的父物体
 
+    public bool IsInitialized { get; set; }
+
     public void Init()
     {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
         // 初始化创建SoundPool
         if (_sourceParent == null) _sourceParent = this.gameObject;
         _soundPool ??= SoundPool.Instance.Created(_sourceParent);

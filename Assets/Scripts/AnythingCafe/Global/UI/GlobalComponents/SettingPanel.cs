@@ -7,7 +7,14 @@ public class SettingPanel :
 {
     private Sequence _sequence;
 
-    public void Init() => gameObject.SetActive(false);
+    public bool IsInitialized { get; set; }
+    public void Init()
+    {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
+        gameObject.SetActive(false);
+    }
 
     public override UniTask Open()
     {

@@ -8,8 +8,13 @@ public class GlobalCanvas :
     MonoBehaviourSingleton<GlobalCanvas>,
     IInitializable
 {
+    public bool IsInitialized { get; set; }
+
     public void Init()
     {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
         ValidateSelf();
     }
 

@@ -18,7 +18,14 @@ public class FadeLoading :
     private Sequence _sequence;
     private FadeLoadingModel _model;
 
-    public void Init() => gameObject.SetActive(false);
+    public bool IsInitialized { get; set; }
+    public void Init()
+    {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
+        gameObject.SetActive(false);
+    }
 
     public void LoadTemplate(FadeLoadingModel model)
     {

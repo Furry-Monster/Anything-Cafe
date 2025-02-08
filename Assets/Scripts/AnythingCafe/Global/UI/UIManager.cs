@@ -26,11 +26,16 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     private readonly LinkedList<ReactiveComponent> _activeComponents = new();  // 正在显示的UI,类似栈的机制
     private readonly List<ReactiveComponent> _closingComponents = new(); // 正在关闭的UI队列,类似GC的机制
 
+    public bool IsInitialized { get; set; }
+
     /// <summary>
     /// 初始化UIManager
     /// </summary>
     public void Init()
     {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
         try
         {
             ResetCanvas();

@@ -22,7 +22,14 @@ public class NoticeDialog :
     private Sequence _sequence;
     private NoticeDialogModel _model;
 
-    public void Init() => gameObject.SetActive(false);
+    public bool IsInitialized { get; set; }
+    public void Init()
+    {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
+        gameObject.SetActive(false);
+    }
 
     public void LoadTemplate(NoticeDialogModel model)
     {

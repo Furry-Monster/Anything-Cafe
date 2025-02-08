@@ -16,8 +16,13 @@ public class GameSceneManager :
     public event Action<SceneID> OnSceneLoadComplete;
     public event Action<float> OnLoadingProgressChanged;
 
+    public bool IsInitialized { get; set; }
+
     public void Init()
     {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.sceneUnloaded += OnSceneUnloaded;
     }

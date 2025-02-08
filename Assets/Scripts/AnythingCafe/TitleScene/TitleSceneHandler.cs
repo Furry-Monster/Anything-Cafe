@@ -2,7 +2,9 @@ using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 
-public class TitleSceneHandler : MonoBehaviourSingleton<TitleSceneHandler>, ISceneHandler
+public class TitleSceneHandler :
+    MonoBehaviourSingleton<TitleSceneHandler>,
+    ISceneHandler
 {
 
     [Header("Audio")]

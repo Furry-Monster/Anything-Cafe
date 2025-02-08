@@ -24,7 +24,14 @@ public class ContentDialog :
     private Sequence _sequence;
     private ContentDialogModel _model;
 
-    public void Init() => gameObject.SetActive(false);
+    public bool IsInitialized { get; set; }
+    public void Init()
+    {
+        if (IsInitialized) return;
+        IsInitialized = true;
+
+        gameObject.SetActive(false);
+    }
 
     public void LoadTemplate(ContentDialogModel model)
     {

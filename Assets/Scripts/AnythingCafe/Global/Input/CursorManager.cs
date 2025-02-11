@@ -70,15 +70,15 @@ public class CursorManager :
             return;
         _currentCursorDict[cursorLayer] = targetCursor;
 
-        
+
         _onCursorMgrUpdate -= UpdateCursorAnimation;
-        
+
         _cursorFrame = 0;
         _frameTimer = CurrentCursor.FrameRate;
         Cursor.SetCursor(CurrentCursor.CursorTextures[0], CurrentCursor.CursorOffset, CursorMode.ForceSoftware);
         Cursor.visible = true;
         UpdateCursorAnimation();
-        
+
         if (CurrentCursor.FrameCount > 1)
             _onCursorMgrUpdate += UpdateCursorAnimation;
 
@@ -99,7 +99,7 @@ public class CursorManager :
     {
         _frameTimer -= Time.deltaTime;
 
-        
+
         if (_frameTimer.CompareTo(0.0f) > 0) return;
         _cursorFrame = (_cursorFrame + 1) % CurrentCursor.FrameCount;
         _frameTimer = CurrentCursor.FrameRate;

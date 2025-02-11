@@ -29,7 +29,8 @@ public class TitleSceneHandler :
     {
         try
         {
-            await InitScene();
+            InitScene();
+
             await ShowScene();
         }
         catch (Exception ex)
@@ -44,12 +45,25 @@ public class TitleSceneHandler :
 
     public async UniTask OnSceneUnload()
     {
-
+        try
+        {
+            SoundManager.Instance.StopAllSounds();
+            // TODO:加载LoadingUI
+        }
+        catch (Exception ex)
+        {
+            if (ex is CustomErrorException) throw;
+            throw new CustomErrorException($"[TitleSceneHandler] Scene on unload failed. Error message: {ex.Message}",
+                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.SceneOnUnloadFailed));
+        }
     }
 
-    private async UniTask InitScene()
+    private void InitScene()
     {
-
+        _warningUI.Init();
+        _titleUI.Init();
+        _supportUI.Init();
+        _thanksUI.Init();
     }
 
     private async UniTask ShowScene()
@@ -57,7 +71,7 @@ public class TitleSceneHandler :
         // 显示WarningUI，仅在第一次进入TitleScene时显示
         if (GameManager.Instance.IsFirstInTitleScene)
         {
-#if !UNITY_EDITOR
+#if UNITY_EDITOR
             _warningUI.OnTextClosed += () => _backGround.SetActive(true);
 
             _backGround.SetActive(false);

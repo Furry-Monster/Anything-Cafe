@@ -8,8 +8,9 @@ public class GameSceneManager :
     PersistentSingleton<GameSceneManager>,
     IInitializable
 {
-    private ISceneHandler _currentSceneHandler;
     private bool _isLoading;
+
+    public ISceneHandler CurrentSceneHandler { get; private set; }
 
     public float LoadingProgress { get; private set; }
 
@@ -22,10 +23,13 @@ public class GameSceneManager :
     public void Init()
     {
         if (IsInitialized) return;
-        IsInitialized = true;
+
+        CurrentSceneHandler ??= GameObject.FindWithTag("SceneHandler").GetComponent<ISceneHandler>();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.sceneUnloaded += OnSceneUnloaded;
+
+        IsInitialized = true;
     }
 
     /// <summary>
@@ -39,7 +43,7 @@ public class GameSceneManager :
     {
         if (_isLoading)
         {
-            Debug.LogWarning("[SceneManager] Please Don't Call LoadScene Method Multiple Times At Once!");
+            Debug.LogWarning("[GameSceneManager] Please Don't Call LoadScene Method Multiple Times At Once!");
             return;
         }
 
@@ -65,7 +69,7 @@ public class GameSceneManager :
             if (ex is CustomErrorException)
                 throw;
             throw new CustomErrorException(
-                $"[SceneManager] Failed to load scene: {sceneToLoad}",
+                $"[GameSceneManager] Failed to load scene: {sceneToLoad}",
                 new CustomErrorItem(ErrorSeverity.Error, ErrorCode.SceneCantLoad)
             );
         }
@@ -82,16 +86,16 @@ public class GameSceneManager :
     /// <returns></returns>
     private async UniTask UnloadCurrentScene()
     {
-        if (_currentSceneHandler != null)
+        if (CurrentSceneHandler != null)
         {
             try
             {
-                await _currentSceneHandler.OnSceneUnload();
-                _currentSceneHandler = null;
+                await CurrentSceneHandler.OnSceneUnload();
+                CurrentSceneHandler = null;
             }
             catch (Exception ex)
             {
-                Debug.LogError($"场景卸载错误: {ex.Message}");
+                Debug.LogError($"[GameSceneManager] Scene unload error: {ex.Message}");
                 throw;
             }
         }
@@ -144,17 +148,17 @@ public class GameSceneManager :
 
         if (newSceneHandler != null)
         {
-            _currentSceneHandler = newSceneHandler;
-            await _currentSceneHandler.OnSceneLoad();
+            CurrentSceneHandler = newSceneHandler;
+            await CurrentSceneHandler.OnSceneLoad();
         }
     }
 
     private static void OnSceneLoaded(Scene scene, LoadSceneMode mode) =>
-        Debug.Log($"场景加载完成: {scene.name} in mode {mode}");
+        Debug.Log($"[GameSceneManager] Scene loaded successfully: {scene.name} in mode {mode}");
 
 
     private static void OnSceneUnloaded(Scene scene) =>
-        Debug.Log($"场景卸载完成: {scene.name}");
+        Debug.Log($"[GameSceneManager] Scene unloaded successfully: {scene.name}");
 
 
     protected override void OnDestroy()

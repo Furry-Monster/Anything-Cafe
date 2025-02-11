@@ -15,4 +15,5 @@ public enum ErrorCode
     UICanvasInitFailed = 7,
     CursorManagerInitFailed = 8,
     ComponentNotFound = 9,
+    SceneOnUnloadFailed = 10,
 }

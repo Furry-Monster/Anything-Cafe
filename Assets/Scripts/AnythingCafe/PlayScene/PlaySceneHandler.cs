@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -25,11 +26,31 @@ public class PlaySceneHandler :
 
     public async UniTask OnSceneLoad()
     {
-        throw new System.NotImplementedException();
+        try
+        {
+            
+        }
+        catch (Exception ex)
+        {
+            if (ex is CustomErrorException)
+                throw;
+            throw new CustomErrorException($"[PlaySceneHandler]Cant call OnSceneLoad() : {ex.Message}",
+                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.SceneOnLoadFailed));
+        }
     }
 
     public async UniTask OnSceneUnload()
     {
-        throw new System.NotImplementedException();
+        try
+        {
+            SoundManager.Instance.StopAllSounds();
+        }
+        catch (Exception ex)
+        {
+            if (ex is CustomErrorException)
+                throw;
+            throw new CustomErrorException($"[PlaySceneHandler]Cant call OnSceneUnload() : {ex.Message}",
+                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.SceneOnLoadFailed));
+        }
     }
 }

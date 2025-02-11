@@ -1,4 +1,6 @@
 using Cysharp.Threading.Tasks;
+using System;
+using UnityEngine;
 
 public class SideBtnUI : PlaySceneComponent, IInitializable
 {
@@ -11,13 +13,32 @@ public class SideBtnUI : PlaySceneComponent, IInitializable
         gameObject.SetActive(false);
     }
 
-    public override UniTask Open()
+    public async void OnMenuClick()
     {
-        return base.Open();
+        try
+        {
+            await UIManager.Instance.OpenReactive<MenuUI>();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[SideBtnUI] {ex.Message}");
+        }
     }
 
-    public override UniTask Close()
+    public async void OnDiscoverClick()
     {
-        return base.Close();
+        try
+        {
+            await UIManager.Instance.OpenReactive<DiscoverUI>();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[SideBtnUI] {ex.Message}");
+        }
+    }
+
+    public void OnHintClick()
+    {
+        
     }
 }

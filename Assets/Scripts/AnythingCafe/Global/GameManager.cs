@@ -15,9 +15,13 @@ public class GameManager : PersistentSingleton<GameManager>
     {
         try
         {
-            DOTween.Init(null, null, LogBehaviour.ErrorsOnly); // 此处可以自定义Tween动画的默认参数
+            DOTween.Init(null, null, LogBehaviour.ErrorsOnly);
+            // 此处可以自定义Tween动画的默认参数
+
             UIManager.Instance.Init();
             SoundManager.Instance.Init();
+            CursorManager.Instance.Init();
+            GameSceneManager.Instance.Init();
 
             await PrepareGame();
             await ValidateIntegrity();
@@ -45,7 +49,6 @@ public class GameManager : PersistentSingleton<GameManager>
     private async UniTask PrepareGame()
     {
         // TODO: 准备游戏资源,初始化游戏
-        CursorManager.Instance.Init();
     }
 
     private async UniTask ValidateIntegrity()
@@ -59,7 +62,7 @@ public class GameManager : PersistentSingleton<GameManager>
     /// <returns>异步UniTask任务</returns>
     private async UniTask ReadyTitleScene()
     {
-        var component = GameObject.FindWithTag("SceneHandler").GetComponent<ISceneHandler>();
+        var component = GameSceneManager.Instance.CurrentSceneHandler;
         if (component == null) return;
         await component.OnSceneLoad();
     }

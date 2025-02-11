@@ -1,18 +1,26 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MenuUI : MonoBehaviour
+public class MenuUI : PlaySceneComponent, IInitializable
 {
-    // Start is called before the first frame update
-    void Start()
+    public bool IsInitialized { get; set; }
+    public void Init()
     {
-        
+        if (IsInitialized) return;
+        IsInitialized = true;
+
+        gameObject.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override UniTask Open()
     {
-        
+        return base.Open();
+    }
+
+    public override UniTask Close()
+    {
+        return base.Close();
     }
 }

@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[AddComponentMenu("FrameMonster/Scene/SceneManager")]
 public class GameSceneManager :
     PersistentSingleton<GameSceneManager>,
     IInitializable

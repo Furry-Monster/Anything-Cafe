@@ -1,18 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class DialogUI : MonoBehaviour
+public class DialogUI : PlaySceneComponent, IInitializable
 {
-    // Start is called before the first frame update
-    void Start()
+    public bool IsInitialized { get; set; }
+    public void Init()
     {
-        
+        if (IsInitialized) return;
+        IsInitialized = true;
+
+        gameObject.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override UniTask Open()
     {
-        
+        return base.Open();
+    }
+
+    public override UniTask Close()
+    {
+        return base.Close();
     }
 }

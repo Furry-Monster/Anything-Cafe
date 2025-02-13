@@ -28,7 +28,7 @@ public class PlaySceneHandler :
     {
         try
         {
-            
+            InitScene();
         }
         catch (Exception ex)
         {
@@ -52,5 +52,15 @@ public class PlaySceneHandler :
             throw new CustomErrorException($"[PlaySceneHandler]Cant call OnSceneUnload() : {ex.Message}",
                 new CustomErrorItem(ErrorSeverity.Error, ErrorCode.SceneOnLoadFailed));
         }
+    }
+
+    private void InitScene()
+    {
+        _coffeeUI.Init();
+        _dialogUI.Init();
+        _discoverUI.Init();
+        _machineUI.Init();
+        _menuUI.Init();
+        _sideBtnUI.Init();
     }
 }

@@ -20,4 +20,19 @@ public class MenuUI : PlaySceneComponent, IInitializable
     {
         return base.Close();
     }
+
+    public void OnContinueClick()
+    {
+
+    }
+
+    public void OnMainMenuClick()
+    {
+
+    }
+
+    public void OnSettingClick()
+    {
+
+    }
 }

@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7833979853635236258}
   - component: {fileID: 5222701343843461803}
   - component: {fileID: 3189587353089140551}
+  - component: {fileID: 8520834176790546015}
+  - component: {fileID: 1390122978207980453}
   m_Layer: 6
   m_Name: ButtonLeft
   m_TagString: Untagged
@@ -121,6 +123,32 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8520834176790546015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 469517119072697284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ca576fac502ed4bb25a97ebd3572bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundMeta: {fileID: 11400000, guid: 0a9f9bc1923367046a74767abefc2190, type: 2}
+--- !u!114 &1390122978207980453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 469517119072697284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &1226982769666658854
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,6 +161,8 @@ GameObject:
   - component: {fileID: 705489730427802769}
   - component: {fileID: 5715419959263269261}
   - component: {fileID: 340442215549518654}
+  - component: {fileID: 3470994069055202259}
+  - component: {fileID: 8152193952813316167}
   m_Layer: 6
   m_Name: ButtonRight
   m_TagString: Untagged
@@ -242,6 +272,32 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3470994069055202259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226982769666658854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ca576fac502ed4bb25a97ebd3572bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundMeta: {fileID: 11400000, guid: 0a9f9bc1923367046a74767abefc2190, type: 2}
+--- !u!114 &8152193952813316167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226982769666658854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &1658487823389521634
 GameObject:
   m_ObjectHideFlags: 0

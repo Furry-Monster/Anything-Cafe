@@ -10,10 +10,10 @@ public class ButtonDataTemplate : IDataTemplate
 
     public ButtonDataTemplate(string text, [CanBeNull] string tooltip, bool isInteractable, Action onClick = null)
     {
-        this.Text = text;
-        this.Tooltip = tooltip;
-        this.IsInteractable = isInteractable;
-        this.OnClick = () =>
+        Text = text;
+        Tooltip = tooltip;
+        IsInteractable = isInteractable;
+        OnClick = () =>
         {
             onClick?.Invoke();
             return true;
@@ -22,9 +22,9 @@ public class ButtonDataTemplate : IDataTemplate
 
     public ButtonDataTemplate(string text, [CanBeNull] string tooltip, bool isInteractable, Func<bool> onClick)
     {
-        this.Text = text;
-        this.Tooltip = tooltip;
-        this.IsInteractable = isInteractable;
-        this.OnClick = onClick;
+        Text = text;
+        Tooltip = tooltip;
+        IsInteractable = isInteractable;
+        OnClick = onClick;
     }
 }

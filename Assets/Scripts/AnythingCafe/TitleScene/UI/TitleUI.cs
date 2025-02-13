@@ -65,15 +65,10 @@ public class TitleUI :
     {
         try
         {
-            // TODO:让模型可以在外部被编辑
-            var noticeData = new NoticeDialogModel
-            {
-                CloseButtonData =
-                {
-                    IsInteractable = true,
-                    Text = "I Know"
-                }
-            };
+            // TODO:让数据模型可以在外部被编辑
+            var noticeData = new NoticeDialogModel(
+                new ButtonDataTemplate("I Know", null, true));
+
             await UIManager.Instance.OpenGlobal<NoticeDialog, NoticeDialogModel>(noticeData);
         }
         catch (Exception ex)

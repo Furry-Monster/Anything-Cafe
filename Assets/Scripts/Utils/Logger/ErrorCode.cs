@@ -16,4 +16,5 @@ public enum ErrorCode
     CursorManagerInitFailed = 8,
     ComponentNotFound = 9,
     SceneOnUnloadFailed = 10,
+    UIResetFailed = 11,
 }

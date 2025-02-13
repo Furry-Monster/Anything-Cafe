@@ -28,6 +28,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
 
     public bool IsInitialized { get; set; }
 
+    #region API（初始化，重置，注册，打开，关闭）
     /// <summary>
     /// 初始化UIManager
     /// </summary>
@@ -50,57 +51,26 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         }
     }
 
-    #region API（重置，注册，打开，关闭）
     /// <summary>
-    /// 重置Canvas
+    /// 重置UIManager
     /// </summary>
-    public void ResetCanvas()
+    /// <exception cref="CustomErrorException"> 如果重置失败则抛出异常 </exception>
+    public void ResetMgr()
     {
-        if (_globalCanvas == null || _loadingCanvas == null)
-            throw new CustomErrorException("[UIManager] Canvas is set NULL!",
-                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UICanvasResetFailed));
         try
         {
-            // 初始化特殊Canvas
-            _globalCanvas.Init();
-            _loadingCanvas.Init();
-
-            // 检查缺失的控件
-            _globalCanvas.CheckComponents(_globalComponents.Values.ToList<ReactiveComponent>());
-            _loadingCanvas.CheckComponents(_loadingComponents.Values.ToList<ReactiveComponent>());
+            ResetCanvas();
+            ResetAllComponents();
         }
         catch (Exception ex)
         {
             if (ex is CustomErrorException)
                 throw;
-            throw new CustomErrorException($"[UIManager] Can't reset Canvas, {ex.Message}",
-                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UICanvasResetFailed));
+            throw new CustomErrorException($"[UIManager] Can't reset UIManager, {ex.Message}",
+                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIResetFailed));
         }
     }
 
-    /// <summary>
-    /// 重置场景中的控件注册
-    /// </summary>
-    public void ResetAllComponents()
-    {
-        // 清除所有控件
-        _allReactiveComponents.Clear();
-        _activeComponents.Clear();
-        _closingComponents.Clear();
-
-        // 重新注册所有Global控件
-        foreach (var component in _globalComponents.Values)
-            RegisterReactiveComponent(1, component.GetComponent<ReactiveComponent>());
-
-        // 重新注册所有Loading控件
-        foreach (var component in _loadingComponents.Values)
-            RegisterReactiveComponent(2, component.GetComponent<ReactiveComponent>());
-
-        // 寻找并注册其他控件
-        var sceneComponents = FindObjectsOfType<ReactiveComponent>();
-        foreach (var component in sceneComponents)
-            RegisterReactiveComponent(0, component);
-    }
 
     /// <summary>
     /// 注册控件
@@ -155,21 +125,6 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     }
 
     /// <summary>
-    /// 打开全局UI
-    /// </summary>
-    /// <param name="uiName"> UI名称 </param>
-    /// <returns> UniTask </returns>
-    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
-    public async UniTask OpenGlobal(string uiName)
-    {
-        var component = _globalComponents[uiName];
-        if (component == null)
-            throw new CustomErrorException($"[UIManager] Can't find global ui {uiName}!",
-                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
-        await OpenReactive(component.GetComponent<ReactiveComponent>());
-    }
-
-    /// <summary>
     ///  打开Loading UI
     /// </summary>
     /// <param name="uiName"> UI名称 </param>
@@ -183,39 +138,69 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
         await OpenReactive(component.GetComponent<ReactiveComponent>());
     }
+    // TODO:把上面的方法优化掉
+    #endregion
 
+    #region 私有方法
     /// <summary>
-    ///  关闭全局UI
+    /// 重置Canvas
     /// </summary>
-    /// <param name="uiName"> UI名称 </param>
-    /// <returns> UniTask </returns>
-    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
-    public async UniTask CloseGlobal(string uiName)
+    private void ResetCanvas()
     {
-        var component = _globalComponents[uiName];
-        if (component == null)
-            throw new CustomErrorException($"[UIManager] Can't find global ui {uiName}!",
-                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
-        await CloseReactive(component.GetComponent<ReactiveComponent>());
+        if (_globalCanvas == null || _loadingCanvas == null)
+            throw new CustomErrorException("[UIManager] Canvas is set NULL!",
+                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UICanvasResetFailed));
+        try
+        {
+            // 初始化特殊Canvas
+            _globalCanvas.Init();
+            _loadingCanvas.Init();
+
+            // 检查缺失的控件
+            _globalCanvas.CheckComponents(_globalComponents.Values.ToList<ReactiveComponent>());
+            _loadingCanvas.CheckComponents(_loadingComponents.Values.ToList<ReactiveComponent>());
+        }
+        catch (Exception ex)
+        {
+            if (ex is CustomErrorException)
+                throw;
+            throw new CustomErrorException($"[UIManager] Can't reset Canvas, {ex.Message}",
+                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UICanvasResetFailed));
+        }
     }
 
     /// <summary>
-    ///  关闭Loading UI
+    /// 重置场景中的控件注册
     /// </summary>
-    /// <param name="uiName"> UI名称 </param>
-    /// <returns> UniTask </returns>
-    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
-    public async UniTask CloseLoading(string uiName)
+    private void ResetAllComponents()
     {
-        var component = _loadingComponents[uiName];
-        if (component == null)
-            throw new CustomErrorException($"[UIManager] Can't find loading ui {uiName}!",
-                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
-        await CloseReactive(component.GetComponent<ReactiveComponent>());
+        // 清除所有控件
+        _allReactiveComponents.Clear();
+        _activeComponents.Clear();
+        _closingComponents.Clear();
+
+        // 重新注册所有Global控件
+        foreach (var component in _globalComponents.Values)
+            RegisterReactiveComponent(1, component.GetComponent<ReactiveComponent>());
+
+        // 重新注册所有Loading控件
+        foreach (var component in _loadingComponents.Values)
+            RegisterReactiveComponent(2, component.GetComponent<ReactiveComponent>());
+
+        // 寻找并注册其他控件
+        var sceneComponents = FindObjectsOfType<ReactiveComponent>();
+        foreach (var component in sceneComponents)
+            RegisterReactiveComponent(0, component);
     }
     #endregion
 
-    #region 快捷方式（打开，关闭）
+    #region 泛型方式（打开，关闭）
+    /// <summary>
+    /// 打开一个控件
+    /// </summary>
+    /// <typeparam name="T"> 控件类型 </typeparam>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
     public async UniTask OpenReactive<T>() where T : ReactiveComponent
     {
         var component = _allReactiveComponents.Values
@@ -227,6 +212,12 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         await OpenReactive(component);
     }
 
+    /// <summary>
+    /// 打开一个全局控件，同时不注入数据模板
+    /// </summary>
+    /// <typeparam name="T"> 控件类型 </typeparam>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
     public async UniTask OpenGlobal<T>() where T : ReactiveComponent
     {
         var component = _globalComponents.Values
@@ -237,6 +228,12 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         await OpenReactive(component.GetComponent<ReactiveComponent>());
     }
 
+    /// <summary>
+    /// 打开一个Loading控件,同时不注入数据模板
+    /// </summary>
+    /// <typeparam name="T"> 控件类型 </typeparam>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
     public async UniTask OpenLoading<T>() where T : ReactiveComponent
     {
         var component = _loadingComponents.Values
@@ -247,6 +244,12 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         await OpenReactive(component.GetComponent<ReactiveComponent>());
     }
 
+    /// <summary>
+    /// 关闭一个控件
+    /// </summary>
+    /// <typeparam name="T"> 控件类型 </typeparam>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
     public async UniTask CloseReactive<T>() where T : ReactiveComponent
     {
         var component = _allReactiveComponents.Values
@@ -258,6 +261,12 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         await CloseReactive(component);
     }
 
+    /// <summary>
+    /// 关闭一个全局控件
+    /// </summary>
+    /// <typeparam name="T"> 控件类型 </typeparam>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
     public async UniTask CloseGlobal<T>() where T : ReactiveComponent
     {
         var component = _globalComponents.Values
@@ -268,6 +277,12 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         await CloseReactive(component.GetComponent<ReactiveComponent>());
     }
 
+    /// <summary>
+    /// 关闭一个Loading控件
+    /// </summary>
+    /// <typeparam name="T"> 控件类型 </typeparam>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
     public async UniTask CloseLoading<T>() where T : ReactiveComponent
     {
         var component = _loadingComponents.Values
@@ -279,11 +294,18 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     }
     #endregion
 
-    #region 快捷方式（With DataTemplate）
-
+    #region 泛型方式（With DataTemplate）
+    /// <summary>
+    /// 注入数据模板打开一个控件
+    /// </summary>
+    /// <typeparam name="T"> 控件类型 </typeparam>
+    /// <typeparam name="TData"> 数据模板类型 </typeparam>
+    /// <param name="data"> 数据模板 </param>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
     public async UniTask OpenReactive<T, TData>(TData data)
         where T : ReactiveComponent
-        where TData : IDataTemplate, new()
+        where TData : IDataTemplate
     {
         var component = _allReactiveComponents.Values
             .SelectMany(c => c)
@@ -301,9 +323,17 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         await OpenReactive(component);
     }
 
+    /// <summary>
+    /// 注入数据模板打开一个全局控件
+    /// </summary>
+    /// <typeparam name="T"> 控件类型 </typeparam>
+    /// <typeparam name="TData"> 数据模板类型 </typeparam>
+    /// <param name="data"> 数据模板 </param>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
     public async UniTask OpenGlobal<T, TData>(TData data)
         where T : ReactiveComponent
-        where TData : IDataTemplate, new()
+        where TData : IDataTemplate
     {
         var component = _globalComponents.Values
             .FirstOrDefault(c => c.GetComponent<T>() != null);
@@ -320,9 +350,17 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         await OpenReactive(component.GetComponent<ReactiveComponent>());
     }
 
+    /// <summary>
+    /// 注入数据模板打开一个Loading控件
+    /// </summary>
+    /// <typeparam name="T"> 控件类型 </typeparam>
+    /// <typeparam name="TData"> 数据模板类型 </typeparam>
+    /// <param name="data"> 数据模板 </param>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
     public async UniTask OpenLoading<T, TData>(TData data)
         where T : ReactiveComponent
-        where TData : IDataTemplate, new()
+        where TData : IDataTemplate
     {
         var component = _loadingComponents.Values
             .FirstOrDefault(c => c.GetComponent<T>());

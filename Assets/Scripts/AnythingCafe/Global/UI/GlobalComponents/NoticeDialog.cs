@@ -35,7 +35,6 @@ public class NoticeDialog :
     {
         try
         {
-            Debug.Log($"[LoadTemplate] {model.ToString()}");
             _model = model;
 
             // 设置按钮 
@@ -80,7 +79,7 @@ public class NoticeDialog :
     }
 
     /// <summary>
-    ///     打开动画序列
+    /// 打开动画序列
     /// </summary>
     /// <returns></returns>
     private Sequence ShowSequence()
@@ -105,7 +104,7 @@ public class NoticeDialog :
     }
 
     /// <summary>
-    ///     关闭动画序列
+    /// 关闭动画序列
     /// </summary>
     /// <returns></returns>
     private Sequence HideSequence()
@@ -123,9 +122,14 @@ public class NoticeDialog :
 }
 
 /// <summary>
-///     按钮数据模板
+/// Notice数据模板
 /// </summary>
 public class NoticeDialogModel : IDataTemplate
 {
     public ButtonDataTemplate CloseButtonData;
+
+    public NoticeDialogModel(ButtonDataTemplate closeButtonData)
+    {
+        CloseButtonData = closeButtonData;
+    }
 }

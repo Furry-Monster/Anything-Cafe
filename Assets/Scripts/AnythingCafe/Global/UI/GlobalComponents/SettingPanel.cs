@@ -16,23 +16,49 @@ public class SettingPanel :
         gameObject.SetActive(false);
     }
 
-    public override UniTask Open()
+    public override async UniTask Open()
     {
-        return base.Open();
+        if (_sequence.IsActive()) _sequence.Kill();
+        _sequence = DropIn();
+        _sequence.Play();
+        await _sequence.AsyncWaitForCompletion();
     }
 
-    public override UniTask Close()
+    public override async UniTask Close()
     {
-        return base.Close();
+        if (_sequence.IsActive()) _sequence.Kill();
+        _sequence = RiseBack();
+        _sequence.Play();
+        await _sequence.AsyncWaitForCompletion();
     }
 
     private Sequence DropIn()
     {
-        return DOTween.Sequence();
+        return DOTween.Sequence()
+            .OnPlay(() =>
+            {
+                gameObject.SetActive(true);
+            })
+            .Append(transform.DOLocalMoveY(0, 0.5f));
     }
 
     private Sequence RiseBack()
     {
-        return DOTween.Sequence();
+        return DOTween.Sequence()
+            .OnKill(() =>
+            {
+                gameObject.SetActive(false);
+            })
+            .Append(transform.DOLocalMoveY(1500, 0.5f));
+    }
+
+    public void OnBackButtonClick()
+    {
+        _ = UIManager.Instance.CloseGlobal<SettingPanel>();
+    }
+
+    public void OnSaveButtonClick()
+    {
+        // TODO: Save settings
     }
 }

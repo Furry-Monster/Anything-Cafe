@@ -8,7 +8,6 @@ namespace FrameMonster.IOC
     {
         private readonly Dictionary<Type, object> _registry = new();
 
-
         public void Register<TInterface, TImpl>(string id, bool isSingleton = true)
             where TImpl : TInterface
         {
@@ -22,8 +21,21 @@ namespace FrameMonster.IOC
             }
             else
             {
-                Debug.LogError("[IoC] EasyContainer doesn't support non-singleton registration.");
+                throw new InvalidOperationException("EasyContainer doesn't support non-singleton registration.");
             }
+        }
+
+        public TInterface Resolve<TInterface>()
+        {
+            if (_registry.TryGetValue(typeof(TInterface), out var instance))
+            {
+                if (instance is Func<object> constructor)
+                {
+                    return (TInterface)constructor.Invoke();
+                }
+                return (TInterface)instance;
+            }
+            throw new InvalidOperationException($"Œ¥◊¢≤·¿‡–Õ {typeof(TInterface)}");
         }
 
         public void UnregisterAll()

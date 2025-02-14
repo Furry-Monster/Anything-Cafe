@@ -8,7 +8,6 @@ namespace FrameMonster.IOC
         private readonly Dictionary<Type, object> _registry = new();
         private readonly Dictionary<string, object> _namedRegistry = new();
 
-
         public void Register<TInterface, TImpl>(string id, bool isSingleton)
             where TImpl : TInterface
         {

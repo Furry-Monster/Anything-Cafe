@@ -1,13 +1,12 @@
 using UnityEngine;
 
-namespace FrameMonster.IOC
+namespace FrameMonster.Core.IOC
 {
-
     public class PersistentSingleton<T> : MonoBehaviour where T : PersistentSingleton<T>
     {
         private static T _instance;
-        private static readonly object _lock = new object(); // 线程锁
-        private static bool _applicationIsQuitting = false; // 标记是否退出游戏
+        private static readonly object _lock = new(); // 线程锁
+        private static bool _applicationIsQuitting; // 标记是否退出游戏
 
         public static T Instance
         {
@@ -34,7 +33,7 @@ namespace FrameMonster.IOC
                         if (FindObjectsOfType<T>().Length > 1)
                         {
                             Debug.LogError(
-                                $"[PersistentSingleton] Something went really wrong - there should never be more than 1 singleton! Reopening the scene might fix it.");
+                                "[PersistentSingleton] Something went really wrong - there should never be more than 1 singleton! Reopening the scene might fix it.");
                             return _instance;
                         }
 
@@ -72,13 +71,13 @@ namespace FrameMonster.IOC
             {
                 // 如果_instance引用为空，则指向该实例
                 _instance = this as T;
-                DontDestroyOnLoad(this.gameObject); // 在场景之间持久化单例
+                DontDestroyOnLoad(gameObject); // 在场景之间持久化单例
             }
             else if (_instance != this)
             {
                 // 如果_instance引用有问题，摧毁当前实例，不进行覆盖
                 Debug.LogWarning($"Multiple instances of {typeof(T)} found. Destroying this one.");
-                Destroy(this.gameObject);
+                Destroy(gameObject);
             }
         }
 

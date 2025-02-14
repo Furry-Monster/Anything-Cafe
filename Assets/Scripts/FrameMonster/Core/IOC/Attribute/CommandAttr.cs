@@ -1,15 +1,15 @@
 using System;
 
-namespace FrameMonster.IOC.Attribute
+namespace FrameMonster.Core.IOC
 {
     [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Class)]
     public class CommandAttr : System.Attribute
     {
-        public string Id { get; }
-
         public CommandAttr(string id = null)
         {
             Id = id;
         }
+
+        public string Id { get; }
     }
 }

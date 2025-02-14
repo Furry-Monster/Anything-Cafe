@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace FrameMonster.IOC
+namespace FrameMonster.Core.IOC
 {
     public class DIContainer : IContainer
     {
@@ -27,12 +27,10 @@ namespace FrameMonster.IOC
         {
             if (_registry.TryGetValue(typeof(TInterface), out var instance))
             {
-                if (instance is Func<object> constructor)
-                {
-                    return (TInterface)constructor.Invoke();
-                }
+                if (instance is Func<object> constructor) return (TInterface)constructor.Invoke();
                 return (TInterface)instance;
             }
+
             throw new InvalidOperationException($"未注册类型 {typeof(TInterface)}");
         }
 
@@ -40,12 +38,10 @@ namespace FrameMonster.IOC
         {
             if (_namedRegistry.TryGetValue(id, out var instance))
             {
-                if (instance is Func<object> constructor)
-                {
-                    return (TInterface)constructor.Invoke();
-                }
+                if (instance is Func<object> constructor) return (TInterface)constructor.Invoke();
                 return (TInterface)instance;
             }
+
             throw new InvalidOperationException($"未注册ID为 {id} 的类型 {typeof(TInterface)}");
         }
 
@@ -54,6 +50,5 @@ namespace FrameMonster.IOC
             _registry.Clear();
             _namedRegistry.Clear();
         }
-
     }
 }

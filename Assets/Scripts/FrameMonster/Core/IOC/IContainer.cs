@@ -1,4 +1,4 @@
-namespace FrameMonster.IOC
+namespace FrameMonster.Core.IOC
 {
     public interface IContainer
     {

@@ -271,7 +271,8 @@ namespace Cysharp.Threading.Tasks
                     {
                         break;
                     }
-                };
+                }
+                ;
             }
 
             static IEnumerator UnwrapWaitAsyncOperation(AsyncOperation asyncOperation)

@@ -22,10 +22,4 @@ public class Singleton<T> where T : class, new()
                                 );
         }
     }
-
-    // 这个地方原本打算写个GC机制来自动回收
-    //
-    //
-    //
-    // 考虑到性能问题，暂时放弃
 }

@@ -38,6 +38,6 @@ public class SideBtnUI : PlaySceneComponent, IInitializable
 
     public void OnHintClick()
     {
-        
+
     }
 }

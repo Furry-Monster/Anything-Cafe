@@ -37,7 +37,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         try
         {
             ResetAllComponents();
-            ResetRegisterGlobal();
+            ReRegisterGlobal();
         }
         catch (Exception ex)
         {
@@ -55,7 +55,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     /// <param name="uiLayer"> UI层级 </param>
     /// <param name="component"> 控件 </param>
     /// <param name="widgetName"> 控件名称 </param>
-    public void RegisterReactiveComponent(int uiLayer, ReactiveComponent component, string widgetName = null)
+    public void RegisterComponent(int uiLayer, ReactiveComponent component, string widgetName = null)
     {
 #if UNITY_EDITOR
         Debug.Log($"[UIManager] Register ReactiveComponent {component.name} at layer {uiLayer}");
@@ -118,7 +118,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     /// <summary>
     /// 重置Canvas
     /// </summary>
-    private void ResetRegisterGlobal()
+    private void ReRegisterGlobal()
     {
         if (_globalCanvas == null)
         {

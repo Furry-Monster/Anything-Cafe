@@ -29,6 +29,7 @@ public class PlaySceneHandler :
         try
         {
             InitScene();
+            ShowScene();
         }
         catch (Exception ex)
         {
@@ -56,11 +57,18 @@ public class PlaySceneHandler :
 
     private void InitScene()
     {
-        _coffeeUI.Init();
-        _dialogUI.Init();
-        _discoverUI.Init();
-        _machineUI.Init();
-        _menuUI.Init();
-        _sideBtnUI.Init();
+        UIManager.Instance.ResetMgr();
+
+        UIManager.Instance.RegisterComponent(0,_coffeeUI);
+        UIManager.Instance.RegisterComponent(0, _dialogUI);
+        UIManager.Instance.RegisterComponent(0, _discoverUI);
+        UIManager.Instance.RegisterComponent(0, _machineUI);
+        UIManager.Instance.RegisterComponent(0, _menuUI);
+        UIManager.Instance.RegisterComponent(0, _sideBtnUI);
+    }
+
+    private void ShowScene()
+    {
+        SoundManager.Instance.PlaySound(_playSceneBGM.Type, _playSceneBGM.Clip, _playSceneBGM.Loop, _playSceneBGM.DefaultVolume);
     }
 }

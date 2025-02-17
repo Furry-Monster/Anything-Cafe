@@ -60,10 +60,12 @@ public class TitleSceneHandler :
 
     private void InitScene()
     {
-        _warningUI.Init();
-        _titleUI.Init();
-        _supportUI.Init();
-        _thanksUI.Init();
+        UIManager.Instance.ResetMgr();
+
+        UIManager.Instance.RegisterComponent(0, _warningUI);
+        UIManager.Instance.RegisterComponent(0, _titleUI);
+        UIManager.Instance.RegisterComponent(0, _thanksUI);
+        UIManager.Instance.RegisterComponent(0, _supportUI);
     }
 
     private async UniTask ShowScene()

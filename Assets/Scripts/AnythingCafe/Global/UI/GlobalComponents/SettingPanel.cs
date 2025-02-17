@@ -1,10 +1,15 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UnityEngine;
 
 public class SettingPanel :
     GlobalComponent,
     IInitializable
 {
+    [Header("General")]
+    [SerializeField]
+    private CanvasGroup _canvasGroup;
+
     private Sequence _sequence;
 
     public bool IsInitialized { get; set; }
@@ -16,23 +21,47 @@ public class SettingPanel :
         gameObject.SetActive(false);
     }
 
-    public override UniTask Open()
+    public void OnCloseClick()
     {
-        return base.Open();
+        _ = UIManager.Instance.CloseReactive(this);
     }
 
-    public override UniTask Close()
+    public override async UniTask Open()
     {
-        return base.Close();
+        if (_sequence.IsActive()) _sequence.Kill();
+        _sequence = DropIn();
+        _sequence.Play();
+        await _sequence.AsyncWaitForCompletion();
+    }
+
+    public override async UniTask Close()
+    {
+        if (_sequence.IsActive()) _sequence.Kill();
+        _sequence = RiseBack();
+        _sequence.Play();
+        await _sequence.AsyncWaitForCompletion();
     }
 
     private Sequence DropIn()
     {
-        return DOTween.Sequence();
+        return DOTween.Sequence().OnPlay(() =>
+        {
+            gameObject.SetActive(true);
+            _canvasGroup.interactable = false;
+        }).OnKill(() =>
+        {
+            _canvasGroup.interactable = true;
+        }).Append(transform.DOLocalMoveY(0, 0.5f));
     }
 
     private Sequence RiseBack()
     {
-        return DOTween.Sequence();
+        return DOTween.Sequence().OnPlay(() =>
+        {
+            _canvasGroup.interactable = false;
+        }).OnKill(() =>
+        {
+            gameObject.SetActive(false);
+        }).Append(transform.DOLocalMoveY(1700, 0.5f));
     }
 }

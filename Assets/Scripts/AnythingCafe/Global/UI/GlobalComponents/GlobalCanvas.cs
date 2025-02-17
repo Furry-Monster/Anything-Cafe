@@ -19,7 +19,7 @@ public class GlobalCanvas :
         CheckGlobalComponents();
 
         foreach (var component in _globalComponents)
-            UIManager.Instance.RegisterReactiveComponent(1, component.Value, component.Key);
+            UIManager.Instance.RegisterComponent(1, component.Value, component.Key);
     }
 
     /// <summary>

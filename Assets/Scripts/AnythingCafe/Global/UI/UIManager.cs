@@ -8,15 +8,9 @@ using UnityEngine.UI;
 [AddComponentMenu("FrameMonster/UI/UIManager")]
 public class UIManager : PersistentSingleton<UIManager>, IInitializable
 {
-    // string: UI名称  int: UI层级  ReactiveComponent: 控件
     [Header("Global Components")]
     [SerializeField] private SerializableDictionary<string, GlobalComponent> _globalComponents; // 全局可用的控件,在每个场景都会加载
     [SerializeField] private GlobalCanvas _globalCanvas; // 全局Canvas
-    [Space]
-
-    [Header("Loading Components")]
-    [SerializeField] private SerializableDictionary<string, LoadingComponent> _loadingComponents; // 用于加载的控件
-    [SerializeField] private LoadingCanvas _loadingCanvas;// 用于加载页面的Canvas
     [Space]
 
     [Header("Other Components")]
@@ -130,19 +124,13 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         await OpenReactive(component.GetComponent<ReactiveComponent>());
     }
 
-    /// <summary>
-    /// 打开一个Loading控件
-    /// </summary>
-    /// <param name="widgetName"> 控件名称 </param>
-    /// <returns> UniTask </returns>
-    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
-    public async UniTask OpenLoading(string widgetName)
+    public async UniTask CloseGlobal(string widgetName)
     {
-        var component = _loadingComponents[widgetName];
+        var component = _globalComponents[widgetName];
         if (component == null)
-            throw new CustomErrorException($"[UIManager] Can't find loading ui {widgetName}!",
+            throw new CustomErrorException($"[UIManager] Can't find global ui {widgetName}!",
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
-        await OpenReactive(component.GetComponent<ReactiveComponent>());
+        await CloseReactive(component.GetComponent<ReactiveComponent>());
     }
     #endregion
 
@@ -152,18 +140,13 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     /// </summary>
     private void ResetCanvas()
     {
-        if (_globalCanvas == null || _loadingCanvas == null)
+        if (_globalCanvas == null)
             throw new CustomErrorException("[UIManager] Canvas is set NULL!",
                 new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UICanvasResetFailed));
         try
         {
             // 初始化特殊Canvas
             _globalCanvas.Init();
-            _loadingCanvas.Init();
-
-            // 检查缺失的控件
-            _globalCanvas.CheckComponents(_globalComponents.Values.ToList<ReactiveComponent>());
-            _loadingCanvas.CheckComponents(_loadingComponents.Values.ToList<ReactiveComponent>());
         }
         catch (Exception ex)
         {
@@ -188,10 +171,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         foreach (var component in _globalComponents.Values)
             RegisterReactiveComponent(1, component.GetComponent<ReactiveComponent>());
 
-        // 重新注册所有Loading控件
-        foreach (var component in _loadingComponents.Values)
-            RegisterReactiveComponent(2, component.GetComponent<ReactiveComponent>());
-
+        
         // 寻找并注册其他控件
         var sceneComponents = FindObjectsOfType<ReactiveComponent>();
         foreach (var component in sceneComponents)
@@ -232,83 +212,18 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
         await OpenReactive(component.GetComponent<ReactiveComponent>());
     }
-
-    /// <summary>
-    /// 打开一个Loading控件,同时不注入数据模板
-    /// </summary>
-    /// <typeparam name="T"> 控件类型 </typeparam>
-    /// <returns> UniTask </returns>
-    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
-    public async UniTask OpenLoading<T>() where T : ReactiveComponent
-    {
-        var component = _loadingComponents.Values
-            .FirstOrDefault(c => c.GetComponent<T>() != null);
-        if (component == null)
-            throw new CustomErrorException($"[UIManager] Can't find loading ui {typeof(T).Name}!",
-                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
-        await OpenReactive(component.GetComponent<ReactiveComponent>());
-    }
-
-    /// <summary>
-    /// 关闭一个控件
-    /// </summary>
-    /// <typeparam name="T"> 控件类型 </typeparam>
-    /// <returns> UniTask </returns>
-    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
-    public async UniTask CloseReactive<T>() where T : ReactiveComponent
-    {
-        var component = _allReactiveComponents.Values
-            .SelectMany(c => c)
-            .FirstOrDefault(c => c.GetComponent<T>() != null);
-        if (component == null)
-            throw new CustomErrorException($"[UIManager] Can't find ui {typeof(T).Name}!",
-                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
-        await CloseReactive(component);
-    }
-
-    /// <summary>
-    /// 关闭一个全局控件
-    /// </summary>
-    /// <typeparam name="T"> 控件类型 </typeparam>
-    /// <returns> UniTask </returns>
-    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
-    public async UniTask CloseGlobal<T>() where T : ReactiveComponent
-    {
-        var component = _globalComponents.Values
-            .FirstOrDefault(c => c.GetComponent<T>() != null);
-        if (component == null)
-            throw new CustomErrorException($"[UIManager] Can't find global ui {typeof(T).Name}!",
-                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
-        await CloseReactive(component.GetComponent<ReactiveComponent>());
-    }
-
-    /// <summary>
-    /// 关闭一个Loading控件
-    /// </summary>
-    /// <typeparam name="T"> 控件类型 </typeparam>
-    /// <returns> UniTask </returns>
-    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
-    public async UniTask CloseLoading<T>() where T : ReactiveComponent
-    {
-        var component = _loadingComponents.Values
-            .FirstOrDefault(c => c.GetComponent<T>() != null);
-        if (component == null)
-            throw new CustomErrorException($"[UIManager] Can't find loading ui {typeof(T).Name}!",
-                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
-        await CloseReactive(component.GetComponent<ReactiveComponent>());
-    }
     #endregion
 
     #region 泛型方式（With DataTemplate）
     /// <summary>
-    /// 注入数据模板打开一个控件
+    /// 注入数据模板
     /// </summary>
     /// <typeparam name="T"> 控件类型 </typeparam>
     /// <typeparam name="TData"> 数据模板类型 </typeparam>
     /// <param name="data"> 数据模板 </param>
-    /// <returns> UniTask </returns>
+    /// <returns> ReactiveComponent </returns>
     /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
-    public async UniTask OpenReactive<T, TData>(TData data)
+    public ReactiveComponent LoadDataReactive<T, TData>(TData data)
         where T : ReactiveComponent
         where TData : IDataTemplate
     {
@@ -324,6 +239,23 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
             dataComponent.LoadTemplate(data);
         else
             Debug.LogWarning($"[UIManager] {component.name} doesn't implement IHasDataTemplate<TData>!");
+
+        return component;
+    }
+
+    /// <summary>
+    /// 注入数据模板打开一个控件
+    /// </summary>
+    /// <typeparam name="T"> 控件类型 </typeparam>
+    /// <typeparam name="TData"> 数据模板类型 </typeparam>
+    /// <param name="data"> 数据模板 </param>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
+    public async UniTask OpenReactive<T, TData>(TData data)
+        where T : ReactiveComponent
+        where TData : IDataTemplate
+    {
+        var component = LoadDataReactive<T, TData>(data);
 
         await OpenReactive(component);
     }
@@ -344,33 +276,6 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
             .FirstOrDefault(c => c.GetComponent<T>() != null);
         if (component == null)
             throw new CustomErrorException($"[UIManager] Can't find global ui {typeof(T).Name}!",
-                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
-
-        // 加载数据模板
-        if (component is IHasDataTemplate<TData> dataComponent)
-            dataComponent.LoadTemplate(data);
-        else
-            Debug.LogWarning($"[UIManager] {component.name} doesn't implement IHasDataTemplate<TData>!");
-
-        await OpenReactive(component.GetComponent<ReactiveComponent>());
-    }
-
-    /// <summary>
-    /// 注入数据模板打开一个Loading控件
-    /// </summary>
-    /// <typeparam name="T"> 控件类型 </typeparam>
-    /// <typeparam name="TData"> 数据模板类型 </typeparam>
-    /// <param name="data"> 数据模板 </param>
-    /// <returns> UniTask </returns>
-    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
-    public async UniTask OpenLoading<T, TData>(TData data)
-        where T : ReactiveComponent
-        where TData : IDataTemplate
-    {
-        var component = _loadingComponents.Values
-            .FirstOrDefault(c => c.GetComponent<T>());
-        if (component == null)
-            throw new CustomErrorException($"[UIManager] Can't find loading ui {typeof(T).Name}!",
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
 
         // 加载数据模板

@@ -49,14 +49,12 @@ public class GameSceneManager :
             LoadingProgress = 0;
             OnSceneLoadStart?.Invoke(sceneToLoad);
 
-            if (loadingName != null)
-                await UIManager.Instance.OpenLoading(loadingName);
+            // TODO: 在这里实现场景切换动画
 
             await UnloadCurrentScene();
             await LoadNewScene(sceneToLoad);
 
-            if (loadingName != null)
-                await UIManager.Instance.OpenLoading(loadingName);
+            // TODO: 关闭动画
 
             OnSceneLoadComplete?.Invoke(sceneToLoad);
         }

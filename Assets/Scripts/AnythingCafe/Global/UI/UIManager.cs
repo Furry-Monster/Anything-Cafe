@@ -28,7 +28,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
 
     public bool IsInitialized { get; set; }
 
-    #region API（初始化，重置，注册，打开，关闭）
+    #region 常规API（初始化，重置，注册，打开，关闭）
     /// <summary>
     /// 初始化UIManager
     /// </summary>
@@ -37,18 +37,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         if (IsInitialized) return;
         IsInitialized = true;
 
-        try
-        {
-            ResetCanvas();
-            ResetAllComponents();
-        }
-        catch (Exception ex)
-        {
-            if (ex is CustomErrorException)
-                throw;
-            throw new CustomErrorException($"[UIManager] Can't init UIManager, {ex.Message}",
-                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIInitFailed));
-        }
+        ResetMgr();
     }
 
     /// <summary>
@@ -123,22 +112,38 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         await component.Close();
         _closingComponents.Remove(component);
     }
+    #endregion
 
+    #region string查找方式（打开，关闭）
     /// <summary>
-    ///  打开Loading UI
+    /// 打开一个全局控件
     /// </summary>
-    /// <param name="uiName"> UI名称 </param>
+    /// <param name="widgetName"> 控件名称 </param>
     /// <returns> UniTask </returns>
     /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
-    public async UniTask OpenLoading(string uiName)
+    public async UniTask OpenGlobal(string widgetName)
     {
-        var component = _loadingComponents[uiName];
+        var component = _globalComponents[widgetName];
         if (component == null)
-            throw new CustomErrorException($"[UIManager] Can't find loading ui {uiName}!",
+            throw new CustomErrorException($"[UIManager] Can't find global ui {widgetName}!",
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
         await OpenReactive(component.GetComponent<ReactiveComponent>());
     }
-    // TODO:把上面的方法优化掉
+
+    /// <summary>
+    /// 打开一个Loading控件
+    /// </summary>
+    /// <param name="widgetName"> 控件名称 </param>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
+    public async UniTask OpenLoading(string widgetName)
+    {
+        var component = _loadingComponents[widgetName];
+        if (component == null)
+            throw new CustomErrorException($"[UIManager] Can't find loading ui {widgetName}!",
+                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
+        await OpenReactive(component.GetComponent<ReactiveComponent>());
+    }
     #endregion
 
     #region 私有方法

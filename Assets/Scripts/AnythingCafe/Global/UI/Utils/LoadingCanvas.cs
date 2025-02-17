@@ -3,7 +3,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-[AddComponentMenu("FrameMonster/UI/Utils/Loading Canvas")]
 public class LoadingCanvas :
     MonoBehaviourSingleton<LoadingCanvas>,
     IInitializable

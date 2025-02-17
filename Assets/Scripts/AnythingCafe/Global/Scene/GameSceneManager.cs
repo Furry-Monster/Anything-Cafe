@@ -19,15 +19,11 @@ public class GameSceneManager :
     public event Action<float> OnLoadingProgressChanged;
 
     public bool IsInitialized { get; set; }
-
     public void Init()
     {
         if (IsInitialized) return;
-
+        
         CurrentSceneHandler ??= GameObject.FindWithTag("SceneHandler").GetComponent<ISceneHandler>();
-
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        SceneManager.sceneUnloaded += OnSceneUnloaded;
 
         IsInitialized = true;
     }
@@ -36,7 +32,7 @@ public class GameSceneManager :
     /// 加载场景
     /// </summary>
     /// <param name="sceneToLoad"> 场景ID </param>
-    /// <param name="loadingName"></param>
+    /// <param name="loadingName"> 加载场景时的文字提示 </param>
     /// <returns> 异步操作 </returns>
     /// <exception cref="CustomErrorException"> 场景加载失败 </exception>
     public async UniTask LoadScene(SceneID sceneToLoad, string loadingName = null)
@@ -104,8 +100,8 @@ public class GameSceneManager :
     /// <summary>
     /// 加载新的场景
     /// </summary>
-    /// <param name="sceneId"></param>
-    /// <returns></returns>
+    /// <param name="sceneId"> 场景ID </param>
+    /// <returns> 异步操作 </returns>
     private async UniTask LoadNewScene(SceneID sceneId)
     {
         var loadOperation = SceneManager.LoadSceneAsync(sceneId.ToString());
@@ -125,13 +121,14 @@ public class GameSceneManager :
 
         while (!loadOperation.isDone)
             await UniTask.Yield();
-        await InitializeNewScene();
+        
+        InitializeNewScene();
     }
 
     /// <summary>
     /// 场景相关资源的预加载(音频、预制体等)
     /// </summary>
-    /// <returns></returns>
+    /// <returns> 异步操作 </returns>
     private async UniTask PreloadSceneResources()
     {
         // TODO: 在这里实现场景相关资源的预加载
@@ -141,31 +138,13 @@ public class GameSceneManager :
     /// <summary>
     /// 初始化新场景
     /// </summary>
-    /// <returns></returns>
-    private async UniTask InitializeNewScene()
+    private void InitializeNewScene()
     {
         var newSceneHandler = GameObject.FindWithTag("SceneHandler")?.GetComponent<ISceneHandler>();
 
         if (newSceneHandler != null)
         {
             CurrentSceneHandler = newSceneHandler;
-            await CurrentSceneHandler.OnSceneLoad();
         }
-    }
-
-    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode) =>
-        Debug.Log($"[GameSceneManager] Scene loaded successfully: {scene.name} in mode {mode}");
-
-
-    private static void OnSceneUnloaded(Scene scene) =>
-        Debug.Log($"[GameSceneManager] Scene unloaded successfully: {scene.name}");
-
-
-    protected override void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-        SceneManager.sceneUnloaded -= OnSceneUnloaded;
-
-        base.OnDestroy();
     }
 }

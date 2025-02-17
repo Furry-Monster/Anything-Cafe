@@ -23,8 +23,6 @@ public class GameManager : PersistentSingleton<GameManager>
             CursorManager.Instance.Init();
             GameSceneManager.Instance.Init();
 
-            await PrepareGame();
-            await ValidateIntegrity();
             await ReadyTitleScene();
         }
         catch (Exception ex)
@@ -42,18 +40,7 @@ public class GameManager : PersistentSingleton<GameManager>
 
     public void OnApplicationQuit()
     {
-        // TODO: 清理游戏资源
         DOTween.Clear();
-    }
-
-    private async UniTask PrepareGame()
-    {
-        // TODO: 准备游戏资源,初始化游戏
-    }
-
-    private async UniTask ValidateIntegrity()
-    {
-        // TODO: 检测游戏资源完整性
     }
 
     /// <summary>

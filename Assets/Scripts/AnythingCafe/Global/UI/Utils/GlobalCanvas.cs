@@ -3,7 +3,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-[AddComponentMenu("FrameMonster/UI/Utils/Global Canvas")]
 public class GlobalCanvas :
     MonoBehaviourSingleton<GlobalCanvas>,
     IInitializable

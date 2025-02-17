@@ -18,4 +18,5 @@ public enum ErrorCode
     SceneOnUnloadFailed = 10,
     UIResetFailed = 11,
     UICantOpen = 12,
+    SceneNotInBuild = 13,
 }

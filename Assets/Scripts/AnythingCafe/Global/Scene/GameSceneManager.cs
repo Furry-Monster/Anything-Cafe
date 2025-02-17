@@ -1,9 +1,10 @@
 using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 
-[AddComponentMenu("FrameMonster/Scene/SceneManager")]
+[AddComponentMenu("FrameMonster/Scene/GameSceneManager")]
 public class GameSceneManager :
     PersistentSingleton<GameSceneManager>,
     IInitializable
@@ -82,6 +83,9 @@ public class GameSceneManager :
             {
                 await CurrentSceneHandler.OnSceneUnload();
                 CurrentSceneHandler = null;
+
+                await Resources.UnloadUnusedAssets();
+                GC.Collect();
             }
             catch (Exception ex)
             {
@@ -98,7 +102,19 @@ public class GameSceneManager :
     /// <returns> 异步操作 </returns>
     private async UniTask LoadNewScene(SceneID sceneId)
     {
-        var loadOperation = SceneManager.LoadSceneAsync(sceneId.ToString());
+        var sceneName = sceneId.ToString();
+#if UNITY_EDITOR
+        // 开发阶段EDITOR模式下,验证场景存在性
+        if (!SceneExists(sceneName))
+        {
+            throw new CustomErrorException(
+                $"[GameSceneManager] Scene {sceneName} not in build settings!",
+                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.SceneNotInBuild)
+            );
+        }
+#endif
+
+        var loadOperation = SceneManager.LoadSceneAsync(sceneName);
         loadOperation.allowSceneActivation = false;
 
         // 监控加载进度
@@ -110,12 +126,23 @@ public class GameSceneManager :
         }
 
         await PreloadSceneResources();
-
         loadOperation.allowSceneActivation = true;
-
         while (!loadOperation.isDone)
             await UniTask.Yield();
     }
+
+#if UNITY_EDITOR
+    private static bool SceneExists(string sceneName)
+    {
+        for (var i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            var path = SceneUtility.GetScenePathByBuildIndex(i);
+            if (System.IO.Path.GetFileNameWithoutExtension(path) == sceneName) // 删除文件扩展名
+                return true;
+        }
+        return false;
+    }
+#endif
 
     /// <summary>
     /// 场景相关资源的预加载(音频、预制体等)
@@ -123,8 +150,42 @@ public class GameSceneManager :
     /// <returns> 异步操作 </returns>
     private async UniTask PreloadSceneResources()
     {
-        // TODO: 在这里实现场景相关资源的预加载
         await UniTask.CompletedTask;
+
+        // TODO: 预加载场景相关资源
+        // 
+        // 以下代码为示例, 之后启用
+        // 
+        // const int totalSteps = 3;
+        // var currentStep = 0;
+        //
+        // //预加载音频
+        // currentStep++;
+        // await Addressables.LoadAssetsAsync<AudioClip>("scene_audio", null)
+        //     .ToUniTask(Progress.Create<float>(p =>
+        //         UpdateCompositeProgress(p, currentStep, totalSteps)));
+        //
+        // //预加载预制体
+        // currentStep++;
+        // await Addressables.LoadAssetsAsync<GameObject>("scene_prefabs", null)
+        //     .ToUniTask(Progress.Create<float>(p =>
+        //         UpdateCompositeProgress(p, currentStep, totalSteps)));
+        //
+        // // 其他资源...
+    }
+
+    /// <summary>
+    /// 更新任务组合进度
+    /// </summary>
+    /// <param name="partialProgress"> 进度百分比 </param>
+    /// <param name="currentStep"> 当前步骤 </param>
+    /// <param name="totalSteps"> </param>
+    private void UpdateCompositeProgress(float partialProgress, int currentStep, int totalSteps)
+    {
+        var stepWeight = 1f / totalSteps;
+        var baseProgress = (currentStep - 1) * stepWeight;
+        LoadingProgress = baseProgress + partialProgress * stepWeight;
+        OnLoadingProgressChanged?.Invoke(LoadingProgress);
     }
 
     /// <summary>
@@ -132,6 +193,8 @@ public class GameSceneManager :
     /// </summary>
     private async UniTask InitializeNewScene()
     {
+        await UniTask.WaitUntil(() => SceneManager.GetActiveScene().isLoaded);
+
         var newSceneHandler = GameObject.FindWithTag("SceneHandler").GetComponent<ISceneHandler>();
 
         if (newSceneHandler != null)

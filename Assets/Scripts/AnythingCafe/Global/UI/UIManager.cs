@@ -8,7 +8,8 @@ using UnityEngine;
 public class UIManager : PersistentSingleton<UIManager>, IInitializable
 {
     [Header("Global Components")]
-    [SerializeField] private GlobalCanvas _globalCanvas;
+    [SerializeField] 
+    private GlobalCanvas _globalCanvas;
 
     private readonly Dictionary<int, Dictionary<string, ReactiveComponent>> _allReactiveComponents = new(); // 场景中所有的ClosableUI,int为UI层级
     private readonly LinkedList<ReactiveComponent> _activeComponents = new();  // 正在显示的UI,类似栈的机制
@@ -24,8 +25,6 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     {
         if (IsInitialized) return;
         IsInitialized = true;
-
-        ResetMgr();
     }
 
     /// <summary>
@@ -124,7 +123,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         {
             _globalCanvas = FindObjectOfType<GlobalCanvas>();
             if (_globalCanvas == null)
-                throw new CustomErrorException($"[UIManager] Can't find GlobalCanvas!",
+                throw new CustomErrorException("[UIManager] Can't find GlobalCanvas!",
                     new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIResetFailed));
         }
 

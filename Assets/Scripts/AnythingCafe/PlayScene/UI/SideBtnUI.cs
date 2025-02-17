@@ -9,7 +9,6 @@ public class SideBtnUI : PlaySceneComponent, IInitializable
         if (IsInitialized) return;
         IsInitialized = true;
 
-        gameObject.SetActive(false);
     }
 
     public async void OnMenuClick()

@@ -14,15 +14,13 @@ public class GameSceneManager :
 
     public float LoadingProgress { get; private set; }
 
-    public event Action<SceneID> OnSceneLoadStart;
-    public event Action<SceneID> OnSceneLoadComplete;
     public event Action<float> OnLoadingProgressChanged;
 
     public bool IsInitialized { get; set; }
     public void Init()
     {
         if (IsInitialized) return;
-        
+
         CurrentSceneHandler ??= GameObject.FindWithTag("SceneHandler").GetComponent<ISceneHandler>();
 
         IsInitialized = true;
@@ -47,23 +45,21 @@ public class GameSceneManager :
         {
             _isLoading = true;
             LoadingProgress = 0;
-            OnSceneLoadStart?.Invoke(sceneToLoad);
 
             // TODO: 在这里实现场景切换动画
 
             await UnloadCurrentScene();
             await LoadNewScene(sceneToLoad);
+            await InitializeNewScene();
 
             // TODO: 关闭动画
-
-            OnSceneLoadComplete?.Invoke(sceneToLoad);
         }
         catch (Exception ex)
         {
             if (ex is CustomErrorException)
                 throw;
             throw new CustomErrorException(
-                $"[GameSceneManager] Failed to load scene: {sceneToLoad}",
+                $"[GameSceneManager] Failed to load scene: {sceneToLoad},cause:{ex}",
                 new CustomErrorItem(ErrorSeverity.Error, ErrorCode.SceneCantLoad)
             );
         }
@@ -77,7 +73,7 @@ public class GameSceneManager :
     /// <summary>
     /// 卸载当前场景
     /// </summary>
-    /// <returns></returns>
+    /// <returns> 异步操作 </returns>
     private async UniTask UnloadCurrentScene()
     {
         if (CurrentSceneHandler != null)
@@ -119,8 +115,6 @@ public class GameSceneManager :
 
         while (!loadOperation.isDone)
             await UniTask.Yield();
-        
-        InitializeNewScene();
     }
 
     /// <summary>
@@ -136,13 +130,14 @@ public class GameSceneManager :
     /// <summary>
     /// 初始化新场景
     /// </summary>
-    private void InitializeNewScene()
+    private async UniTask InitializeNewScene()
     {
-        var newSceneHandler = GameObject.FindWithTag("SceneHandler")?.GetComponent<ISceneHandler>();
+        var newSceneHandler = GameObject.FindWithTag("SceneHandler").GetComponent<ISceneHandler>();
 
         if (newSceneHandler != null)
         {
             CurrentSceneHandler = newSceneHandler;
+            await CurrentSceneHandler.OnSceneLoad();
         }
     }
 }

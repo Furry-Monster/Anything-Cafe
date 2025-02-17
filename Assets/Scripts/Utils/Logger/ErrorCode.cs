@@ -17,4 +17,5 @@ public enum ErrorCode
     ComponentNotFound = 9,
     SceneOnUnloadFailed = 10,
     UIResetFailed = 11,
+    UICantOpen = 12,
 }

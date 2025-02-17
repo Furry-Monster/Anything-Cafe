@@ -1,4 +1,6 @@
+using System;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 public class MenuUI : PlaySceneComponent, IInitializable
 {
@@ -23,16 +25,34 @@ public class MenuUI : PlaySceneComponent, IInitializable
 
     public void OnContinueClick()
     {
-
+        _ = UIManager.Instance.CloseReactive(this);
     }
 
-    public void OnMainMenuClick()
+    public async void OnMainMenuClick()
     {
-
+        try
+        {
+            await GameSceneManager.Instance.LoadScene(SceneID.TitleScene);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"[TitleUI] {e.Message}");
+        }
     }
 
-    public void OnSettingClick()
+    public async void OnSettingClick()
     {
-
+        try
+        {
+            await UIManager.Instance.CloseReactive(this);
+            await UIManager.Instance.OpenGlobal<SettingPanel>();
+        }
+        catch (Exception ex)
+        {
+            if (ex is CustomErrorException)
+                throw;
+            throw new CustomErrorException($"[MenuUI] Cant open Setting Panel bcz:{ex}",
+                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UICantOpen));
+        }
     }
 }

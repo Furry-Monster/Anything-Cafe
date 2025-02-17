@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 
 public class FadeLoading :
-    LoadingComponent,
+    GlobalComponent,
     IInitializable,
     IHasDataTemplate<FadeLoadingModel>
 {

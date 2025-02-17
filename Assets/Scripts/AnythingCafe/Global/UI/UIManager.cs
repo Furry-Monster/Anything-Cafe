@@ -3,20 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 [AddComponentMenu("FrameMonster/UI/UIManager")]
 public class UIManager : PersistentSingleton<UIManager>, IInitializable
 {
     [Header("Global Components")]
-    [SerializeField] private SerializableDictionary<string, GlobalComponent> _globalComponents; // 全局可用的控件,在每个场景都会加载
-    [SerializeField] private GlobalCanvas _globalCanvas; // 全局Canvas
-    [Space]
+    [SerializeField] private GlobalCanvas _globalCanvas;
 
-    [Header("Other Components")]
-    [SerializeField] private GraphicRaycaster _graphicRaycaster; // 用于处理UI事件的Raycaster
-
-    private readonly Dictionary<int, List<ReactiveComponent>> _allReactiveComponents = new(); // 场景中所有的ClosableUI,int为UI层级
+    private readonly Dictionary<int, Dictionary<string, ReactiveComponent>> _allReactiveComponents = new(); // 场景中所有的ClosableUI,int为UI层级
     private readonly LinkedList<ReactiveComponent> _activeComponents = new();  // 正在显示的UI,类似栈的机制
     private readonly List<ReactiveComponent> _closingComponents = new(); // 正在关闭的UI队列,类似GC的机制
 
@@ -60,20 +54,21 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     /// </summary>
     /// <param name="uiLayer"> UI层级 </param>
     /// <param name="component"> 控件 </param>
-    public void RegisterReactiveComponent(int uiLayer, ReactiveComponent component)
+    /// <param name="widgetName"></param>
+    public void RegisterReactiveComponent(int uiLayer, ReactiveComponent component, string widgetName = null)
     {
 #if UNITY_EDITOR
         Debug.Log($"[UIManager] Register ReactiveComponent {component.name} at layer {uiLayer}");
 #endif
         // 整理字典
         if (!_allReactiveComponents.ContainsKey(uiLayer))
-            _allReactiveComponents[uiLayer] = new List<ReactiveComponent>();
-        if (_allReactiveComponents[uiLayer].Contains(component))
+            _allReactiveComponents[uiLayer] = new Dictionary<string, ReactiveComponent>();
+        if (_allReactiveComponents[uiLayer].Values.Contains(component))
             return;
         // 初始化并注册
         if (component is IInitializable initializable)
             initializable.Init();
-        _allReactiveComponents[uiLayer].Add(component);
+        _allReactiveComponents[uiLayer].Add(widgetName ?? component.name, component);
     }
 
     /// <summary>
@@ -108,44 +103,22 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     }
     #endregion
 
-    #region string查找方式（打开，关闭）
-    /// <summary>
-    /// 打开一个全局控件
-    /// </summary>
-    /// <param name="widgetName"> 控件名称 </param>
-    /// <returns> UniTask </returns>
-    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
-    public async UniTask OpenGlobal(string widgetName)
-    {
-        var component = _globalComponents[widgetName];
-        if (component == null)
-            throw new CustomErrorException($"[UIManager] Can't find global ui {widgetName}!",
-                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
-        await OpenReactive(component.GetComponent<ReactiveComponent>());
-    }
-
-    public async UniTask CloseGlobal(string widgetName)
-    {
-        var component = _globalComponents[widgetName];
-        if (component == null)
-            throw new CustomErrorException($"[UIManager] Can't find global ui {widgetName}!",
-                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
-        await CloseReactive(component.GetComponent<ReactiveComponent>());
-    }
-    #endregion
-
-    #region 私有方法
+    #region 私有方法（重置Canvas，重置所有控件注册）
     /// <summary>
     /// 重置Canvas
     /// </summary>
     private void ResetCanvas()
     {
         if (_globalCanvas == null)
-            throw new CustomErrorException("[UIManager] Canvas is set NULL!",
-                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UICanvasResetFailed));
+        {
+            _globalCanvas = FindObjectOfType<GlobalCanvas>();
+            if (_globalCanvas == null)
+                throw new CustomErrorException($"[UIManager] Can't find GlobalCanvas!",
+                    new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIResetFailed));
+        }
+
         try
         {
-            // 初始化特殊Canvas
             _globalCanvas.Init();
         }
         catch (Exception ex)
@@ -166,16 +139,6 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         _allReactiveComponents.Clear();
         _activeComponents.Clear();
         _closingComponents.Clear();
-
-        // 重新注册所有Global控件
-        foreach (var component in _globalComponents.Values)
-            RegisterReactiveComponent(1, component.GetComponent<ReactiveComponent>());
-
-        
-        // 寻找并注册其他控件
-        var sceneComponents = FindObjectsOfType<ReactiveComponent>();
-        foreach (var component in sceneComponents)
-            RegisterReactiveComponent(0, component);
     }
     #endregion
 
@@ -188,8 +151,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
     public async UniTask OpenReactive<T>() where T : ReactiveComponent
     {
-        var component = _allReactiveComponents.Values
-            .SelectMany(c => c)
+        var component = _allReactiveComponents[0].Values
             .FirstOrDefault(c => c.GetComponent<T>() != null);
         if (component == null)
             throw new CustomErrorException($"[UIManager] Can't find ui {typeof(T).Name}!",
@@ -205,16 +167,16 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
     public async UniTask OpenGlobal<T>() where T : ReactiveComponent
     {
-        var component = _globalComponents.Values
+        var globalComponents = _allReactiveComponents[1].Values
             .FirstOrDefault(c => c.GetComponent<T>() != null);
-        if (component == null)
+        if (globalComponents == null)
             throw new CustomErrorException($"[UIManager] Can't find global ui {typeof(T).Name}!",
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
-        await OpenReactive(component.GetComponent<ReactiveComponent>());
+        await OpenReactive(globalComponents.GetComponent<ReactiveComponent>());
     }
     #endregion
 
-    #region 泛型方式（With DataTemplate）
+    #region 模板注入方式（With DataTemplate）
     /// <summary>
     /// 注入数据模板
     /// </summary>
@@ -227,8 +189,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         where T : ReactiveComponent
         where TData : IDataTemplate
     {
-        var component = _allReactiveComponents.Values
-            .SelectMany(c => c)
+        var component = _allReactiveComponents[0].Values
             .FirstOrDefault(c => c.GetComponent<T>() != null);
         if (component == null)
             throw new CustomErrorException($"[UIManager] Can't find ui {typeof(T).Name}!",
@@ -272,7 +233,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
         where T : ReactiveComponent
         where TData : IDataTemplate
     {
-        var component = _globalComponents.Values
+        var component = _allReactiveComponents[1].Values
             .FirstOrDefault(c => c.GetComponent<T>() != null);
         if (component == null)
             throw new CustomErrorException($"[UIManager] Can't find global ui {typeof(T).Name}!",

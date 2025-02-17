@@ -36,8 +36,8 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     {
         try
         {
-            ResetCanvas();
             ResetAllComponents();
+            ResetRegisterGlobal();
         }
         catch (Exception ex)
         {
@@ -54,7 +54,7 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
     /// </summary>
     /// <param name="uiLayer"> UI层级 </param>
     /// <param name="component"> 控件 </param>
-    /// <param name="widgetName"></param>
+    /// <param name="widgetName"> 控件名称 </param>
     public void RegisterReactiveComponent(int uiLayer, ReactiveComponent component, string widgetName = null)
     {
 #if UNITY_EDITOR
@@ -105,9 +105,20 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
 
     #region 私有方法（重置Canvas，重置所有控件注册）
     /// <summary>
+    /// 重置场景中的控件注册
+    /// </summary>
+    private void ResetAllComponents()
+    {
+        // 清除所有控件
+        _allReactiveComponents.Clear();
+        _activeComponents.Clear();
+        _closingComponents.Clear();
+    }
+
+    /// <summary>
     /// 重置Canvas
     /// </summary>
-    private void ResetCanvas()
+    private void ResetRegisterGlobal()
     {
         if (_globalCanvas == null)
         {
@@ -128,17 +139,6 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
             throw new CustomErrorException($"[UIManager] Can't reset Canvas, {ex.Message}",
                 new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UICanvasResetFailed));
         }
-    }
-
-    /// <summary>
-    /// 重置场景中的控件注册
-    /// </summary>
-    private void ResetAllComponents()
-    {
-        // 清除所有控件
-        _allReactiveComponents.Clear();
-        _activeComponents.Clear();
-        _closingComponents.Clear();
     }
     #endregion
 

@@ -1248,17 +1248,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8483421769605013457, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
   m_PrefabInstance: {fileID: 3848026137083507435}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &623646477 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7762138148611661172, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
-  m_PrefabInstance: {fileID: 3848026137083507435}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bb30cf7abc499a429db0753b5b3335e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &789590929
 GameObject:
   m_ObjectHideFlags: 0
@@ -2343,17 +2332,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1779259044765207818, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
   m_PrefabInstance: {fileID: 1954704472}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1954704474 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2955689492781739411, guid: b195c17b23b10e44aa303e9d8c743f38, type: 3}
-  m_PrefabInstance: {fileID: 1954704472}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c06b46420dc80c4fa5e3812472da2a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2026649722
 GameObject:
   m_ObjectHideFlags: 0
@@ -2398,16 +2376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0edf2c849c9eb64409caae6a432d603e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _globalComponents:
-    list:
-    - Key: ContentDialog
-      Value: {fileID: 1954704474}
-    - Key: NoticeDialog
-      Value: {fileID: 2108120239}
-    - Key: SettingPanel
-      Value: {fileID: 623646477}
   _globalCanvas: {fileID: 2028202968}
-  _graphicRaycaster: {fileID: 0}
 --- !u!1 &2028202962
 GameObject:
   m_ObjectHideFlags: 0
@@ -2538,6 +2507,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee5e0275176863742b198c2f149d1e7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _globalComponents:
+    list:
+    - Key: 
+      Value: {fileID: 0}
 --- !u!1 &2089550343
 GameObject:
   m_ObjectHideFlags: 0
@@ -2638,17 +2611,6 @@ MonoBehaviour:
   _thanksUI: {fileID: 2113589707}
   _supportUI: {fileID: 438058644}
   _backGround: {fileID: 908015340}
---- !u!114 &2108120239 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9113552169457295178, guid: 416fca6d831b1a14a86cc8a8679bed22, type: 3}
-  m_PrefabInstance: {fileID: 89546358}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f50f3d554b73960479b284e625f6fdf4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2113589703
 GameObject:
   m_ObjectHideFlags: 0

@@ -30,23 +30,28 @@ public class DiscoverUI : PlaySceneComponent, IInitializable
         await _sequence.AsyncWaitForCompletion();
     }
 
-    public Sequence DrawInLeft()
+    private Sequence DrawInLeft()
     {
         return DOTween.Sequence()
             .OnPlay(() =>
             {
                 gameObject.SetActive(true);
             })
-            .Append(transform.DOLocalMoveX(-100, 0.5f));
+            .Append(transform.DOLocalMoveX(-600, 0.5f));
     }
 
-    public Sequence DrawBackLeft()
+    private Sequence DrawBackLeft()
     {
         return DOTween.Sequence()
             .OnKill(() =>
             {
                 gameObject.SetActive(false);
             })
-            .Append(transform.DOLocalMoveX(0, 0.5f));
+            .Append(transform.DOLocalMoveX(-1700, 0.5f));
+    }
+
+    public void OnCloseClick()
+    {
+        _ = UIManager.Instance.CloseReactive(this);
     }
 }

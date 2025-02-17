@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NoticeDialog
       objectReference: {fileID: 0}
+    - target: {fileID: 1480323393942784196, guid: 416fca6d831b1a14a86cc8a8679bed22, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7221339797962187318, guid: 416fca6d831b1a14a86cc8a8679bed22, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

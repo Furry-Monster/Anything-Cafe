@@ -20,4 +20,24 @@ public class CoffeeUI : PlaySceneComponent, IInitializable
     {
         return base.Close();
     }
+
+    public async UniTask OnTrashClick()
+    {
+        var data = new ContentDialogModel
+        {
+            LeftButtonData = new ButtonDataTemplate("Yes", null, true),
+            RightButtonData = new ButtonDataTemplate("No", null, false)
+        };
+        await UIManager.Instance.OpenGlobal<ContentDialog, ContentDialogModel>(data);
+    }
+
+    public void OnLetHerDrinkClick()
+    {
+        
+    }
+
+    public void OnDrinkYourselfClick()
+    {
+
+    }
 }

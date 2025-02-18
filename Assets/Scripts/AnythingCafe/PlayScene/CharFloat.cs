@@ -14,8 +14,7 @@ public class CharFloat : MonoBehaviour
 
     private void Update()
     {
-        transform.position = new Vector3(transform.position.x,
-            _originalY + Mathf.Sin(2 * Time.time) * _floatStrength,
-            transform.position.z);
+        var newY = _originalY + Mathf.Sin(2 * Time.time) * _floatStrength;
+        transform.position = new Vector3(transform.position.x, newY, transform.position.z);
     }
 }

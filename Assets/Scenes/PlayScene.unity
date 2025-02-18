@@ -1053,6 +1053,7 @@ GameObject:
   - component: {fileID: 465930478}
   - component: {fileID: 465930479}
   - component: {fileID: 465930480}
+  - component: {fileID: 465930481}
   m_Layer: 0
   m_Name: KeyboardOutline
   m_TagString: Untagged
@@ -1156,7 +1157,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1172,6 +1173,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &465930481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465930477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b1a57a8c189b7f45ae9041dcfe685fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  glowMaterial: {fileID: 2100000, guid: c0390a6d1d8b1c04aaf9edd794e3d1c7, type: 2}
 --- !u!1 &508039621
 GameObject:
   m_ObjectHideFlags: 0
@@ -4310,6 +4324,7 @@ GameObject:
   - component: {fileID: 1504322607}
   - component: {fileID: 1504322608}
   - component: {fileID: 1504322609}
+  - component: {fileID: 1504322610}
   m_Layer: 0
   m_Name: OutputOutline
   m_TagString: Untagged
@@ -4413,7 +4428,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -4429,6 +4444,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1504322610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504322606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b1a57a8c189b7f45ae9041dcfe685fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  glowMaterial: {fileID: 2100000, guid: c0390a6d1d8b1c04aaf9edd794e3d1c7, type: 2}
 --- !u!1 &1521896631
 GameObject:
   m_ObjectHideFlags: 0

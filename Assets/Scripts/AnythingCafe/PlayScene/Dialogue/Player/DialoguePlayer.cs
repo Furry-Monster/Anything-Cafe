@@ -1,8 +1,6 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 
 public class DialoguePlayer
 {

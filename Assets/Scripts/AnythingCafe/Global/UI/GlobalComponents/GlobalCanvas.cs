@@ -28,7 +28,7 @@ public class GlobalCanvas :
     private void CheckGlobalComponents()
     {
         var sceneGlobalComponents = FindObjectsOfType<GlobalComponent>();
-        
+
         // 检查缺失的全局组件
         foreach (var sceneComponent in sceneGlobalComponents)
         {

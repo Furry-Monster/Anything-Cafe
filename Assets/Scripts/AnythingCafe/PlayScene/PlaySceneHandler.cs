@@ -59,7 +59,7 @@ public class PlaySceneHandler :
     {
         UIManager.Instance.ResetMgr();
 
-        UIManager.Instance.RegisterComponent(0,_coffeeUI);
+        UIManager.Instance.RegisterComponent(0, _coffeeUI);
         UIManager.Instance.RegisterComponent(0, _dialogueUI);
         UIManager.Instance.RegisterComponent(0, _discoverUI);
         UIManager.Instance.RegisterComponent(0, _machineUI);

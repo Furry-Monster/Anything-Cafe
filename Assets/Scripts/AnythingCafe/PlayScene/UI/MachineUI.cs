@@ -24,7 +24,7 @@ public class MachineUI : PlaySceneComponent, IInitializable
 
     public override async UniTask Close()
     {
-        if(_sequence.IsActive())_sequence.Kill();
+        if (_sequence.IsActive()) _sequence.Kill();
         _sequence = RiseUpPanel();
         _sequence.Play();
         await _sequence.AsyncWaitForCompletion();

@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 
 public class DialoguePlayer
 {
@@ -8,7 +11,6 @@ public class DialoguePlayer
 
     private event Action OnDialoguePlay;
     private event Action OnDialogueEnd;
-
 
     #region Builder
     private DialoguePlayer(List<DialogueNode> dialogueNodes)
@@ -49,34 +51,74 @@ public class DialoguePlayer
     }
     #endregion
 
-    public void StartDialogue()
+    #region API
+    /// <summary>
+    /// 开始播放对话
+    /// </summary>
+    /// <returns> UniTask </returns>
+    public async UniTask StartDialogue()
     {
         OnDialoguePlay?.Invoke();
         OnDialoguePlay = null;
 
         _currentNode = _dialogueNodes[0]; // 默认从第一个节点开始播放
-        PlayNode(_currentNode);
+
+        var model = new DialogueUIModel()
+        {
+            Text = "",
+            NextBtnData = new ButtonDataTemplate("Next", null, true, UpdateDialogue),
+        };
+        await UIManager.Instance.OpenReactive<DialogueUI, DialogueUIModel>(model);
     }
 
+    /// <summary>
+    /// 更新对话内容
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException"> 节点类型不支持 </exception>
     public void UpdateDialogue()
     {
+        _currentNode.IsPlayed = true;
+        _currentNode = _dialogueNodes.Find(node => node.NodeId == _currentNode.NextNodeId);
 
+        switch (_currentNode.NodeAction)
+        {
+            case NodeAction.Choice:
+                // TODO: 处理选择选项
+                break;
+            case NodeAction.Input:
+                // TODO: 处理输入选项
+                break;
+            case NodeAction.Branch:
+                // TODO: 处理分支选项
+                break;
+            case NodeAction.End:
+                _ = DialogueManager.Instance.StopDialogue();
+                break;
+            case NodeAction.None:
+            case NodeAction.Chat:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        var model = new DialogueUIModel()
+        {
+            Text = _currentNode.Text,
+            NextBtnData = new ButtonDataTemplate("Next", null, true, UpdateDialogue),
+        };
+        UIManager.Instance.LoadDataReactive<DialogueUI, DialogueUIModel>(model);
     }
 
-    public void EndDialogue()
+    /// <summary>
+    /// 结束对话
+    /// </summary>
+    /// <returns> UniTask </returns>
+    public async UniTask EndDialogue()
     {
+        await UIManager.Instance.CloseReactive<DialogueUI>();
+
         OnDialogueEnd?.Invoke();
         OnDialogueEnd = null;
     }
-
-    private void PlayNode(DialogueNode node)
-    {
-        var data = new DialogueUIModel()
-        {
-            
-        };
-        UIManager.Instance.OpenReactive<DialogueUI, DialogueUIModel>(data);
-
-        // TODO: 实现对话播放逻辑
-    }
+    #endregion
 }

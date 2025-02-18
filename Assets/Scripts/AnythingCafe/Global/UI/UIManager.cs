@@ -8,7 +8,7 @@ using UnityEngine;
 public class UIManager : PersistentSingleton<UIManager>, IInitializable
 {
     [Header("Global Components")]
-    [SerializeField] 
+    [SerializeField]
     private GlobalCanvas _globalCanvas;
 
     private readonly Dictionary<int, Dictionary<string, ReactiveComponent>> _allReactiveComponents = new(); // 场景中所有的ClosableUI,int为UI层级
@@ -126,9 +126,9 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
                 throw new CustomErrorException("[UIManager] Can't find GlobalCanvas!",
                     new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIResetFailed));
         }
-        
+
         _globalCanvas.Init();
-        
+
     }
     #endregion
 
@@ -163,6 +163,21 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
             throw new CustomErrorException($"[UIManager] Can't find global ui {typeof(T).Name}!",
                 new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
         await OpenReactive(globalComponents.GetComponent<ReactiveComponent>());
+    }
+
+    /// <summary>
+    /// 关闭一个控件
+    /// </summary>
+    /// <typeparam name="T"> 控件类型 </typeparam>
+    /// <returns> UniTask </returns>
+    /// <exception cref="CustomErrorException"> 如果找不到控件则抛出异常 </exception>
+    public async UniTask CloseReactive<T>() where T : ReactiveComponent
+    {
+        var component = _activeComponents.FirstOrDefault(c => c.GetComponent<T>() != null);
+        if (component == null)
+            throw new CustomErrorException($"[UIManager] Can't find ui {typeof(T).Name}!",
+                new CustomErrorItem(ErrorSeverity.Warning, ErrorCode.ComponentNotFound));
+        await CloseReactive(component);
     }
     #endregion
 

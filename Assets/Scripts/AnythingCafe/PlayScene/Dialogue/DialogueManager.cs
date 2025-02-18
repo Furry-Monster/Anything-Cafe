@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[AddComponentMenu("FrameMonster/Dialogue/DialogueManager")]
 public class DialogueManager : MonoBehaviourSingleton<DialogueManager>
 {
     

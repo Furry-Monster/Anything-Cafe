@@ -1,10 +1,14 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DialogueUI : PlaySceneComponent, IInitializable
+public class DialogueUI :
+    PlaySceneComponent,
+    IInitializable,
+    IHasDataTemplate<DialogueUIModel>
 {
     [Header("General")]
     [SerializeField]
@@ -17,6 +21,7 @@ public class DialogueUI : PlaySceneComponent, IInitializable
     private Button _nextBtn;
 
     private Sequence _sequence;
+    private DialogueUIModel _model;
 
     public bool IsInitialized { get; set; }
     public void Init()
@@ -25,6 +30,30 @@ public class DialogueUI : PlaySceneComponent, IInitializable
         IsInitialized = true;
 
         gameObject.SetActive(false);
+    }
+
+    public void LoadTemplate(DialogueUIModel model)
+    {
+        try
+        {
+            _model = model;
+
+            _text.text = model.Text;
+
+            _nextBtn.interactable = model.NextBtnData.IsInteractable;
+            _nextBtn.onClick.RemoveAllListeners();
+            _nextBtn.onClick.AddListener(() =>
+            {
+                _model.NextBtnData.OnClick?.Invoke();
+            });
+        }
+        catch (Exception ex)
+        {
+            if (ex is CustomErrorException)
+                throw;
+            throw new CustomErrorException($"[ContentDialog] Can't init Component. {ex.GetType()}, {ex.Message}",
+                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.ComponentInitFailed));
+        }
     }
 
     public override async UniTask Open()
@@ -67,10 +96,13 @@ public class DialogueUI : PlaySceneComponent, IInitializable
         }).Append(transform.DOLocalMoveY(375, 0.5f).SetEase(Ease.OutBack));
     }
 
-    public void OnNextClick()
-    {
-
-    }
 }
 
-
+/// <summary>
+/// DialogueUI的数据模型
+/// </summary>
+public class DialogueUIModel : IDataTemplate
+{
+    public string Text { get; set; }
+    public ButtonDataTemplate NextBtnData { get; set; }
+}

@@ -14,7 +14,7 @@ public class PlaySceneHandler :
     [SerializeField]
     private CoffeeUI _coffeeUI;
     [SerializeField]
-    private DialogUI _dialogUI;
+    private DialogueUI _dialogueUI;
     [SerializeField]
     private DiscoverUI _discoverUI;
     [SerializeField]
@@ -60,7 +60,7 @@ public class PlaySceneHandler :
         UIManager.Instance.ResetMgr();
 
         UIManager.Instance.RegisterComponent(0,_coffeeUI);
-        UIManager.Instance.RegisterComponent(0, _dialogUI);
+        UIManager.Instance.RegisterComponent(0, _dialogueUI);
         UIManager.Instance.RegisterComponent(0, _discoverUI);
         UIManager.Instance.RegisterComponent(0, _machineUI);
         UIManager.Instance.RegisterComponent(0, _menuUI);

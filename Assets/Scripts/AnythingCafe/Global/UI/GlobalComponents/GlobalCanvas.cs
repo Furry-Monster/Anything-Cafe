@@ -27,13 +27,17 @@ public class GlobalCanvas :
     /// </summary>
     private void CheckGlobalComponents()
     {
-        var globalComponents = FindObjectsOfType<GlobalComponent>();
+        var sceneGlobalComponents = FindObjectsOfType<GlobalComponent>();
+        
         // 检查缺失的全局组件
-        foreach (var component in globalComponents)
-            _globalComponents.TryAdd(component.gameObject.name, component);
+        foreach (var sceneComponent in sceneGlobalComponents)
+        {
+            Debug.LogWarning($"[GlobalCanvas] Found global component {sceneComponent.gameObject.name},but not in _globalComponents, adding it.");
+            _globalComponents.TryAdd(sceneComponent.gameObject.name, sceneComponent);
+        }
 
         foreach (var component in _globalComponents)
-            if (!globalComponents.Contains(component.Value))
+            if (!sceneGlobalComponents.Contains(component.Value))
                 throw new CustomErrorException($"[GlobalCanvas] Global component {component.Key} is missing in scene!",
                     new CustomErrorItem(ErrorSeverity.Error, ErrorCode.ComponentNotFound));
     }

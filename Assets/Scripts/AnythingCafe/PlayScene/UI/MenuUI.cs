@@ -6,6 +6,7 @@ using UnityEngine;
 public class MenuUI : PlaySceneComponent, IInitializable
 {
     [Header("General")]
+    [SerializeField]
     private CanvasGroup _canvasGroup;
 
     private Sequence _sequence;

@@ -126,18 +126,9 @@ public class UIManager : PersistentSingleton<UIManager>, IInitializable
                 throw new CustomErrorException("[UIManager] Can't find GlobalCanvas!",
                     new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UIResetFailed));
         }
-
-        try
-        {
-            _globalCanvas.Init();
-        }
-        catch (Exception ex)
-        {
-            if (ex is CustomErrorException)
-                throw;
-            throw new CustomErrorException($"[UIManager] Can't reset Canvas, {ex.Message}",
-                new CustomErrorItem(ErrorSeverity.Error, ErrorCode.UICanvasResetFailed));
-        }
+        
+        _globalCanvas.Init();
+        
     }
     #endregion
 

@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ClickableArea : 
+public class ClickableArea :
     PlotObject,
     IPointerClickHandler,
     IPointerEnterHandler,

@@ -1054,7 +1054,7 @@ GameObject:
   - component: {fileID: 465930479}
   - component: {fileID: 465930480}
   - component: {fileID: 465930481}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: KeyboardOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4325,7 +4325,7 @@ GameObject:
   - component: {fileID: 1504322608}
   - component: {fileID: 1504322609}
   - component: {fileID: 1504322610}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: OutputOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4777,7 +4777,7 @@ GameObject:
   - component: {fileID: 1606325967}
   - component: {fileID: 1606325966}
   m_Layer: 0
-  m_Name: MaskTilemap
+  m_Name: InteractTilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

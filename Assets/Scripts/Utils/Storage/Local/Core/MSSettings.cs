@@ -183,15 +183,17 @@ public class MSSettings : ICloneable
     }
     #endregion
 
-    /// <summary>
-    /// 检查路径是否为绝对路径
-    /// </summary>
     private static bool IsAbsolute(string path)
     {
+        // 检查路径是否为绝对路径
         return path.Length > 0 && (path[0] == '/' || path[0] == '\\') || path.Length > 1 && path[1] == ':';
     }
 }
 
+#region Enum
+/// <summary>
+/// 存储目录策略，决定了保存文件的位置
+/// </summary>
 public enum DirectoryStrategy
 {
     UserDir,
@@ -199,6 +201,9 @@ public enum DirectoryStrategy
     PlayerPrefs
 }
 
+/// <summary>
+/// 加密模式，决定了加密算法
+/// </summary>
 public enum EncryptionMode
 {
     None,
@@ -206,15 +211,22 @@ public enum EncryptionMode
     Rinjdael
 }
 
+/// <summary>
+/// 压缩模式，决定了压缩算法
+/// </summary>
 public enum CompressionMode
 {
     None,
     Gzip
 }
 
+/// <summary>
+/// 格式模式，决定了保存文件的格式
+/// </summary>
 public enum FormatMode
 {
     JSON,
     Binary,
     XML
 }
+#endregion

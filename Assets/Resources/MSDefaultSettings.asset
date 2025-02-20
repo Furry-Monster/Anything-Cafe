@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9db5c38e1ba60c745a1de5d46ae51ac3, type: 3}
+  m_Name: MSDefaultSettings
+  m_EditorClassIdentifier: 
+  MainSettings:
+    _directoryStrategy: 0
+    SavePath: 
+    Encryption: 0
+    EncryptionKey: 
+    Compression: 0
+    Format: 0

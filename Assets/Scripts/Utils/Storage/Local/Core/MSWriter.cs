@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MSWriter 
+public abstract class MSWriter : IDisposable
 {
-    
+    public MSSettings Settings;
+
+    public abstract void Dispose();
 }

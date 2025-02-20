@@ -1,14 +1,13 @@
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
+[Serializable]
 public class MSSettings : ICloneable
 {
-    private static MSSettings _default;
-    private static MSDefaultSettings _defaultSettings;
+    private static MSDefaultSettings _defaultSettings = null;
     private const string DefaultSettingsPath = "MSDefaultSettings.asset";
     private static readonly string[] SupportedExtensions = {
         ".txt",
@@ -29,23 +28,13 @@ public class MSSettings : ICloneable
     public FormatMode Format;
     public Encoding Encoding = Encoding.UTF8;
 
-    public static MSDefaultSettings DefaultSettings
+    public MSDefaultSettings DefaultSettings
     {
         get
         {
             if (_defaultSettings == null)
-                _defaultSettings = Resources.Load<MSDefaultSettings>(DefaultSettingsPath);
+                Resources.Load<MSDefaultSettings>(DefaultSettingsPath);
             return _defaultSettings;
-        }
-    }
-
-    public static MSSettings Default
-    {
-        get
-        {
-            if (_default == null && _defaultSettings != null)
-                _default = _defaultSettings.SerializableSettings;
-            return _default;
         }
     }
 
@@ -91,7 +80,7 @@ public class MSSettings : ICloneable
                         return SavePath.Replace(extension, ""); // È¥µôÀ©Õ¹Ãû
                     }
                 default:
-                    throw new NotImplementedException($"DirectoryStrategy {DirectoryStrategy} has not been implemented yet.");
+                    throw new Exception($"DirectoryStrategy {DirectoryStrategy} has not been implemented yet.");
             }
         }
     }
@@ -157,9 +146,8 @@ public class MSSettings : ICloneable
     [EditorBrowsable(EditorBrowsableState.Never)]
     public MSSettings(bool shouldApplyDefaults)
     {
-        if (!shouldApplyDefaults || DefaultSettings == null)
-            return;
-        Default.CopyInto(this);
+        if (!shouldApplyDefaults || DefaultSettings == null) return;
+        DefaultSettings.MainSettings.CopyInto(this);
     }
     #endregion
 

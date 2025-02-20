@@ -118,14 +118,14 @@ public class MSIO
             if (FileExists(settings.FullPath))
             {
                 // 覆盖备份文件
-                DeleteFile(str2); 
-                CopyFile(settings.FullPath, str2); 
+                DeleteFile(str2);
+                CopyFile(settings.FullPath, str2);
 
                 try
                 {
                     // 保存str1到settings.FullPath并覆盖
                     DeleteFile(settings.FullPath);
-                    MoveFile(str1, settings.FullPath); 
+                    MoveFile(str1, settings.FullPath);
                 }
                 catch (Exception ex)
                 {
@@ -139,7 +139,7 @@ public class MSIO
                         MSDebugger.LogError("无法删除文件：" + settings.FullPath + "\n错误信息：" + ex.Message);
                     }
 
-                    MoveFile(str2, settings.FullPath); 
+                    MoveFile(str2, settings.FullPath);
                     throw;
                 }
 

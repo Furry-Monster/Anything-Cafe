@@ -12,7 +12,7 @@ public class MSDefaultSettings : ScriptableObject
 
     private void OnEnable()
     {
-        MainSettings = new MSSettings();
+        MainSettings = new MSSettings(false);
     }
 
     private void OnDisable()

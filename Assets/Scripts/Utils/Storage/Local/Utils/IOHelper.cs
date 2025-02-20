@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// MonStore的IO类，封装了对文件的读写、目录的创建、删除等操作
 /// </summary>
-public class MSIO
+public class IOHelper
 {
     internal static string PersistentDataPath = Application.persistentDataPath;
     internal static string DataPath = Application.dataPath;
@@ -15,16 +15,8 @@ public class MSIO
     public static DateTime GetTimestamp(string filePath)
     {
         return !FileExists(filePath)
-            ? new DateTime(1970,
-                1,
-                1,
-                0,
-                0,
-                0,
-                0,
-                DateTimeKind.Utc)
-            : File.GetLastWriteTime(filePath)
-                .ToUniversalTime();
+            ? new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+            : File.GetLastWriteTimeUtc(filePath);
     }
 
     public static string GetExtension(string path) => Path.GetExtension(path);
@@ -42,9 +34,9 @@ public class MSIO
 
     public static void CopyFile(string sourcePath, string destPath) => File.Copy(sourcePath, destPath);
 
-    public static void MoveDirectory(string sourcePath, string destPath) => System.IO.Directory.Move(sourcePath, destPath);
+    public static void MoveDirectory(string sourcePath, string destPath) => Directory.Move(sourcePath, destPath);
 
-    public static void CreateDirectory(string directoryPath) => System.IO.Directory.CreateDirectory(directoryPath);
+    public static void CreateDirectory(string directoryPath) => Directory.CreateDirectory(directoryPath);
 
     public static bool DirectoryExists(string directoryPath) => System.IO.Directory.Exists(directoryPath);
 
@@ -60,7 +52,10 @@ public class MSIO
         if (length == path.Length - 1)
             length = path[..length].LastIndexOf(ch); // 倒数第二个分隔符的位置
         if (length == -1)
+        {
             MSDebugger.LogError("设置的路径格式不正确，请检查路径是否包含分隔符(字符'/'或'\\')");
+            return string.Empty;
+        }
 
         return path[..length]; // 路径上一级目录
     }
@@ -76,7 +71,7 @@ public class MSIO
 
     public static string[] GetDirectories(string path, bool getFullPaths = true)
     {
-        var directories = System.IO.Directory.GetDirectories(path);
+        var directories = Directory.GetDirectories(path);
         for (var index = 0; index < directories.Length; ++index)
         {
             if (!getFullPaths)
@@ -90,12 +85,12 @@ public class MSIO
     {
         if (!DirectoryExists(directoryPath))
             return;
-        System.IO.Directory.Delete(directoryPath, true);
+        Directory.Delete(directoryPath, true);
     }
 
     public static string[] GetFiles(string path, bool getFullPaths = true)
     {
-        var files = System.IO.Directory.GetFiles(path);
+        var files = Directory.GetFiles(path);
         if (!getFullPaths)
         {
             for (var index = 0; index < files.Length; ++index)
@@ -111,50 +106,61 @@ public class MSIO
     public static void CommitBackup(MSSettings settings)
     {
         MSDebugger.Log("Committing backup for " + settings.SavePath + " in " + settings.DirectoryStrategy);
-        var str1 = settings.FullPath + ".tmp";
-        if (settings.DirectoryStrategy == DirectoryStrategy.UserDir)
+        var tempFilePath = settings.FullPath + TempFileSuffix;
+
+        switch (settings.DirectoryStrategy)
         {
-            var str2 = settings.FullPath + ".tmp.bak";
-            if (FileExists(settings.FullPath))
-            {
-                // 覆盖备份文件
-                DeleteFile(str2);
-                CopyFile(settings.FullPath, str2);
-
-                try
+            case DirectoryStrategy.UserDir:
+            case DirectoryStrategy.GameDir:
                 {
-                    // 保存str1到settings.FullPath并覆盖
-                    DeleteFile(settings.FullPath);
-                    MoveFile(str1, settings.FullPath);
+                    var backupFilePath = settings.FullPath + TempFileSuffix + BackupSuffix;
+                    if (FileExists(settings.FullPath))
+                    {
+                        // 覆盖备份文件
+                        DeleteFile(backupFilePath);
+                        CopyFile(settings.FullPath, backupFilePath);
+
+                        try
+                        {
+                            // 保存str1到settings.FullPath并覆盖
+                            DeleteFile(settings.FullPath);
+                            MoveFile(tempFilePath, settings.FullPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            // 尝试还原原文件    
+                            try
+                            {
+                                DeleteFile(settings.FullPath);
+                            }
+                            catch
+                            {
+                                MSDebugger.LogError("无法删除文件：" + settings.FullPath + "\n错误信息：" + ex.Message);
+                            }
+
+                            MoveFile(backupFilePath, settings.FullPath);
+                            throw;
+                        }
+
+                        DeleteFile(backupFilePath);
+                    }
+                    else
+                    {
+                        MoveFile(tempFilePath, settings.FullPath);
+                    }
+
+                    break;
                 }
-                catch (Exception ex)
+            case DirectoryStrategy.PlayerPrefs:
                 {
-                    // 尝试还原原文件
-                    try
-                    {
-                        DeleteFile(settings.FullPath);
-                    }
-                    catch
-                    {
-                        MSDebugger.LogError("无法删除文件：" + settings.FullPath + "\n错误信息：" + ex.Message);
-                    }
+                    PlayerPrefs.SetString(settings.FullPath, PlayerPrefs.GetString(tempFilePath));
+                    PlayerPrefs.DeleteKey(tempFilePath);
+                    PlayerPrefs.Save();
 
-                    MoveFile(str2, settings.FullPath);
-                    throw;
+                    break;
                 }
-
-                DeleteFile(str2);
-            }
-            else
-                MoveFile(str1, settings.FullPath);
-        }
-        else
-        {
-            if (settings.DirectoryStrategy != DirectoryStrategy.PlayerPrefs)
-                return;
-            PlayerPrefs.SetString(settings.FullPath, PlayerPrefs.GetString(str1));
-            PlayerPrefs.DeleteKey(str1);
-            PlayerPrefs.Save();
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 }

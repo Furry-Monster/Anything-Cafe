@@ -1,40 +1,49 @@
 using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 
 [Serializable]
 public class MSSettings : ICloneable
 {
+    // 单例与原型
     private static MSDefaultSettings _defaultSettings = null;
+    private static MSSettings _instance;
+    
+    // 保存路径相关
     private const string DefaultSettingsPath = "MSDefaultSettings.asset";
-    private static readonly string[] SupportedExtensions = {
-        ".txt",
-        ".htm",
-        ".html",
-        ".xml",
-        ".bytes",
-        ".json",
-        ".csv",
-        ".yaml",
-        ".fnt"
-    };
     [SerializeField] private DirectoryStrategy _directoryStrategy;
     public string SavePath = "SaveFile.ms";
+
+    // 加密相关
     public EncryptionMode Encryption;
     public string EncryptionKey = "passw0rd";
-    public CompressionMode Compression;
-    public FormatMode Format;
+    public int BufferSize = 2048;
     public Encoding Encoding = Encoding.UTF8;
+    
+    // 压缩相关
+    public CompressionMode Compression;
+    
+    // 格式相关
+    public FormatMode Format;
 
-    public MSDefaultSettings DefaultSettings
+    public static MSDefaultSettings DefaultSettings
     {
         get
         {
             if (_defaultSettings == null)
                 Resources.Load<MSDefaultSettings>(DefaultSettingsPath);
             return _defaultSettings;
+        }
+    }
+
+    public static MSSettings Instance
+    {
+        get
+        {
+            if (_instance == null && DefaultSettings != null)
+                _instance = _defaultSettings.MainSettings;
+            return _instance;
         }
     }
 
@@ -59,29 +68,13 @@ public class MSSettings : ICloneable
 
             if (IsAbsolute(SavePath)) return SavePath;
 
-            switch (DirectoryStrategy)
+            return DirectoryStrategy switch
             {
-                case DirectoryStrategy.UserDir:
-                    return MSIO.PersistentDataPath + "/" + SavePath;
-                case DirectoryStrategy.GameDir:
-                    return MSIO.DataPath + "/" + SavePath;
-                case DirectoryStrategy.PlayerPrefs:
-                    {
-                        var extension = MSIO.GetExtension(SavePath);
-
-                        var flag = SupportedExtensions
-                            .Any(supportedExtension => extension == supportedExtension);
-
-                        if (!flag)
-                            throw new ArgumentException(
-                                "Extension of file in Resources must be .json, .bytes, .txt, .csv, .htm, .html, .xml, .yaml or .fnt, but path given was \"" +
-                                SavePath + "\"");
-
-                        return SavePath.Replace(extension, ""); // 去掉扩展名
-                    }
-                default:
-                    throw new Exception($"DirectoryStrategy {DirectoryStrategy} has not been implemented yet.");
-            }
+                DirectoryStrategy.UserDir => IOHelper.PersistentDataPath + "/" + SavePath,
+                DirectoryStrategy.GameDir => IOHelper.DataPath + "/" + SavePath,
+                DirectoryStrategy.PlayerPrefs => SavePath,
+                _ => throw new Exception($"DirectoryStrategy {DirectoryStrategy} has not been implemented yet.")
+            };
         }
     }
 
@@ -167,7 +160,6 @@ public class MSSettings : ICloneable
         newSettings.EncryptionKey = EncryptionKey;
         newSettings.Compression = Compression;
         newSettings.Format = Format;
-        newSettings.Encoding = Encoding;
     }
     #endregion
 
@@ -213,8 +205,8 @@ public enum CompressionMode
 /// </summary>
 public enum FormatMode
 {
-    JSON,
     Binary,
+    JSON,
     XML
 }
 #endregion

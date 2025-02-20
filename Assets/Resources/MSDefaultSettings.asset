@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainSettings:
     _directoryStrategy: 0
-    SavePath: 
+    SavePath: SaveFile.ms
     Encryption: 0
-    EncryptionKey: 
+    EncryptionKey: passw0rd
+    BufferSize: 2048
     Compression: 0
     Format: 0

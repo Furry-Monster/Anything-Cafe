@@ -166,6 +166,9 @@ public class MSSettings : ICloneable
     #region Prototype Methods
     public object Clone()
     {
+        var newSettings = new MSSettings((string)null);
+        CopyInto(newSettings);
+        return newSettings;
     }
 
     public void CopyInto(MSSettings newSettings)

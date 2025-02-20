@@ -2,6 +2,8 @@ using Cysharp.Threading.Tasks;
 
 public class SteamPlatform : CloudStorage
 {
+    public const uint AppId = 123456; // Dummy Steam AppId
+
     public override UniTask Connect()
     {
         throw new System.NotImplementedException();

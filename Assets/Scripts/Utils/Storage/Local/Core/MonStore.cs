@@ -1,12 +1,10 @@
 using System;
-using System.IO;
-using System.Text;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class MonStore
 {
     #region SaveAPI 保存
+
     #region 无类型参数
     public static void Save(string key, object value) => Save(key, value, new MSSettings((string)null));
 
@@ -29,10 +27,12 @@ public class MonStore
         // TODO: Implement saving logic here
     }
     #endregion
+
     #endregion
 
 
     #region LoadAPI 加载
+
     #region 无类型参数
     public static object Load(string key) => Load<object>(key, new MSSettings((string)null));
 
@@ -76,10 +76,26 @@ public class MonStore
         throw new System.NotImplementedException();
     }
     #endregion
+
     #endregion
 
 
     #region ExistsAPI 是否存在
+
+    #region 键值对
+    public static bool KeyExists(string key) => KeyExists(key, new MSSettings((string)null));
+
+    public static bool KeyExists(string key, string filePath) => KeyExists(key, new MSSettings(filePath));
+
+    public static bool KeyExists(string key, string filePath, MSSettings settings) => KeyExists(key, new MSSettings(filePath, settings));
+
+    public static bool KeyExists(string key, MSSettings settings)
+    {
+        // TODO: Implement checking logic here
+        throw new NotImplementedException();
+    }
+    #endregion
+
     #region 文件
     public static bool FileExists() => FileExists(new MSSettings((string)null));
 
@@ -105,10 +121,25 @@ public class MonStore
         throw new NotImplementedException();
     }
     #endregion
+
     #endregion
 
 
     #region DeleteAPI 删除
+
+    #region 键值对
+    public static void DeleteKey(string key) => DeleteKey(key, new MSSettings((string)null));
+
+    public static void DeleteKey(string key, string filePath) => DeleteKey(key, new MSSettings(filePath));
+
+    public static void DeleteKey(string key, string filePath, MSSettings settings) => DeleteKey(key, new MSSettings(filePath, settings));
+
+    public static void DeleteKey(string key, MSSettings settings)
+    {
+        // TODO: Implement deleting logic here
+    }
+    #endregion
+
     #region 文件
     public static void DeleteFile() => DeleteFile(new MSSettings((string)null));
 
@@ -132,10 +163,26 @@ public class MonStore
         // TODO: Implement deleting logic here
     }
     #endregion
+
     #endregion
 
 
     #region GetAPI 获取
+    
+    #region 键值对
+    public static string[] GetKeys() => GetKeys(new MSSettings((string)null));
+
+    public static string[] GetKeys(string filePath) => GetKeys(new MSSettings(filePath));
+
+    public static string[] GetKeys(string filePath, MSSettings settings) => GetKeys(new MSSettings(filePath, settings));
+
+    public static string[] GetKeys(MSSettings settings)
+    {
+        // TODO: Implement getting keys logic here
+        throw new NotImplementedException();
+    }
+    #endregion
+    
     #region 文件
     public static string[] GetFiles() => GetFiles(new MSSettings((string)null));
 
@@ -165,10 +212,12 @@ public class MonStore
             : throw new NotSupportedException("GetDirectories can only be used when the location is set to File.");
     }
     #endregion
+
     #endregion
 
 
     #region CopyAPI 复制
+
     #region 文件
     public static void CopyFile(string oldFilePath, string newFilePath) => CopyFile(new MSSettings(oldFilePath), new MSSettings(newFilePath));
 
@@ -192,10 +241,12 @@ public class MonStore
     }
 
     #endregion
+
     #endregion
 
 
     #region RenameAPI 重命名
+
     #region 文件
     public static void RenameFile(string oldFilePath, string newFilePath) => RenameFile(new MSSettings(oldFilePath), new MSSettings(newFilePath));
 
@@ -217,10 +268,12 @@ public class MonStore
         // TODO: Implement renaming logic here
     }
     #endregion
+
     #endregion
 
 
     #region UtilAPI 辅助函数
+
     #region EncrypyAPI 加密
     public static byte[] EncryptBytes(byte[] bytes, string password = null)
     {
@@ -290,5 +343,6 @@ public class MonStore
         };
     }
     #endregion
+    
     #endregion
 }

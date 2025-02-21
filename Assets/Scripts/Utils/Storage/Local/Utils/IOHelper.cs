@@ -9,8 +9,6 @@ public class IOHelper
 {
     internal static string PersistentDataPath = Application.persistentDataPath;
     internal static string DataPath = Application.dataPath;
-    internal static string BackupSuffix = ".bak";
-    internal static string TempFileSuffix = ".tmp";
 
     public static DateTime GetTimestamp(string filePath)
     {
@@ -102,65 +100,4 @@ public class IOHelper
     public static byte[] ReadAllBytes(string path) => File.ReadAllBytes(path);
 
     public static void WriteAllBytes(string path, byte[] bytes) => File.WriteAllBytes(path, bytes);
-
-    public static void CommitBackup(MSSettings settings)
-    {
-        MSDebugger.Log("Committing backup for " + settings.SavePath + " in " + settings.DirectoryStrategy);
-        var tempFilePath = settings.FullPath + TempFileSuffix;
-
-        switch (settings.DirectoryStrategy)
-        {
-            case DirectoryStrategy.UserDir:
-            case DirectoryStrategy.GameDir:
-                {
-                    var backupFilePath = settings.FullPath + TempFileSuffix + BackupSuffix;
-                    if (FileExists(settings.FullPath))
-                    {
-                        // 覆盖备份文件
-                        DeleteFile(backupFilePath);
-                        CopyFile(settings.FullPath, backupFilePath);
-
-                        try
-                        {
-                            // 保存str1到settings.FullPath并覆盖
-                            DeleteFile(settings.FullPath);
-                            MoveFile(tempFilePath, settings.FullPath);
-                        }
-                        catch (Exception ex)
-                        {
-                            // 尝试还原原文件    
-                            try
-                            {
-                                DeleteFile(settings.FullPath);
-                            }
-                            catch
-                            {
-                                MSDebugger.LogError("无法删除文件：" + settings.FullPath + "\n错误信息：" + ex.Message);
-                            }
-
-                            MoveFile(backupFilePath, settings.FullPath);
-                            throw;
-                        }
-
-                        DeleteFile(backupFilePath);
-                    }
-                    else
-                    {
-                        MoveFile(tempFilePath, settings.FullPath);
-                    }
-
-                    break;
-                }
-            case DirectoryStrategy.PlayerPrefs:
-                {
-                    PlayerPrefs.SetString(settings.FullPath, PlayerPrefs.GetString(tempFilePath));
-                    PlayerPrefs.DeleteKey(tempFilePath);
-                    PlayerPrefs.Save();
-
-                    break;
-                }
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-    }
 }

@@ -9,7 +9,7 @@ public class InspectorLock
     [MenuItem("GameObject/InspectorLock/UnLock", false, 1)]
     private static void UnLock() => SetHideFlags(HideFlags.None);
 
-    // Ëø¶¨GUI
+    // Ëø¶¨Inspector
     private static void SetHideFlags(HideFlags hideFlags)
     {
         if (Selection.gameObjects != null)

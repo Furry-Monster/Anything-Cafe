@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MSDebugger
+internal class MSDebugger
 {
     private static string Indent(int size) => size <= 0 ? "" : new string('-', size);
 

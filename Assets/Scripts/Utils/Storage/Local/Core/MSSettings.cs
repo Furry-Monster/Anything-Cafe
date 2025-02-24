@@ -11,13 +11,19 @@ public class MSSettings : ICloneable
     private static MSSettings _defaultSettings;
     private const string DefaultSettingsPath = "MSDefaultSettings.asset";
 
-    // 保存路径相关
+    // 路径相关
     [Header("General")]
     [SerializeField]
     [Tooltip("Directory strategy for saving files")]
     private DirectoryStrategy _directoryStrategy;
     [Tooltip("File name for saving data")]
     public string SavePath = "SaveFile.ms";
+    [Tooltip("Assemblies to search for types when deserializing")]
+    public string[] AssemblyNames = new string[2]
+    {
+        "Assembly-CSharp-firstpass",
+        "Assembly-CSharp"
+    };
 
     // 加密相关
     [Header("Encryption")]

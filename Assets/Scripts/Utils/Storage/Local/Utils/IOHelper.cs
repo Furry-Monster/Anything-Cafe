@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// MonStore的IO类，封装了对文件的读写、目录的创建、删除等操作
 /// </summary>
-public class IOHelper
+internal class IOHelper
 {
     internal static string PersistentDataPath = Application.persistentDataPath;
     internal static string DataPath = Application.dataPath;

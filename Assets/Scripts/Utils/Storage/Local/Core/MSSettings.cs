@@ -219,8 +219,8 @@ public enum CompressionMode
 /// </summary>
 public enum FormatMode
 {
-    Binary,
     JSON,
+    Binary,
     XML
 }
 #endregion

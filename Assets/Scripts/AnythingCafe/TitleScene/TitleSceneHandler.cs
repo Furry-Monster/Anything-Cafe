@@ -85,9 +85,9 @@ public class TitleSceneHandler :
 
             await _titleUI.Open();
 
-            SoundManager.Instance.PlaySound(_titleBGM.Type, _titleBGM.Clip, _titleBGM.Loop, _titleBGM.DefaultVolume);
+            SoundManager.DefaultSettings.PlaySound(_titleBGM.Type, _titleBGM.Clip, _titleBGM.Loop, _titleBGM.DefaultVolume);
 
-            GameManager.Instance.IsFirstInTitleScene = false;
+            GameManager.DefaultSettings.IsFirstInTitleScene = false;
 #endif
         }
 

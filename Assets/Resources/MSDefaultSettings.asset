@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db5c38e1ba60c745a1de5d46ae51ac3, type: 3}
   m_Name: MSDefaultSettings
   m_EditorClassIdentifier: 
-  MainSettings:
+  DefaultSettings:
     _directoryStrategy: 0
     SavePath: SaveFile.ms
     Encryption: 0

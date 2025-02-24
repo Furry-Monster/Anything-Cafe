@@ -278,25 +278,25 @@ public class MonStore
     public static byte[] EncryptBytes(byte[] bytes, string password = null)
     {
         if (string.IsNullOrEmpty(password))
-            password = MSSettings.Instance.EncryptionKey;
-        return new AESEncryption().Encrypt(bytes, password, MSSettings.DefaultSettings.MainSettings.BufferSize);
+            password = MSSettings.DefaultSettings.EncryptionKey;
+        return new AESEncryption().Encrypt(bytes, password, MSSettings.DefaultSettingsSO.DefaultSettings.BufferSize);
     }
 
     public static byte[] DecryptBytes(byte[] bytes, string password = null)
     {
         if (string.IsNullOrEmpty(password))
-            password = MSSettings.Instance.EncryptionKey;
-        return new AESEncryption().Decrypt(bytes, password, MSSettings.DefaultSettings.MainSettings.BufferSize);
+            password = MSSettings.DefaultSettings.EncryptionKey;
+        return new AESEncryption().Decrypt(bytes, password, MSSettings.DefaultSettingsSO.DefaultSettings.BufferSize);
     }
 
     public static string EncryptString(string str, string password = null)
     {
-        return Convert.ToBase64String(EncryptBytes(MSSettings.DefaultSettings.MainSettings.Encoding.GetBytes(str), password));
+        return Convert.ToBase64String(EncryptBytes(MSSettings.DefaultSettingsSO.DefaultSettings.Encoding.GetBytes(str), password));
     }
 
     public static string DecryptString(string str, string password = null)
     {
-        return MSSettings.DefaultSettings.MainSettings.Encoding.GetString(DecryptBytes(Convert.FromBase64String(str), password));
+        return MSSettings.DefaultSettingsSO.DefaultSettings.Encoding.GetString(DecryptBytes(Convert.FromBase64String(str), password));
     }
     #endregion
 
@@ -315,12 +315,12 @@ public class MonStore
 
     public static string CompressString(string str)
     {
-        return Convert.ToBase64String(CompressBytes(MSSettings.DefaultSettings.MainSettings.Encoding.GetBytes(str)));
+        return Convert.ToBase64String(CompressBytes(MSSettings.DefaultSettingsSO.DefaultSettings.Encoding.GetBytes(str)));
     }
 
     public static string DecompressString(string str)
     {
-        return MSSettings.DefaultSettings.MainSettings.Encoding.GetString(DecompressBytes(Convert.FromBase64String(str)));
+        return MSSettings.DefaultSettingsSO.DefaultSettings.Encoding.GetString(DecompressBytes(Convert.FromBase64String(str)));
     }
     #endregion
 

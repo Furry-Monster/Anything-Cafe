@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MSDefaultSettings", menuName = "MonStore/Default Settings")]
 public class MSDefaultSettings : ScriptableObject
 {
-    public MSSettings MainSettings;
+    public MSSettings DefaultSettings;
 
     // Settings below can't be modified during runtime.
     public static bool LogInfo;
@@ -12,11 +12,11 @@ public class MSDefaultSettings : ScriptableObject
 
     private void OnEnable()
     {
-        MainSettings = new MSSettings(false);
+        DefaultSettings = new MSSettings(false);
     }
 
     private void OnDisable()
     {
-        MainSettings = null;
+        DefaultSettings = null;
     }
 }

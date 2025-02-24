@@ -7,43 +7,51 @@ using UnityEngine;
 public class MSSettings : ICloneable
 {
     // 单例与原型
-    private static MSDefaultSettings _defaultSettings = null;
-    private static MSSettings _instance;
+    private static MSDefaultSettings _defaultSettingsSO = null;
+    private static MSSettings _defaultSettings;
+    private const string DefaultSettingsPath = "MSDefaultSettings.asset";
 
     // 保存路径相关
-    private const string DefaultSettingsPath = "MSDefaultSettings.asset";
-    [SerializeField] private DirectoryStrategy _directoryStrategy;
+    [Header("General")]
+    [SerializeField]
+    [Tooltip("Directory strategy for saving files")]
+    private DirectoryStrategy _directoryStrategy;
+    [Tooltip("File name for saving data")]
     public string SavePath = "SaveFile.ms";
 
     // 加密相关
+    [Header("Encryption")]
     public EncryptionMode Encryption;
     public string EncryptionKey = "passw0rd";
+    [Tooltip("Buffer size for encryption and decryption")]
     public int BufferSize = 2048;
-    public Encoding Encoding = Encoding.UTF8;
 
     // 压缩相关
+    [Header("Compression")]
     public CompressionMode Compression;
 
     // 格式相关
+    [Header("Format")]
     public FormatMode Format;
+    public Encoding Encoding = Encoding.UTF8;
 
-    public static MSDefaultSettings DefaultSettings
+    public static MSDefaultSettings DefaultSettingsSO
     {
         get
         {
-            if (_defaultSettings == null)
+            if (_defaultSettingsSO == null)
                 Resources.Load<MSDefaultSettings>(DefaultSettingsPath);
-            return _defaultSettings;
+            return _defaultSettingsSO;
         }
     }
 
-    public static MSSettings Instance
+    public static MSSettings DefaultSettings
     {
         get
         {
-            if (_instance == null && DefaultSettings != null)
-                _instance = _defaultSettings.MainSettings;
-            return _instance;
+            if (_defaultSettings == null && DefaultSettingsSO != null)
+                _defaultSettings = _defaultSettingsSO.DefaultSettings;
+            return _defaultSettings;
         }
     }
 
@@ -139,8 +147,8 @@ public class MSSettings : ICloneable
     [EditorBrowsable(EditorBrowsableState.Never)]
     public MSSettings(bool shouldApplyDefaults)
     {
-        if (!shouldApplyDefaults || DefaultSettings == null) return;
-        DefaultSettings.MainSettings.CopyInto(this);
+        if (!shouldApplyDefaults || DefaultSettingsSO == null) return;
+        DefaultSettingsSO.DefaultSettings.CopyInto(this);
     }
     #endregion
 

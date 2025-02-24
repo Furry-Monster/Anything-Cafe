@@ -9,7 +9,7 @@ public class MSSettings : ICloneable
     // 单例与原型
     private static MSDefaultSettings _defaultSettings = null;
     private static MSSettings _instance;
-    
+
     // 保存路径相关
     private const string DefaultSettingsPath = "MSDefaultSettings.asset";
     [SerializeField] private DirectoryStrategy _directoryStrategy;
@@ -20,10 +20,10 @@ public class MSSettings : ICloneable
     public string EncryptionKey = "passw0rd";
     public int BufferSize = 2048;
     public Encoding Encoding = Encoding.UTF8;
-    
+
     // 压缩相关
     public CompressionMode Compression;
-    
+
     // 格式相关
     public FormatMode Format;
 

@@ -168,7 +168,7 @@ public class MonStore
 
 
     #region GetAPI 获取
-    
+
     #region 键值对
     public static string[] GetKeys() => GetKeys(new MSSettings((string)null));
 
@@ -182,7 +182,7 @@ public class MonStore
         throw new NotImplementedException();
     }
     #endregion
-    
+
     #region 文件
     public static string[] GetFiles() => GetFiles(new MSSettings((string)null));
 
@@ -343,6 +343,6 @@ public class MonStore
         };
     }
     #endregion
-    
+
     #endregion
 }

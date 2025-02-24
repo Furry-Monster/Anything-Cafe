@@ -1,12 +1,14 @@
+using System;
+
 public class LocalStorage : IStorageUtility
 {
     public void Save(string fileName, string content)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public string Load(string fileName)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }

@@ -32,6 +32,4 @@ internal static class MSReflection
     public static bool IsInterface(Type type) => type.IsInterface;
 
     public static bool IsEnum(Type type) => type.IsEnum;
-
-    public static bool IsAssignableFrom(Type a, Type b) => a.IsAssignableFrom(b);
 }

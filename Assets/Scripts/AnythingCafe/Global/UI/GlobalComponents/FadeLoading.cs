@@ -59,9 +59,6 @@ public class FadeLoading :
         return DOTween.Sequence().OnPlay(() =>
         {
             _canvasGroup.interactable = false;
-        }).OnKill(() =>
-        {
-            _canvasGroup.interactable = true;
         }).Append(_canvasGroup.DOFade(1, _model.FadeInDuration));
     }
 
@@ -71,9 +68,9 @@ public class FadeLoading :
     /// <returns> ∂Øª≠–Ú¡– </returns>
     private Sequence HideSequence()
     {
-        return DOTween.Sequence().OnPlay(() =>
+        return DOTween.Sequence().OnKill(() =>
         {
-            _canvasGroup.interactable = false;
+            _canvasGroup.interactable = true;
         }).Append(_canvasGroup.DOFade(0, _model.FadeOutDuration));
     }
 }

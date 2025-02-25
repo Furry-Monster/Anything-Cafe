@@ -116,6 +116,7 @@ public class NoticeDialog :
         }).OnKill(() =>
         {
             _canvasGroup.alpha = 1f;
+            _canvasGroup.interactable = true;
             gameObject.SetActive(false);
         }).Append(_canvasGroup.DOFade(0.0f, 0.5f));
     }

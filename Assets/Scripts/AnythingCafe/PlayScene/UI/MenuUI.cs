@@ -55,6 +55,7 @@ public class MenuUI : PlaySceneComponent, IInitializable
                 _canvasGroup.interactable = false;
             }).OnKill(() =>
             {
+                _canvasGroup.interactable = true;
                 gameObject.SetActive(false);
             }).Append(transform.DOLocalMoveY(1700, 0.5f, false).SetEase(Ease.OutCubic));
     }

@@ -2663,6 +2663,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2028202966}
     m_Modifications:
+    - target: {fileID: 7762138148611661172, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: _canvasGroup
+      value: 
+      objectReference: {fileID: 2028202967}
     - target: {fileID: 7804843166034876254, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
       propertyPath: m_Name
       value: SettingPanel

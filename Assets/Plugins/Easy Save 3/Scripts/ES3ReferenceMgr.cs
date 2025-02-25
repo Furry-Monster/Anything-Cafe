@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ES3Internal;
@@ -6,7 +5,6 @@ using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using System.Reflection;
 using System;
 using System.Linq;
 #endif
@@ -71,7 +69,7 @@ public class ES3ReferenceMgr : ES3ReferenceMgrBase
                 {
                     ((ES3ReferenceMgr)mgr).RefreshDependencies();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     ES3Debug.LogError($"Couldn't update references for scene {scene.name} as the following exception occurred:\n\n" + e);
                 }
@@ -85,7 +83,7 @@ public class ES3ReferenceMgr : ES3ReferenceMgrBase
                 // Temporarily disable refreshing on save so that it doesn't refresh again.
                 var updateReferencesOnSave = ES3Settings.defaultSettingsScriptableObject.updateReferencesWhenSceneIsSaved;
                 ES3Settings.defaultSettingsScriptableObject.updateReferencesWhenSceneIsSaved = false;
-                
+
                 EditorSceneManager.SaveScene(scene);
                 EditorSceneManager.CloseScene(scene, true);
 
@@ -176,7 +174,7 @@ public class ES3ReferenceMgr : ES3ReferenceMgrBase
             var path = AssetDatabase.GUIDToAssetPath(guid);
             var obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path);
 
-            if(obj != null)
+            if (obj != null)
                 AddDependencies(obj);
         }
     }
@@ -240,14 +238,14 @@ public class ES3ReferenceMgr : ES3ReferenceMgrBase
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     private void AddPrefabToManager(ES3Prefab es3Prefab)
     {
-            try
-            {
-                if (es3Prefab != null && EditorUtility.IsPersistent(es3Prefab))
-                    if(AddPrefab(es3Prefab))
-                        Undo.RecordObject(this, "Update Easy Save 3 Reference List");
-                es3Prefab.GeneratePrefabReferences();
-            }
-            catch { }
+        try
+        {
+            if (es3Prefab != null && EditorUtility.IsPersistent(es3Prefab))
+                if (AddPrefab(es3Prefab))
+                    Undo.RecordObject(this, "Update Easy Save 3 Reference List");
+            es3Prefab.GeneratePrefabReferences();
+        }
+        catch { }
     }
 #endif
 }

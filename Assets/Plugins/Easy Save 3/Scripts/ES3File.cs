@@ -1,10 +1,8 @@
-﻿using System.Collections;
+﻿using ES3Internal;
+using ES3Types;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System;
-using ES3Types;
-using UnityEngine;
-using ES3Internal;
 using System.Linq;
 
 /// <summary>Represents a cached file which can be saved to and loaded from, and commited to storage when necessary.</summary>

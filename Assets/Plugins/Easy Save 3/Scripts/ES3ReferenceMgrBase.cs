@@ -1,8 +1,7 @@
-using UnityEngine;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace ES3Internal
@@ -78,7 +77,7 @@ namespace ES3Internal
                     if (root.name == "Easy Save 3 Manager")
                     {
                         var mgr = root.GetComponent<ES3ReferenceMgr>();
-                        if(mgr != null)
+                        if (mgr != null)
                             return mgr;
                     }
                 }
@@ -87,7 +86,7 @@ namespace ES3Internal
                 foreach (var root in roots)
                 {
                     var mgr = root.GetComponentInChildren<ES3ReferenceMgr>();
-                    if(mgr != null)
+                    if (mgr != null)
                         return mgr;
                 }
             }

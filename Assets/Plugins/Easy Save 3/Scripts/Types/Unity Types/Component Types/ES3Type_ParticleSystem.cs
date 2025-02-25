@@ -1,6 +1,3 @@
-using System;
-using UnityEngine;
-
 namespace ES3Types
 {
     [UnityEngine.Scripting.Preserve]

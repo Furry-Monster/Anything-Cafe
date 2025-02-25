@@ -3,26 +3,26 @@ using UnityEngine;
 
 namespace ES3Types
 {
-	[UnityEngine.Scripting.Preserve]
-	[ES3PropertiesAttribute("shader", "renderQueue", "shaderKeywords", "globalIlluminationFlags", "properties")]
-	public class ES3Type_Material : ES3UnityObjectType
-	{
-		public static ES3Type Instance = null;
+    [UnityEngine.Scripting.Preserve]
+    [ES3PropertiesAttribute("shader", "renderQueue", "shaderKeywords", "globalIlluminationFlags", "properties")]
+    public class ES3Type_Material : ES3UnityObjectType
+    {
+        public static ES3Type Instance = null;
 
-		public ES3Type_Material() : base(typeof(UnityEngine.Material)){ Instance = this; }
+        public ES3Type_Material() : base(typeof(UnityEngine.Material)) { Instance = this; }
 
-		protected override void WriteUnityObject(object obj, ES3Writer writer)
-		{
-			var instance = (UnityEngine.Material)obj;
+        protected override void WriteUnityObject(object obj, ES3Writer writer)
+        {
+            var instance = (UnityEngine.Material)obj;
 
             // Uncomment if you want "instance" to be removed from the name.
             //instance.name = instance.name.Replace(" (Instance)", "");
 
-			writer.WriteProperty("name", instance.name);
-			writer.WriteProperty("shader", instance.shader);
-			writer.WriteProperty("renderQueue", instance.renderQueue, ES3Type_int.Instance);
-			writer.WriteProperty("shaderKeywords", instance.shaderKeywords);
-			writer.WriteProperty("globalIlluminationFlags", instance.globalIlluminationFlags);
+            writer.WriteProperty("name", instance.name);
+            writer.WriteProperty("shader", instance.shader);
+            writer.WriteProperty("renderQueue", instance.renderQueue, ES3Type_int.Instance);
+            writer.WriteProperty("shaderKeywords", instance.shaderKeywords);
+            writer.WriteProperty("globalIlluminationFlags", instance.globalIlluminationFlags);
 
             var shader = instance.shader;
 
@@ -513,20 +513,20 @@ namespace ES3Types
                     writer.WriteProperty("_Detail_TextureScale", instance.GetTextureScale("_Detail_TextureScale"));
                 if(instance.HasProperty("_HalfOverCutoff"))
                     writer.WriteProperty("_HalfOverCutoff", instance.GetFloat("_HalfOverCutoff"));
-                    #endif
+#endif
             }
-		}
+        }
 
-		protected override object ReadUnityObject<T>(ES3Reader reader)
-		{
-			var obj = new Material(Shader.Find("Diffuse"));
-			ReadUnityObject<T>(reader, obj);
-			return obj;
-		}
+        protected override object ReadUnityObject<T>(ES3Reader reader)
+        {
+            var obj = new Material(Shader.Find("Diffuse"));
+            ReadUnityObject<T>(reader, obj);
+            return obj;
+        }
 
-		protected override void ReadUnityObject<T>(ES3Reader reader, object obj)
-		{
-			var instance = (UnityEngine.Material)obj;
+        protected override void ReadUnityObject<T>(ES3Reader reader, object obj)
+        {
+            var instance = (UnityEngine.Material)obj;
 
 #if UNITY_2019_3_OR_NEWER
 
@@ -1292,13 +1292,13 @@ namespace ES3Types
         }
     }
 
-		public class ES3Type_MaterialArray : ES3ArrayType
-	{
-		public static ES3Type Instance;
+    public class ES3Type_MaterialArray : ES3ArrayType
+    {
+        public static ES3Type Instance;
 
-		public ES3Type_MaterialArray() : base(typeof(Material[]), ES3Type_Material.Instance)
-		{
-			Instance = this;
-		}
-	}
+        public ES3Type_MaterialArray() : base(typeof(Material[]), ES3Type_Material.Instance)
+        {
+            Instance = this;
+        }
+    }
 }

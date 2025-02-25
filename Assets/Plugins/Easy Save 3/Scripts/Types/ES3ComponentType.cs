@@ -1,7 +1,6 @@
+using ES3Internal;
 using System;
 using UnityEngine;
-using System.Collections;
-using ES3Internal;
 
 namespace ES3Types
 {
@@ -100,7 +99,7 @@ namespace ES3Types
                 }
             }
 
-            if(instance != null)
+            if (instance != null)
                 ReadComponent<T>(reader, instance);
 
             return instance;

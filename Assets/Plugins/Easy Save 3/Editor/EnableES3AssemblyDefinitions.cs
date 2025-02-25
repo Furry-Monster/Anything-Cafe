@@ -1,5 +1,5 @@
-using UnityEditor;
 using System.IO;
+using UnityEditor;
 
 public class EnableES3AssemblyDefinitions : Editor
 {

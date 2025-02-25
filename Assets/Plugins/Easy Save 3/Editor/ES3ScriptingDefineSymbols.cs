@@ -1,11 +1,9 @@
-﻿using UnityEditor;
-using UnityEngine;
-using UnityEditor.Build;
+﻿using System;
 using System.Collections.Generic;
-using UnityEditor.Compilation;
-using System.Reflection;
 using System.Linq;
-using System;
+using System.Reflection;
+using UnityEditor;
+using UnityEditor.Build;
 
 [InitializeOnLoad]
 public class ES3ScriptingDefineSymbols
@@ -15,7 +13,7 @@ public class ES3ScriptingDefineSymbols
         SetDefineSymbols();
     }
 
-    static void SetDefineSymbols() 
+    static void SetDefineSymbols()
     {
         if (Type.GetType("Unity.VisualScripting.IncludeInSettingsAttribute, Unity.VisualScripting.Core") != null)
             SetDefineSymbol("UNITY_VISUAL_SCRIPTING");
@@ -70,7 +68,7 @@ public class ES3ScriptingDefineSymbols
         if (!allDefines.Contains(symbol))
             PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, string.Join(";", allDefines.Concat(new string[] { symbol }).ToArray()));
 #endif
-            return;
+        return;
     }
 
     internal static void RemoveDefineSymbol(string symbol)

@@ -1,5 +1,3 @@
-using System;
-
 namespace ES3Types
 {
 #if UNITY_6000_0_OR_NEWER

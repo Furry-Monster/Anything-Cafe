@@ -1,7 +1,7 @@
-using System;
-using UnityEngine;
-using System.Collections.Generic;
 using ES3Internal;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace ES3Types
 {
@@ -41,7 +41,7 @@ namespace ES3Types
 
             var es3AutoSave = instance.GetComponent<ES3AutoSave>();
 
-            if(es3AutoSave == null || es3AutoSave.saveLayer)
+            if (es3AutoSave == null || es3AutoSave.saveLayer)
                 writer.WriteProperty("layer", instance.layer, ES3Type_int.Instance);
             if (es3AutoSave == null || es3AutoSave.saveTag)
                 writer.WriteProperty("tag", instance.tag, ES3Type_string.Instance);
@@ -53,7 +53,7 @@ namespace ES3Types
                 writer.WriteProperty("active", instance.activeSelf);
 
             if ((es3AutoSave == null && saveChildren) || (es3AutoSave != null && es3AutoSave.saveChildren))
-                    writer.WriteProperty("children", GetChildren(instance), ES3.ReferenceMode.ByRefAndValue);
+                writer.WriteProperty("children", GetChildren(instance), ES3.ReferenceMode.ByRefAndValue);
 
             List<Component> components;
 
@@ -80,7 +80,7 @@ namespace ES3Types
                         components.Add(component);
             }
 
-            if(components != null & components.Count > 0)
+            if (components != null & components.Count > 0)
                 writer.WriteProperty("components", components, ES3.ReferenceMode.ByRefAndValue);
         }
 

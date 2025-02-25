@@ -1,32 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
-using ES3Internal;
 
 namespace ES3Editor
 {
-	public class SettingsWindow : SubWindow
-	{
-		public ES3Defaults editorSettings = null;
-		public ES3SerializableSettings settings = null;
-		public SerializedObject so = null;
-		public SerializedProperty referenceFoldersProperty = null;
+    public class SettingsWindow : SubWindow
+    {
+        public ES3Defaults editorSettings = null;
+        public ES3SerializableSettings settings = null;
+        public SerializedObject so = null;
+        public SerializedProperty referenceFoldersProperty = null;
 
         Vector2 scrollPos = Vector2.zero;
         const string disableGlobalDefineName = "ES3GLOBAL_DISABLED";
 
-        public SettingsWindow(EditorWindow window) : base("Settings", window){}
+        public SettingsWindow(EditorWindow window) : base("Settings", window) { }
 
         public void OnEnable()
         {
 
         }
 
-		public override void OnGUI()
-		{
-			if(settings == null || editorSettings == null)
-				Init();
+        public override void OnGUI()
+        {
+            if (settings == null || editorSettings == null)
+                Init();
 
             var style = EditorStyle.Get;
 
@@ -136,7 +133,7 @@ namespace ES3Editor
                         EditorGUILayout.PrefixLabel("Use Global References");
 
                         bool useGlobalReferences = ES3ScriptingDefineSymbols.HasDefineSymbol(disableGlobalDefineName);
-                        if(EditorGUILayout.Toggle(useGlobalReferences) != useGlobalReferences)
+                        if (EditorGUILayout.Toggle(useGlobalReferences) != useGlobalReferences)
                         {
                             // If global references is currently enabled, we want to disable it.
                             if (useGlobalReferences)
@@ -165,15 +162,15 @@ namespace ES3Editor
                 EditorUtility.SetDirty(editorSettings);
 
             EditorGUIUtility.labelWidth = labelWidth; // Set the label width back to default
-		}
+        }
 
-		public void Init()
-		{
+        public void Init()
+        {
             editorSettings = ES3Settings.defaultSettingsScriptableObject;
-			settings = editorSettings.settings;
+            settings = editorSettings.settings;
             so = new SerializedObject(editorSettings);
             referenceFoldersProperty = so.FindProperty("referenceFolders");
         }
-	}
+    }
 
 }

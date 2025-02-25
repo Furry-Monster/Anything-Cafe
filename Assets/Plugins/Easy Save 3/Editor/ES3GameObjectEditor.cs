@@ -26,7 +26,7 @@ namespace ES3Internal
                 var markedToBeSaved = es3Go.components.Contains(component);
                 var newMarkedToBeSaved = EditorGUILayout.Toggle(component.GetType().Name, markedToBeSaved);
 
-                if(markedToBeSaved && !newMarkedToBeSaved)
+                if (markedToBeSaved && !newMarkedToBeSaved)
                 {
                     Undo.RecordObject(es3Go, "Marked Component to save");
                     es3Go.components.Remove(component);

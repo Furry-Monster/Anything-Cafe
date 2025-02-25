@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace ES3Types
@@ -30,8 +29,8 @@ namespace ES3Types
 
 #if UNITY_2020_1_OR_NEWER
             writer.WriteProperty("streamingTextureForceLoadAll", UnityEngine.RenderTexture.streamingTextureForceLoadAll, ES3Type_bool.Instance);
-			writer.WriteProperty("streamingTextureDiscardUnusedMips", UnityEngine.RenderTexture.streamingTextureDiscardUnusedMips, ES3Type_bool.Instance);
-			writer.WriteProperty("allowThreadedTextureCreation", UnityEngine.RenderTexture.allowThreadedTextureCreation, ES3Type_bool.Instance);
+            writer.WriteProperty("streamingTextureDiscardUnusedMips", UnityEngine.RenderTexture.streamingTextureDiscardUnusedMips, ES3Type_bool.Instance);
+            writer.WriteProperty("allowThreadedTextureCreation", UnityEngine.RenderTexture.allowThreadedTextureCreation, ES3Type_bool.Instance);
 #endif
         }
 
@@ -126,14 +125,14 @@ namespace ES3Types
                         instance.useDynamicScale = reader.Read<System.Boolean>(ES3Type_bool.Instance);
                         break;
                     case "streamingTextureForceLoadAll":
-						UnityEngine.RenderTexture.streamingTextureForceLoadAll = reader.Read<System.Boolean>(ES3Type_bool.Instance);
-						break;
-					case "streamingTextureDiscardUnusedMips":
-						UnityEngine.RenderTexture.streamingTextureDiscardUnusedMips = reader.Read<System.Boolean>(ES3Type_bool.Instance);
-						break;
-					case "allowThreadedTextureCreation":
-						UnityEngine.RenderTexture.allowThreadedTextureCreation = reader.Read<System.Boolean>(ES3Type_bool.Instance);
-						break;
+                        UnityEngine.RenderTexture.streamingTextureForceLoadAll = reader.Read<System.Boolean>(ES3Type_bool.Instance);
+                        break;
+                    case "streamingTextureDiscardUnusedMips":
+                        UnityEngine.RenderTexture.streamingTextureDiscardUnusedMips = reader.Read<System.Boolean>(ES3Type_bool.Instance);
+                        break;
+                    case "allowThreadedTextureCreation":
+                        UnityEngine.RenderTexture.allowThreadedTextureCreation = reader.Read<System.Boolean>(ES3Type_bool.Instance);
+                        break;
 #endif
 
                     default:

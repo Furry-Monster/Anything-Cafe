@@ -26,39 +26,22 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
         if (IsInitialized) return;
         IsInitialized = true;
 
+        LoadOptions();
+
         // 初始化创建SoundPool
         if (_sourceParent == null) _sourceParent = gameObject;
         _soundPool ??= SoundPool.Instance.Created(_sourceParent);
     }
 
-    #region 音量控制
-
-    public void SetVolume(float volume, SoundType type)
+    private void LoadOptions()
     {
-        switch (type)
-        {
-            case SoundType.Ambient:
-                _ambientVolumeFactor = volume;
-                break;
-            case SoundType.Music:
-                _musicVolumeFactor = volume;
-                break;
-            case SoundType.SFX:
-                _sfxVolumeFactor = volume;
-                break;
-            case SoundType.UI:
-                _uiVolumeFactor = volume;
-                break;
-            case SoundType.Ero:
-                _eroVolumeFactor = volume;
-                break;
-            default:
-                _globalVolumeFactor = volume;
-                break;
-        }
+        _globalVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.GlobalVolume);
+        _musicVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.MusicVolume);
+        _sfxVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.SFXVolume);
+        _ambientVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.AmbientVolume);
+        _uiVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.UIVolume);
+        _eroVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.EroVolume);
     }
-
-    #endregion
 
     #region 声音操作,包括播放、停止、暂停、恢复
 

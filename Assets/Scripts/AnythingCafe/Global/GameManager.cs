@@ -18,6 +18,7 @@ public class GameManager : PersistentSingleton<GameManager>
             DOTween.Init(null, null, LogBehaviour.ErrorsOnly);
             // 此处可以自定义Tween动画的默认参数
 
+            OptionManager.Instance.Init();
             UIManager.Instance.Init();
             SoundManager.Instance.Init();
             CursorManager.Instance.Init();

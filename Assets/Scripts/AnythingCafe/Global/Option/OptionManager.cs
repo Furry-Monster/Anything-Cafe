@@ -6,6 +6,7 @@ using UnityEngine;
 public class OptionManager : Singleton<OptionManager>, IInitializable
 {
     private const string Password = "AnythingCafe";
+    private const string SaveFile = SaveFileConstants.Options;
 
     private readonly Dictionary<OptionKey, OptionValue> _options;
 
@@ -126,7 +127,7 @@ public class OptionManager : Singleton<OptionManager>, IInitializable
     public void Save()
     {
         var settings = new ES3Settings(
-            SaveFileConstants.Options,
+            SaveFile,
             ES3.EncryptionType.AES,
             Password
         );
@@ -140,7 +141,7 @@ public class OptionManager : Singleton<OptionManager>, IInitializable
     private void LoadAll()
     {
         var settings = new ES3Settings(
-            SaveFileConstants.Options,
+            SaveFile,
             ES3.EncryptionType.AES,
             Password
         );

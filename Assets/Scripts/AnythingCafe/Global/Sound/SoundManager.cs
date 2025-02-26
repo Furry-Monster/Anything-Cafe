@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -7,6 +8,13 @@ using UnityEngine;
 public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
 {
     private SoundPool _soundPool;
+
+    private float _globalVolumeFactor = 1; // 全局音量
+    private float _musicVolumeFactor = 1; // 背景音乐音量
+    private float _sfxVolumeFactor = 1; // 音效音量
+    private float _ambientVolumeFactor = 1; // 环境音量
+    private float _uiVolumeFactor = 1; // UI音量
+    private float _eroVolumeFactor = 1; // 色情声音
 
     [SerializeField]
     private GameObject _sourceParent; // 所有Source对应的GameObject的父物体
@@ -19,9 +27,38 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
         IsInitialized = true;
 
         // 初始化创建SoundPool
-        if (_sourceParent == null) _sourceParent = this.gameObject;
+        if (_sourceParent == null) _sourceParent = gameObject;
         _soundPool ??= SoundPool.Instance.Created(_sourceParent);
     }
+
+    #region 音量控制
+
+    public void SetVolume(float volume, SoundType type)
+    {
+        switch (type)
+        {
+            case SoundType.Ambient:
+                _ambientVolumeFactor = volume;
+                break;
+            case SoundType.Music:
+                _musicVolumeFactor = volume;
+                break;
+            case SoundType.SFX:
+                _sfxVolumeFactor = volume;
+                break;
+            case SoundType.UI:
+                _uiVolumeFactor = volume;
+                break;
+            case SoundType.Ero:
+                _eroVolumeFactor = volume;
+                break;
+            default:
+                _globalVolumeFactor = volume;
+                break;
+        }
+    }
+
+    #endregion
 
     #region 声音操作,包括播放、停止、暂停、恢复
 
@@ -35,8 +72,19 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     /// <param name="delay"> 延迟播放 </param>
     public void PlaySound(SoundType type, AudioClip clip, bool loop = false, float volume = 1.0f, ulong delay = 0ul)
     {
+        // 音量乘数
+        var volumeFactor = type switch
+        {
+            SoundType.Ambient => _ambientVolumeFactor,
+            SoundType.Ero => _eroVolumeFactor,
+            SoundType.Music => _musicVolumeFactor,
+            SoundType.SFX => _sfxVolumeFactor,
+            SoundType.UI => _uiVolumeFactor,
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        } * _globalVolumeFactor;
+
         // 查找后包装一个
-        var soundItem = new SoundItem(type, clip, loop, volume, delay);
+        var soundItem = new SoundItem(type, clip, loop, volume * volumeFactor, delay);
         Debug.Log($"[SoundManager] Play sound [{type}]{clip.name} with loop {loop} and volume {volume} with delay {delay}ms");
         _soundPool.PlaySound(soundItem);
     }
@@ -48,7 +96,6 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     /// <param name="clip"> 音频Clip </param>
     public void StopSound(SoundType type, AudioClip clip)
     {
-
         // 查找后包装一个
         var soundItem = new SoundItem(type, clip, false, 0, 0);
         _soundPool.StopSound(soundItem);
@@ -69,7 +116,6 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
         // 查找后包装一个
         var soundItem = new SoundItem(type, clip, false, 0, 0);
         _soundPool.PauseSound(soundItem);
-
     }
 
     /// <summary>
@@ -79,11 +125,9 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     /// <param name="clip"> 音频Clip </param>
     public void ResumeSound(SoundType type, AudioClip clip)
     {
-
         // 查找后包装一个
         var soundItem = new SoundItem(type, clip, false, 0, 0);
         _soundPool.ResumeSound(soundItem);
     }
     #endregion
-
 }

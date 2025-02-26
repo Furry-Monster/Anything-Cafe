@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c1d9bf66b2fda34c81dc9dfc8c621c9, type: 3}
+  m_Name: OptionDefaults
+  m_EditorClassIdentifier: 
+  DefaultGlobalVolume: 1
+  DefaultAmbientVolume: 1
+  DefaultEroVolume: 1
+  DefaultMusicVolume: 1
+  DefaultSFXVolume: 1
+  DefaultUIVolume: 1
+  DefaultScreenMode: 1
+  DefaultResolutionWidth: 1920
+  DefaultResolutionHeight: 1080
+  DefaultLanguage: en

@@ -4,20 +4,20 @@ using UnityEngine;
 public class OptionDefaults : ScriptableObject
 {
     [Header("音频设置")]
-    public float defaultGlobalVolume = 1.0f;
-    public float defaultAmbientVolume = 1.0f;
-    public float defaultEroVolume = 1.0f;
-    public float defaultMusicVolume = 1.0f;
-    public float defaultSFXVolume = 1.0f;
-    public float defaultUIVolume = 1.0f;
+    [Range(0.0f, 1.0f)] public float DefaultGlobalVolume = 1.0f;
+    [Range(0.0f, 1.0f)] public float DefaultAmbientVolume = 1.0f;
+    [Range(0.0f, 1.0f)] public float DefaultEroVolume = 1.0f;
+    [Range(0.0f, 1.0f)] public float DefaultMusicVolume = 1.0f;
+    [Range(0.0f, 1.0f)] public float DefaultSFXVolume = 1.0f;
+    [Range(0.0f, 1.0f)] public float DefaultUIVolume = 1.0f;
 
     [Header("显示设置")]
-    public ScreenMode defaultScreenMode = ScreenMode.Windowed;
-    public int defaultResolutionWidth = 1920;
-    public int defaultResolutionHeight = 1080;
+    public ScreenMode DefaultScreenMode = ScreenMode.Windowed;
+    public int DefaultResolutionWidth = 1920;
+    public int DefaultResolutionHeight = 1080;
 
     [Header("其他设置")]
-    public string defaultLanguage = "en";
+    public string DefaultLanguage = "en";
 
     private static OptionDefaults _instance;
     public static OptionDefaults Instance

@@ -1,3 +1,6 @@
+// ReSharper disable ConvertToAutoProperty
+using System;
+
 public abstract class OptionValue
 {
     public abstract object GetValue();
@@ -11,10 +14,10 @@ public class OptionValue<T> : OptionValue
 {
     private T _value;
     private readonly T _defaultValue;
-    private readonly System.Func<T, bool> _validator;
+    private readonly Func<T, bool> _validator; // 设置为null表示不需要验证
     private readonly OptionGroup _group;
 
-    public OptionValue(T defaultValue, System.Func<T, bool> validator = null, OptionGroup group = OptionGroup.Other)
+    public OptionValue(T defaultValue, Func<T, bool> validator = null, OptionGroup group = OptionGroup.Other)
     {
         _defaultValue = defaultValue;
         _value = defaultValue;
@@ -28,7 +31,7 @@ public class OptionValue<T> : OptionValue
     {
         var typedValue = (T)value;
         if (_validator != null && !_validator(typedValue))
-            throw new System.ArgumentException($"Invalid value: {value}");
+            throw new ArgumentException($"Invalid value: {value}");
         _value = typedValue;
     }
 
@@ -48,7 +51,7 @@ public class OptionValue<T> : OptionValue
         set
         {
             if (_validator != null && !_validator(value))
-                throw new System.ArgumentException($"Invalid value: {value}");
+                throw new ArgumentException($"Invalid value: {value}");
             _value = value;
         }
     }

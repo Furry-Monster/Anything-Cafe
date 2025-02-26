@@ -32,21 +32,37 @@ public class SettingPanel :
         if (IsInitialized) return;
         IsInitialized = true;
 
-        LoadOptions();
+        // Set initial values
+        foreach (OptionKey optionKey in Enum.GetValues(typeof(OptionKey)))
+            UpdateOptionComponent(optionKey);
 
-        OptionManager.Instance.OnOptionChanged += UpdateOptionsUI;
+        OptionManager.Instance.OnOptionChanged += UpdateOptionComponent;
 
         gameObject.SetActive(false);
     }
 
-    private void LoadOptions()
+    public void UpdateOptionComponent(OptionKey key)
     {
-
-    }
-
-    public void UpdateOptionsUI(OptionKey key)
-    {
-
+        switch (key)
+        {
+            case OptionKey.GlobalVolume:
+                _audioSlider.value = OptionManager.Instance.GetValue<float>(key);
+                break;
+            case OptionKey.EroVolume:
+                _sexVolumeSlider.value = OptionManager.Instance.GetValue<float>(key);
+                break;
+            case OptionKey.MusicVolume:
+                _musicSlider.value = OptionManager.Instance.GetValue<float>(key);
+                break;
+            case OptionKey.AmbientVolume:
+            case OptionKey.SFXVolume:
+            case OptionKey.UIVolume:
+                _soundEffectSlider.value = OptionManager.Instance.GetValue<float>(key);
+                break;
+            case OptionKey.ScreenMode:
+                _screenModeToggle.isOn = OptionManager.Instance.GetValue<ScreenMode>(key) == ScreenMode.FullScreen;
+                break;
+        }
     }
 
     public void ScreenChangeCommand()

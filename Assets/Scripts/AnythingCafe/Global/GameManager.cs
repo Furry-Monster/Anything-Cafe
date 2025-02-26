@@ -42,6 +42,9 @@ public class GameManager : PersistentSingleton<GameManager>
     public void OnApplicationQuit()
     {
         DOTween.Clear();
+
+        OptionManager.Instance.ClearObservers(); // 清除OptionManager的观察者
+        OptionManager.Instance.Save(); // 保存配置
     }
 
     /// <summary>

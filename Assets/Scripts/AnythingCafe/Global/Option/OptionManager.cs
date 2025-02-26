@@ -41,7 +41,10 @@ public class OptionManager : Singleton<OptionManager>, IInitializable
     public void Init()
     {
         if (IsInitialized) return;
+
+        // 首次加载Option数据
         LoadAll();
+
         IsInitialized = true;
     }
 
@@ -122,7 +125,7 @@ public class OptionManager : Singleton<OptionManager>, IInitializable
     }
 
     /// <summary>
-    /// 保存所有选项值
+    /// 保存所有选项值,推荐只在退出游戏时调用
     /// </summary>
     public void Save()
     {
@@ -136,6 +139,15 @@ public class OptionManager : Singleton<OptionManager>, IInitializable
         {
             ES3.Save(kvp.Key.ToString(), kvp.Value.GetValue(), settings);
         }
+    }
+
+    /// <summary>
+    /// 清除所有观察者
+    /// </summary>
+    public void ClearObservers()
+    {
+        OnOptionChanged = null;
+        OnGroupChanged = null;
     }
 
     private void LoadAll()

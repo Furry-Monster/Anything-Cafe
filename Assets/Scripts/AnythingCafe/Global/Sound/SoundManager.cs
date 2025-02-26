@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -16,8 +17,7 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     private float _uiVolumeFactor = 1; // UI音量
     private float _eroVolumeFactor = 1; // 色情声音
 
-    [SerializeField]
-    private GameObject _sourceParent; // 所有Source对应的GameObject的父物体
+    [SerializeField] private GameObject _sourceParent; // 所有Source对应的GameObject的父物体
 
     public bool IsInitialized { get; set; }
 
@@ -26,21 +26,56 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
         if (IsInitialized) return;
         IsInitialized = true;
 
-        LoadOptions();
+        // 首次加载配置
+        LoadOptions(OptionGroup.Audio);
+
+        // 监听OptionManager的变化
+        OptionManager.Instance.OnGroupChanged += groupNotifier => LoadOptions(groupNotifier);
+        OptionManager.Instance.OnOptionChanged += keyNotifier => LoadOptions(keyNotifier);
 
         // 初始化创建SoundPool
         if (_sourceParent == null) _sourceParent = gameObject;
         _soundPool ??= SoundPool.Instance.Created(_sourceParent);
     }
 
-    private void LoadOptions()
+    private void LoadOptions(Enum notifier)
     {
-        _globalVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.GlobalVolume);
-        _musicVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.MusicVolume);
-        _sfxVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.SFXVolume);
-        _ambientVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.AmbientVolume);
-        _uiVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.UIVolume);
-        _eroVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.EroVolume);
+        if (notifier is not OptionGroup and not OptionKey) return;
+
+        switch (notifier)
+        {
+            case OptionGroup group when group == OptionGroup.Audio:
+                _globalVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.GlobalVolume);
+                _ambientVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.AmbientVolume);
+                _eroVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.EroVolume);
+                _musicVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.MusicVolume);
+                _sfxVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.SFXVolume);
+                _uiVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.UIVolume);
+                break;
+            case OptionKey key:
+                switch (key)
+                {
+                    case OptionKey.GlobalVolume:
+                        _globalVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.GlobalVolume);
+                        break;
+                    case OptionKey.AmbientVolume:
+                        _ambientVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.AmbientVolume);
+                        break;
+                    case OptionKey.EroVolume:
+                        _eroVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.EroVolume);
+                        break;
+                    case OptionKey.MusicVolume:
+                        _musicVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.MusicVolume);
+                        break;
+                    case OptionKey.SFXVolume:
+                        _sfxVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.SFXVolume);
+                        break;
+                    case OptionKey.UIVolume:
+                        _uiVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.UIVolume);
+                        break;
+                }
+                break;
+        }
     }
 
     #region 声音操作,包括播放、停止、暂停、恢复

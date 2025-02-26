@@ -1,6 +1,8 @@
+using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SettingPanel :
     GlobalComponent,
@@ -10,6 +12,18 @@ public class SettingPanel :
     [SerializeField]
     private CanvasGroup _canvasGroup;
 
+    [Header("Components")]
+    [SerializeField]
+    private Slider _audioSlider;
+    [SerializeField]
+    private Slider _soundEffectSlider;
+    [SerializeField]
+    private Slider _musicSlider;
+    [SerializeField]
+    private Slider _sexVolumeSlider;
+    [SerializeField]
+    private Toggle _screenModeToggle;
+
     private Sequence _sequence;
 
     public bool IsInitialized { get; set; }
@@ -18,7 +32,27 @@ public class SettingPanel :
         if (IsInitialized) return;
         IsInitialized = true;
 
+        LoadOptions();
+
+        OptionManager.Instance.OnOptionChanged += UpdateOptionsUI;
+
         gameObject.SetActive(false);
+    }
+
+    private void LoadOptions()
+    {
+
+    }
+
+    public void UpdateOptionsUI(OptionKey key)
+    {
+
+    }
+
+    public void ScreenChangeCommand()
+    {
+        var currentScreenMode = OptionManager.Instance.GetValue<ScreenMode>(OptionKey.ScreenMode);
+        OptionManager.Instance.SetValue(OptionKey.ScreenMode, currentScreenMode == ScreenMode.FullScreen ? ScreenMode.Windowed : ScreenMode.FullScreen);
     }
 
     public void OnCloseClick()

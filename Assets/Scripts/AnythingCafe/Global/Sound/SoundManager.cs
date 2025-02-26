@@ -30,7 +30,7 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
         LoadOptions(OptionGroup.Audio);
 
         // 监听OptionManager的变化
-        OptionManager.Instance.OnGroupChanged += groupNotifier => LoadOptions(groupNotifier);
+        // OptionManager.Instance.OnGroupChanged += groupNotifier => LoadOptions(groupNotifier);
         OptionManager.Instance.OnOptionChanged += keyNotifier => LoadOptions(keyNotifier);
 
         // 初始化创建SoundPool

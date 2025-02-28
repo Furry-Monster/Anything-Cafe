@@ -34,14 +34,14 @@ public class SettingPanel :
 
         // Set initial values
         foreach (OptionKey optionKey in Enum.GetValues(typeof(OptionKey)))
-            UpdateOptionComponent(optionKey);
+            UpdateOptionComponentView(optionKey);
 
-        OptionManager.Instance.OnOptionChanged += UpdateOptionComponent;
+        OptionManager.Instance.OnOptionChanged += UpdateOptionComponentView;
 
         gameObject.SetActive(false);
     }
 
-    public void UpdateOptionComponent(OptionKey key)
+    public void UpdateOptionComponentView(OptionKey key)
     {
         switch (key)
         {
@@ -74,8 +74,12 @@ public class SettingPanel :
     public void OnMusicSliderChanged(float value) =>
         OptionManager.Instance.SetValue(OptionKey.MusicVolume, value);
 
-    public void OnSoundEffectSliderChanged(float value) =>
+    public void OnSoundEffectSliderChanged(float value)
+    {
         OptionManager.Instance.SetValue(OptionKey.SFXVolume, value);
+        OptionManager.Instance.SetValue(OptionKey.AmbientVolume, value);
+        OptionManager.Instance.SetValue(OptionKey.UIVolume, value);
+    }
 
     public void OnScreenModeToggled()
     {

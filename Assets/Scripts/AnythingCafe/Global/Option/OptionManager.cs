@@ -1,3 +1,4 @@
+#define VERBOSE_LOG
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,42 +9,22 @@ public class OptionManager : Singleton<OptionManager>, IInitializable
     private const string Password = "AnythingCafe";
     private const string SaveFile = SaveFileConstants.Options;
 
-    private readonly Dictionary<OptionKey, OptionValue> _options;
+    private Dictionary<OptionKey, OptionValue> _options;
 
     public event Action<OptionGroup> OnGroupChanged;    // 分组变更事件
     public event Action<OptionKey> OnOptionChanged;    // 单个选项变更事件
 
-    public OptionManager()
-    {
-        // 加载默认值
-        var defaults = OptionDefaults.Instance;
-        _options = new Dictionary<OptionKey, OptionValue>
-        {
-            // 音频设置
-            { OptionKey.GlobalVolume, new OptionValue<float>(defaults.DefaultGlobalVolume, OptionValidator.ValidateVolume, OptionGroup.Audio) },
-            { OptionKey.AmbientVolume, new OptionValue<float>(defaults.DefaultAmbientVolume, OptionValidator.ValidateVolume, OptionGroup.Audio) },
-            { OptionKey.EroVolume, new OptionValue<float>(defaults.DefaultEroVolume, OptionValidator.ValidateVolume, OptionGroup.Audio) },
-            { OptionKey.MusicVolume, new OptionValue<float>(defaults.DefaultMusicVolume, OptionValidator.ValidateVolume, OptionGroup.Audio) },
-            { OptionKey.SFXVolume, new OptionValue<float>(defaults.DefaultSFXVolume, OptionValidator.ValidateVolume, OptionGroup.Audio) },
-            { OptionKey.UIVolume, new OptionValue<float>(defaults.DefaultUIVolume, OptionValidator.ValidateVolume, OptionGroup.Audio) },
-            
-            // 显示设置
-            { OptionKey.ScreenMode, new OptionValue<ScreenMode>(defaults.DefaultScreenMode, null, OptionGroup.Display) },
-            { OptionKey.ResolutionWidth, new OptionValue<int>(defaults.DefaultResolutionWidth, width => OptionValidator.ValidateResolution(width, GetValue<int>(OptionKey.ResolutionHeight)), OptionGroup.Display) },
-            { OptionKey.ResolutionHeight, new OptionValue<int>(defaults.DefaultResolutionHeight, height => OptionValidator.ValidateResolution(GetValue<int>(OptionKey.ResolutionWidth), height), OptionGroup.Display) },
-            
-            // 其他设置
-            { OptionKey.Language, new OptionValue<string>(defaults.DefaultLanguage, OptionValidator.ValidateLanguage) }
-        };
-    }
-
     public bool IsInitialized { get; set; }
     public void Init()
     {
+#if VERBOSE_LOG
+        Debug.Log("[OptionManager] Initializing");
+#endif
         if (IsInitialized) return;
 
-        // 首次加载Option数据
-        LoadAll();
+        // 加载Option数据
+        LoadDefault();
+        LoadPersistent();
 
         IsInitialized = true;
     }
@@ -57,6 +38,9 @@ public class OptionManager : Singleton<OptionManager>, IInitializable
     /// <exception cref="KeyNotFoundException"> 选项不存在 </exception>
     public T GetValue<T>(OptionKey key)
     {
+#if VERBOSE_LOG
+        Debug.Log($"[OptionManager] Getting value for {key}");
+#endif
         if (_options.TryGetValue(key, out var value))
             return (T)value.GetValue();
         throw new KeyNotFoundException($"[OptionManager] Option key {key} not found");
@@ -72,6 +56,9 @@ public class OptionManager : Singleton<OptionManager>, IInitializable
     /// <exception cref="ArgumentException"> 选项值无效 </exception>
     public void SetValue<T>(OptionKey key, T value)
     {
+#if VERBOSE_LOG
+        Debug.Log($"[OptionManager] Setting value for {key} to {value}");
+#endif
         if (!_options.TryGetValue(key, out var optionValue))
             throw new KeyNotFoundException($"[OptionManager] Option key {key} not found");
 
@@ -107,6 +94,9 @@ public class OptionManager : Singleton<OptionManager>, IInitializable
     /// <param name="key"> 选项 </param>
     public void ResetToDefault(OptionKey key)
     {
+#if VERBOSE_LOG
+        Debug.Log($"[OptionManager] Resetting group {_options[key].Group}");
+#endif
         if (_options.TryGetValue(key, out var value))
         {
             value.SetValue(value.GetDefaultValue());
@@ -129,6 +119,9 @@ public class OptionManager : Singleton<OptionManager>, IInitializable
     /// </summary>
     public void Save()
     {
+#if VERBOSE_LOG
+        Debug.Log($"[OptionManager] Saving options to file {SaveFile} with password {Password} ");
+#endif
         var settings = new ES3Settings(
             SaveFile,
             ES3.EncryptionType.AES,
@@ -146,11 +139,14 @@ public class OptionManager : Singleton<OptionManager>, IInitializable
     /// </summary>
     public void ClearObservers()
     {
+#if VERBOSE_LOG
+        Debug.Log("[OptionManager] Clearing observers");
+#endif
         OnOptionChanged = null;
         OnGroupChanged = null;
     }
 
-    private void LoadAll()
+    private void LoadPersistent()
     {
         var settings = new ES3Settings(
             SaveFile,
@@ -171,5 +167,29 @@ public class OptionManager : Singleton<OptionManager>, IInitializable
                 kvp.Value.SetValue(kvp.Value.GetDefaultValue());
             }
         }
+    }
+
+    private void LoadDefault()
+    {
+        // 加载默认值
+        var defaults = OptionDefaults.Instance;
+        _options = new Dictionary<OptionKey, OptionValue>
+        {
+            // 音频设置
+            { OptionKey.GlobalVolume, new OptionValue<float>(defaults.DefaultGlobalVolume, OptionValidator.ValidateVolume, OptionGroup.Audio) },
+            { OptionKey.AmbientVolume, new OptionValue<float>(defaults.DefaultAmbientVolume, OptionValidator.ValidateVolume, OptionGroup.Audio) },
+            { OptionKey.EroVolume, new OptionValue<float>(defaults.DefaultEroVolume, OptionValidator.ValidateVolume, OptionGroup.Audio) },
+            { OptionKey.MusicVolume, new OptionValue<float>(defaults.DefaultMusicVolume, OptionValidator.ValidateVolume, OptionGroup.Audio) },
+            { OptionKey.SFXVolume, new OptionValue<float>(defaults.DefaultSFXVolume, OptionValidator.ValidateVolume, OptionGroup.Audio) },
+            { OptionKey.UIVolume, new OptionValue<float>(defaults.DefaultUIVolume, OptionValidator.ValidateVolume, OptionGroup.Audio) },
+            
+            // 显示设置
+            { OptionKey.ScreenMode, new OptionValue<ScreenMode>(defaults.DefaultScreenMode, null, OptionGroup.Display) },
+            { OptionKey.ResolutionWidth, new OptionValue<int>(defaults.DefaultResolutionWidth, width => OptionValidator.ValidateResolution(width, GetValue<int>(OptionKey.ResolutionHeight)), OptionGroup.Display) },
+            { OptionKey.ResolutionHeight, new OptionValue<int>(defaults.DefaultResolutionHeight, height => OptionValidator.ValidateResolution(GetValue<int>(OptionKey.ResolutionWidth), height), OptionGroup.Display) },
+            
+            // 其他设置
+            { OptionKey.Language, new OptionValue<string>(defaults.DefaultLanguage, OptionValidator.ValidateLanguage) }
+        };
     }
 }

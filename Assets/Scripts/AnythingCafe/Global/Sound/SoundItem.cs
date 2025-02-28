@@ -1,7 +1,5 @@
 using UnityEngine;
 
-
-
 public record SoundItem(SoundType SoundType, AudioClip AudioClip, bool Loop, float Volume, ulong Delay)
 {
     public SoundType SoundType { get; set; } = SoundType;

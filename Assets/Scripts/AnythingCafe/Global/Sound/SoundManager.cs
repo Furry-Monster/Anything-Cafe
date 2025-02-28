@@ -12,7 +12,6 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     [SerializeField] private GameObject _sourceParent;
 
     private SoundPoolManager _soundPoolManager;
-    private bool _isMuted;
 
     // 音量控制
     private float _globalVolumeFactor = 1f;
@@ -22,19 +21,7 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     private float _uiVolumeFactor = 1f;
     private float _eroVolumeFactor = 1f;
 
-    // 音频淡入淡出默认时间
-    private const float DefaultFadeTime = 1.0f;
-
     public bool IsInitialized { get; set; }
-    public bool IsMuted
-    {
-        get => _isMuted;
-        set
-        {
-            _isMuted = value;
-            SetMute(_isMuted);
-        }
-    }
 
     public void Init()
     {
@@ -53,11 +40,11 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
         IsInitialized = true;
     }
 
-    private void LoadOptions(Enum notifier)
+    private void LoadOptions(Enum optionEnum)
     {
-        if (notifier is not OptionGroup and not OptionKey) return;
+        if (optionEnum is not OptionGroup and not OptionKey) return;
 
-        switch (notifier)
+        switch (optionEnum)
         {
             case OptionGroup group when group == OptionGroup.Audio:
                 LoadAllVolumeSettings();
@@ -112,6 +99,7 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
             foreach (SoundType type in Enum.GetValues(typeof(SoundType)))
             {
                 var volumeFactor = GetVolumeFactorForType(type);
+                // 音量范围为0~1，需要转换为-80~0
                 _audioMixer.SetFloat($"{type}Volume", Mathf.Log10(volumeFactor * _globalVolumeFactor) * 20);
             }
         }
@@ -128,15 +116,6 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
             SoundType.UI => _uiVolumeFactor,
             _ => 1f
         };
-    }
-
-    private void SetMute(bool mute)
-    {
-        if (_audioMixer != null)
-        {
-            var volume = mute ? -80f : Mathf.Log10(_globalVolumeFactor) * 20;
-            _audioMixer.SetFloat("MasterVolume", volume);
-        }
     }
 
     #region 公共方法

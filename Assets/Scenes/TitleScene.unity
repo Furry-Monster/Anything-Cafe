@@ -2162,6 +2162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f575de1c16cae5240a9cc5844cc05cf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _audioMixer: {fileID: 24100000, guid: 80dd25617fd5f8d4dbce54e4b599172c, type: 2}
   _sourceParent: {fileID: 1653469487}
 --- !u!4 &1653469489
 Transform:

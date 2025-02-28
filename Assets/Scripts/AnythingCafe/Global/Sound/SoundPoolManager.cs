@@ -73,7 +73,7 @@ public class SoundPoolManager : Singleton<SoundPoolManager>
         return Instance;
     }
 
-    #region 私有方法, 一个方法调用多个方法
+    #region 私有方法, 内部调用
     /// <summary>
     /// 获取一个音频源池中的音频源
     /// </summary>
@@ -183,6 +183,7 @@ public class SoundPoolManager : Singleton<SoundPoolManager>
 
         if (sound.Delay > 0)
         {
+            // 按s计时
             source.PlayDelayed(sound.Delay / 1000f);
         }
         else
@@ -209,13 +210,10 @@ public class SoundPoolManager : Singleton<SoundPoolManager>
     }
     public void StopAllSounds()
     {
-        foreach (var sources in _busySources.Values)
+        foreach (var source in _busySources.Values.SelectMany(sources => sources))
         {
-            foreach (var source in sources)
-            {
-                source.Stop();
-                OnSoundStop?.Invoke(source);
-            }
+            source.Stop();
+            OnSoundStop?.Invoke(source);
         }
     }
 

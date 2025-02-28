@@ -7,8 +7,13 @@ public class PlotObject : MonoBehaviour, IInteractable, IConditionalShow
     private bool _interactable = true;
     private bool _isInteracting;
 
+    public bool CheckConditionsOnStart = true;
+
     [SerializeField] private UnityEvent _onInteractionStart = new();
     [SerializeField] private UnityEvent _onInteractionEnd = new();
+    [SerializeField] private UnityEvent _onConditionsFailed = new();
+
+    private ConditionGroup _conditionGroup;
 
     public virtual bool Interactable
     {
@@ -28,10 +33,24 @@ public class PlotObject : MonoBehaviour, IInteractable, IConditionalShow
 
     public UnityEvent OnInteractionStart => _onInteractionStart;
     public UnityEvent OnInteractionEnd => _onInteractionEnd;
+    public UnityEvent OnConditionsFailed => _onConditionsFailed;
+
+    protected virtual void Awake()
+    {
+        _conditionGroup = GetComponent<ConditionGroup>();
+        if (_conditionGroup == null)
+        {
+            _conditionGroup = gameObject.AddComponent<ConditionGroup>();
+        }
+    }
 
     protected virtual void Start()
     {
         ValidateComponents();
+        if (CheckConditionsOnStart)
+        {
+            CheckConditions();
+        }
     }
 
     protected virtual void ValidateComponents()
@@ -51,6 +70,13 @@ public class PlotObject : MonoBehaviour, IInteractable, IConditionalShow
     public virtual void OnInteract()
     {
         if (!Interactable) return;
+
+        if (!CheckConditions())
+        {
+            OnConditionsFailed?.Invoke();
+            return;
+        }
+
         OnInteractionBegin();
     }
 
@@ -87,5 +113,26 @@ public class PlotObject : MonoBehaviour, IInteractable, IConditionalShow
         {
             OnInteractionCancel();
         }
+    }
+
+    protected bool CheckConditions()
+    {
+        if (_conditionGroup == null) return true;
+        return _conditionGroup.IsMet();
+    }
+
+    public string GetFailureReason()
+    {
+        return _conditionGroup?.GetFailureReason() ?? string.Empty;
+    }
+
+    public void AddCondition(MonoBehaviour condition)
+    {
+        _conditionGroup?.AddCondition(condition);
+    }
+
+    public void RemoveCondition(MonoBehaviour condition)
+    {
+        _conditionGroup?.RemoveCondition(condition);
     }
 }

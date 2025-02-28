@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class ItemCondition : MonoBehaviour, ICondition
 {
-    [SerializeField] private string itemId;
-    [SerializeField] private int requiredAmount = 1;
+    [SerializeField] private string _itemId;
+    [SerializeField] private int _requiredAmount = 1;
 
     public bool IsMet()
     {
@@ -13,8 +13,5 @@ public class ItemCondition : MonoBehaviour, ICondition
         return false;
     }
 
-    public string GetFailureReason()
-    {
-        return $"需要 {requiredAmount} 个 {itemId}";
-    }
+    public string GetFailureReason() => $"需要 {_requiredAmount} 个 {_itemId}";
 }

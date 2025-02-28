@@ -1,40 +1,56 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 
 /// <summary>
-/// ÉùÒô¹ÜÀíÆ÷
+/// éŸ³é¢‘ç®¡ç†å™¨
 /// </summary>
 [AddComponentMenu("FrameMonster/Sound/SoundManager")]
 public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
 {
-    private SoundPool _soundPool;
+    [SerializeField] private AudioMixer _audioMixer;
+    [SerializeField] private GameObject _sourceParent;
 
-    private float _globalVolumeFactor = 1; // È«¾ÖÒôÁ¿
-    private float _musicVolumeFactor = 1; // ±³¾°ÒôÀÖÒôÁ¿
-    private float _sfxVolumeFactor = 1; // ÒôĞ§ÒôÁ¿
-    private float _ambientVolumeFactor = 1; // »·¾³ÒôÁ¿
-    private float _uiVolumeFactor = 1; // UIÒôÁ¿
-    private float _eroVolumeFactor = 1; // É«ÇéÉùÒô
+    private SoundPoolManager _soundPoolManager;
+    private bool _isMuted;
 
-    [SerializeField] private GameObject _sourceParent; // ËùÓĞSource¶ÔÓ¦µÄGameObjectµÄ¸¸ÎïÌå
+    // éŸ³é‡æ§åˆ¶
+    private float _globalVolumeFactor = 1f;
+    private float _musicVolumeFactor = 1f;
+    private float _sfxVolumeFactor = 1f;
+    private float _ambientVolumeFactor = 1f;
+    private float _uiVolumeFactor = 1f;
+    private float _eroVolumeFactor = 1f;
+
+    // éŸ³é¢‘æ·¡å…¥æ·¡å‡ºé»˜è®¤æ—¶é—´
+    private const float DefaultFadeTime = 1.0f;
 
     public bool IsInitialized { get; set; }
+    public bool IsMuted
+    {
+        get => _isMuted;
+        set
+        {
+            _isMuted = value;
+            SetMute(_isMuted);
+        }
+    }
 
     public void Init()
     {
         if (IsInitialized) return;
-        IsInitialized = true;
 
-        // Ê×´Î¼ÓÔØÅäÖÃ
+        // åˆå§‹åŒ–éŸ³é¢‘æ± 
+        _sourceParent ??= gameObject;
+        _soundPoolManager = SoundPoolManager.Instance.Created(_sourceParent, _audioMixer);
+
+        // åŠ è½½éŸ³é¢‘è®¾ç½®
         LoadOptions(OptionGroup.Audio);
 
-        // ¼àÌıOptionManagerµÄ±ä»¯
-        // OptionManager.Instance.OnGroupChanged += groupNotifier => LoadOptions(groupNotifier);
-        OptionManager.Instance.OnOptionChanged += keyNotifier => LoadOptions(keyNotifier);
+        // è®¢é˜…è®¾ç½®å˜æ›´äº‹ä»¶
+        OptionManager.Instance.OnOptionChanged += keyEnum => LoadOptions(keyEnum);
 
-        // ³õÊ¼»¯´´½¨SoundPool
-        if (_sourceParent == null) _sourceParent = gameObject;
-        _soundPool ??= SoundPool.Instance.Created(_sourceParent);
+        IsInitialized = true;
     }
 
     private void LoadOptions(Enum notifier)
@@ -44,107 +60,173 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
         switch (notifier)
         {
             case OptionGroup group when group == OptionGroup.Audio:
-                _globalVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.GlobalVolume);
-                _ambientVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.AmbientVolume);
-                _eroVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.EroVolume);
-                _musicVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.MusicVolume);
-                _sfxVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.SFXVolume);
-                _uiVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.UIVolume);
+                LoadAllVolumeSettings();
                 break;
             case OptionKey key:
-                switch (key)
-                {
-                    case OptionKey.GlobalVolume:
-                        _globalVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.GlobalVolume);
-                        break;
-                    case OptionKey.AmbientVolume:
-                        _ambientVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.AmbientVolume);
-                        break;
-                    case OptionKey.EroVolume:
-                        _eroVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.EroVolume);
-                        break;
-                    case OptionKey.MusicVolume:
-                        _musicVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.MusicVolume);
-                        break;
-                    case OptionKey.SFXVolume:
-                        _sfxVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.SFXVolume);
-                        break;
-                    case OptionKey.UIVolume:
-                        _uiVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.UIVolume);
-                        break;
-                }
+                LoadSpecificVolumeSetting(key);
+                break;
+        }
+
+        ApplyVolumeSettings();
+    }
+
+    private void LoadAllVolumeSettings()
+    {
+        _globalVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.GlobalVolume);
+        _ambientVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.AmbientVolume);
+        _eroVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.EroVolume);
+        _musicVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.MusicVolume);
+        _sfxVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.SFXVolume);
+        _uiVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.UIVolume);
+    }
+
+    private void LoadSpecificVolumeSetting(OptionKey key)
+    {
+        switch (key)
+        {
+            case OptionKey.GlobalVolume:
+                _globalVolumeFactor = OptionManager.Instance.GetValue<float>(key);
+                break;
+            case OptionKey.AmbientVolume:
+                _ambientVolumeFactor = OptionManager.Instance.GetValue<float>(key);
+                break;
+            case OptionKey.EroVolume:
+                _eroVolumeFactor = OptionManager.Instance.GetValue<float>(key);
+                break;
+            case OptionKey.MusicVolume:
+                _musicVolumeFactor = OptionManager.Instance.GetValue<float>(key);
+                break;
+            case OptionKey.SFXVolume:
+                _sfxVolumeFactor = OptionManager.Instance.GetValue<float>(key);
+                break;
+            case OptionKey.UIVolume:
+                _uiVolumeFactor = OptionManager.Instance.GetValue<float>(key);
                 break;
         }
     }
 
-    #region ÉùÒô²Ù×÷,°üÀ¨²¥·Å¡¢Í£Ö¹¡¢ÔİÍ£¡¢»Ö¸´
-
-    /// <summary>
-    /// ²¥·ÅÉùÒô
-    /// </summary>
-    /// <param name="type"> ÉùÒôÀàĞÍ </param>
-    /// <param name="clip"> ÒôÆµClip </param>
-    /// <param name="loop"> ÊÇ·ñÑ­»· </param>
-    /// <param name="volume"> ÒôÁ¿ </param>
-    /// <param name="delay"> ÑÓ³Ù²¥·Å </param>
-    public void PlaySound(SoundType type, AudioClip clip, bool loop = false, float volume = 1.0f, ulong delay = 0ul)
+    private void ApplyVolumeSettings()
     {
-        // ÒôÁ¿³ËÊı
-        var volumeFactor = type switch
+        if (_audioMixer != null)
+        {
+            foreach (SoundType type in Enum.GetValues(typeof(SoundType)))
+            {
+                var volumeFactor = GetVolumeFactorForType(type);
+                _audioMixer.SetFloat($"{type}Volume", Mathf.Log10(volumeFactor * _globalVolumeFactor) * 20);
+            }
+        }
+    }
+
+    private float GetVolumeFactorForType(SoundType type)
+    {
+        return type switch
         {
             SoundType.Ambient => _ambientVolumeFactor,
             SoundType.Ero => _eroVolumeFactor,
             SoundType.Music => _musicVolumeFactor,
             SoundType.SFX => _sfxVolumeFactor,
             SoundType.UI => _uiVolumeFactor,
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-        } * _globalVolumeFactor;
+            _ => 1f
+        };
+    }
 
-        // ²éÕÒºó°ü×°Ò»¸ö
-        var soundItem = new SoundItem(type, clip, loop, volume * volumeFactor, delay);
-        Debug.Log($"[SoundManager] Play sound [{type}]{clip.name} with loop {loop} and volume {volume} with delay {delay}ms");
-        _soundPool.PlaySound(soundItem);
+    private void SetMute(bool mute)
+    {
+        if (_audioMixer != null)
+        {
+            var volume = mute ? -80f : Mathf.Log10(_globalVolumeFactor) * 20;
+            _audioMixer.SetFloat("MasterVolume", volume);
+        }
+    }
+
+    #region å…¬å…±æ–¹æ³•
+    /// <summary>
+    /// æ’­æ”¾éŸ³æ•ˆ
+    /// </summary>
+    /// <param name="type"> éŸ³æ•ˆç±»å‹ </param>
+    /// <param name="clip"> éŸ³æ•ˆç‰‡æ®µ </param>
+    /// <param name="loop"> æ˜¯å¦å¾ªç¯æ’­æ”¾ </param>
+    /// <param name="volume"> éŸ³é‡ </param>
+    /// <param name="delay"> å»¶è¿Ÿæ’­æ”¾ </param>
+    public void PlaySound(SoundType type, AudioClip clip, bool loop = false, float volume = 1.0f, ulong delay = 0)
+    {
+        if (!IsInitialized || clip == null) return;
+
+        var finalVolume = volume * GetVolumeFactorForType(type) * _globalVolumeFactor;
+        var soundItem = new SoundItem(type, clip, loop, finalVolume, delay);
+        _soundPoolManager.PlaySound(soundItem);
     }
 
     /// <summary>
-    /// Í£Ö¹ÉùÒô
+    /// åœ¨æŒ‡å®šä½ç½®æ’­æ”¾éŸ³æ•ˆ
     /// </summary>
-    /// <param name="type"> ÉùÒôÀàĞÍ </param>
-    /// <param name="clip"> ÒôÆµClip </param>
+    /// <param name="type"> éŸ³æ•ˆç±»å‹ </param>
+    /// <param name="clip"> éŸ³æ•ˆç‰‡æ®µ </param>
+    /// <param name="position"> ä½ç½® </param>
+    /// <param name="loop"> æ˜¯å¦å¾ªç¯æ’­æ”¾ </param>
+    /// <param name="volume"> éŸ³é‡ </param>
+    /// <param name="delay"> å»¶è¿Ÿæ’­æ”¾ </param>
+    public void PlaySoundAtPosition(SoundType type, AudioClip clip, Vector3 position, bool loop = false, float volume = 1.0f, ulong delay = 0)
+    {
+        if (!IsInitialized || clip == null) return;
+
+        var finalVolume = volume * GetVolumeFactorForType(type) * _globalVolumeFactor;
+        var soundItem = new SoundItem(
+            type, clip, loop, finalVolume, 1f, 1f, delay, null, position);
+        _soundPoolManager.PlaySound(soundItem);
+    }
+
+    /// <summary>
+    /// åœæ­¢éŸ³æ•ˆ
+    /// </summary>
+    /// <param name="type"> éŸ³æ•ˆç±»å‹ </param>
+    /// <param name="clip"> éŸ³æ•ˆç‰‡æ®µ </param>
     public void StopSound(SoundType type, AudioClip clip)
     {
-        // ²éÕÒºó°ü×°Ò»¸ö
-        var soundItem = new SoundItem(type, clip, false, 0, 0);
-        _soundPool.StopSound(soundItem);
+        if (!IsInitialized) return;
+        _soundPoolManager.StopSound(new SoundItem(type, clip));
     }
 
     /// <summary>
-    /// Í£Ö¹ËùÓĞÉùÒô
+    /// åœæ­¢æ‰€æœ‰éŸ³æ•ˆ
     /// </summary>
-    public void StopAllSounds() => _soundPool.StopAllSounds();
+    public void StopAllSounds()
+    {
+        if (!IsInitialized) return;
+        _soundPoolManager.StopAllSounds();
+    }
 
     /// <summary>
-    /// ÔİÍ£ÉùÒô
+    /// æš‚åœéŸ³æ•ˆ
     /// </summary>
-    /// <param name="type"> ÉùÒôÀàĞÍ </param>
-    /// <param name="clip"> ÒôÆµClip </param>
+    /// <param name="type"> éŸ³æ•ˆç±»å‹ </param>
+    /// <param name="clip"> éŸ³æ•ˆç‰‡æ®µ </param>
     public void PauseSound(SoundType type, AudioClip clip)
     {
-        // ²éÕÒºó°ü×°Ò»¸ö
-        var soundItem = new SoundItem(type, clip, false, 0, 0);
-        _soundPool.PauseSound(soundItem);
+        if (!IsInitialized) return;
+        _soundPoolManager.PauseSound(new SoundItem(type, clip));
     }
 
     /// <summary>
-    /// »Ö¸´ÉùÒô
+    /// æ¢å¤éŸ³æ•ˆ
     /// </summary>
-    /// <param name="type"> ÉùÒôÀàĞÍ </param>
-    /// <param name="clip"> ÒôÆµClip </param>
+    /// <param name="type"> éŸ³æ•ˆç±»å‹ </param>
+    /// <param name="clip"> éŸ³æ•ˆç‰‡æ®µ </param>
     public void ResumeSound(SoundType type, AudioClip clip)
     {
-        // ²éÕÒºó°ü×°Ò»¸ö
-        var soundItem = new SoundItem(type, clip, false, 0, 0);
-        _soundPool.ResumeSound(soundItem);
+        if (!IsInitialized) return;
+        _soundPoolManager.ResumeSound(new SoundItem(type, clip));
+    }
+
+    /// <summary>
+    /// æ˜¯å¦æ­£åœ¨æ’­æ”¾éŸ³æ•ˆ
+    /// </summary>
+    /// <param name="type"> éŸ³æ•ˆç±»å‹ </param>
+    /// <param name="clip"> éŸ³æ•ˆç‰‡æ®µ </param>
+    /// <returns></returns>
+    public bool IsPlaying(SoundType type, AudioClip clip)
+    {
+        return IsInitialized && _soundPoolManager.IsPlaying(new SoundItem(type, clip));
     }
     #endregion
 }

@@ -7,7 +7,7 @@ public class PlotObject : MonoBehaviour, IInteractable, IConditionalShow
     private bool _interactable = true;
     private bool _isInteracting;
 
-    public bool CheckConditionsOnStart = true;
+    [SerializeField] private bool _checkConditionsOnStart = true;
 
     [SerializeField] private UnityEvent _onInteractionStart = new();
     [SerializeField] private UnityEvent _onInteractionEnd = new();
@@ -47,15 +47,15 @@ public class PlotObject : MonoBehaviour, IInteractable, IConditionalShow
     protected virtual void Start()
     {
         ValidateComponents();
-        if (CheckConditionsOnStart)
-        {
+
+        if (_checkConditionsOnStart)
             CheckConditions();
-        }
     }
 
     protected virtual void ValidateComponents()
     {
         var colliderComponent = GetComponent<Collider2D>();
+        
         if (colliderComponent != null && !colliderComponent.isTrigger)
         {
             colliderComponent.isTrigger = true;
@@ -115,24 +115,11 @@ public class PlotObject : MonoBehaviour, IInteractable, IConditionalShow
         }
     }
 
-    protected bool CheckConditions()
-    {
-        if (_conditionGroup == null) return true;
-        return _conditionGroup.IsMet();
-    }
+    protected bool CheckConditions() => _conditionGroup == null || _conditionGroup.IsMet();
 
-    public string GetFailureReason()
-    {
-        return _conditionGroup?.GetFailureReason() ?? string.Empty;
-    }
+    public string GetFailureReason() => _conditionGroup.GetFailureReason() ?? string.Empty;
 
-    public void AddCondition(MonoBehaviour condition)
-    {
-        _conditionGroup?.AddCondition(condition);
-    }
+    public void AddCondition(MonoBehaviour condition) => _conditionGroup.AddCondition(condition);
 
-    public void RemoveCondition(MonoBehaviour condition)
-    {
-        _conditionGroup?.RemoveCondition(condition);
-    }
+    public void RemoveCondition(MonoBehaviour condition) => _conditionGroup.RemoveCondition(condition);
 }

@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class QuestCondition : MonoBehaviour, ICondition
 {
-    [SerializeField] private string questId;
-    [SerializeField] private bool requireCompleted = true;
+    [SerializeField] private string _questId;
+    [SerializeField] private bool _requireCompleted = true;
 
     public bool IsMet()
     {
@@ -13,10 +13,7 @@ public class QuestCondition : MonoBehaviour, ICondition
         return false;
     }
 
-    public string GetFailureReason()
-    {
-        return requireCompleted ?
-            $"需要完成任务: {questId}" :
-            $"任务 {questId} 已完成，无法交互";
-    }
+    public string GetFailureReason() => _requireCompleted
+            ? $"需要完成任务: {_questId}"
+            : $"任务 {_questId} 已完成，无法交互";
 }

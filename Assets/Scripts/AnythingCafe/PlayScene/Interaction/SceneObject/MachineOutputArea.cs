@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 public class MachineOutputArea : ClickableArea
 {
-    public override async void OnPointerClick(PointerEventData eventData)
+    public override void OnPointerClick(PointerEventData eventData)
     {
         try
         {

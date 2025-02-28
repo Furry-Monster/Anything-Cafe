@@ -1054,8 +1054,9 @@ GameObject:
   - component: {fileID: 465930479}
   - component: {fileID: 465930480}
   - component: {fileID: 465930481}
+  - component: {fileID: 465930482}
   m_Layer: 8
-  m_Name: KeyboardOutline
+  m_Name: Keyboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1186,6 +1187,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowMaterial: {fileID: 2100000, guid: c0390a6d1d8b1c04aaf9edd794e3d1c7, type: 2}
+--- !u!114 &465930482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465930477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a967a49c97583845895509bd1b760a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &508039621
 GameObject:
   m_ObjectHideFlags: 0
@@ -2471,7 +2484,7 @@ GameObject:
   m_Component:
   - component: {fileID: 932439010}
   m_Layer: 0
-  m_Name: Outlines
+  m_Name: CoffeeMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3917,6 +3930,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 46483425}
     m_Modifications:
+    - target: {fileID: 28639797547820624, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 28639797547820624, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2273498543406792081, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2273498543406792081, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2273498543406792081, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3386254041531628129, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3386254041531628129, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3603916044362366172, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3603916044362366172, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3603916044362366172, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3918483154981497346, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3918483154981497346, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3918483154981497346, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960377394262636010, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960377394262636010, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7762138148611661172, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
       propertyPath: _canvasGroup
       value: 
@@ -4003,6 +4076,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8483421769605013457, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8579191474955333520, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8579191474955333520, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8579191474955333520, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8595376879274176204, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8595376879274176204, guid: b9b97a99da4ad61469f733c7e2e0bae1, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -4321,8 +4414,9 @@ GameObject:
   - component: {fileID: 1504322608}
   - component: {fileID: 1504322609}
   - component: {fileID: 1504322610}
+  - component: {fileID: 1504322611}
   m_Layer: 8
-  m_Name: OutputOutline
+  m_Name: Output
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4453,6 +4547,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowMaterial: {fileID: 2100000, guid: c0390a6d1d8b1c04aaf9edd794e3d1c7, type: 2}
+--- !u!114 &1504322611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504322606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa249bcaf831f1c439baa6b5a252f651, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1521896631
 GameObject:
   m_ObjectHideFlags: 0
@@ -4773,7 +4879,7 @@ GameObject:
   - component: {fileID: 1606325967}
   - component: {fileID: 1606325966}
   m_Layer: 0
-  m_Name: InteractTilemap
+  m_Name: DynamicTilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

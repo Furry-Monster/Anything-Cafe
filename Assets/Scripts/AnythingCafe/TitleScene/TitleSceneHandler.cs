@@ -73,7 +73,7 @@ public class TitleSceneHandler :
         // 显示WarningUI，仅在第一次进入TitleScene时显示
         if (GameManager.Instance.IsFirstInTitleScene)
         {
-#if !UNITY_EDITOR
+#if UNITY_EDITOR
             _warningUI.OnTextClosed += () => _backGround.SetActive(true);
 
             _backGround.SetActive(false);
@@ -85,9 +85,9 @@ public class TitleSceneHandler :
 
             await _titleUI.Open();
 
-            SoundManager.DefaultSettings.PlaySound(_titleBGM.Type, _titleBGM.Clip, _titleBGM.Loop, _titleBGM.DefaultVolume);
+            SoundManager.Instance.PlaySound(_titleBGM.Type, _titleBGM.Clip, _titleBGM.Loop, _titleBGM.DefaultVolume);
 
-            GameManager.DefaultSettings.IsFirstInTitleScene = false;
+            GameManager.Instance.IsFirstInTitleScene = false;
 #endif
         }
 

@@ -65,7 +65,19 @@ public class SettingPanel :
         }
     }
 
-    public void ScreenChangeCommand()
+    public void OnAudioSliderChanged(float value) =>
+        OptionManager.Instance.SetValue(OptionKey.GlobalVolume, value);
+
+    public void OnSexVolumeSliderChanged(float value) =>
+        OptionManager.Instance.SetValue(OptionKey.EroVolume, value);
+
+    public void OnMusicSliderChanged(float value) =>
+        OptionManager.Instance.SetValue(OptionKey.MusicVolume, value);
+
+    public void OnSoundEffectSliderChanged(float value) =>
+        OptionManager.Instance.SetValue(OptionKey.SFXVolume, value);
+
+    public void OnScreenModeToggled()
     {
         var currentScreenMode = OptionManager.Instance.GetValue<ScreenMode>(OptionKey.ScreenMode);
         OptionManager.Instance.SetValue(OptionKey.ScreenMode, currentScreenMode == ScreenMode.FullScreen ? ScreenMode.Windowed : ScreenMode.FullScreen);

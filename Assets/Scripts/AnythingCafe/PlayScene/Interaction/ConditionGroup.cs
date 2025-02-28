@@ -1,15 +1,14 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class ConditionGroup : MonoBehaviour, ICondition
 {
     [SerializeField] private List<MonoBehaviour> conditions = new List<MonoBehaviour>();
     [SerializeField] private bool requireAllConditions = true;
-    
+
     private List<ICondition> _validConditions = new List<ICondition>();
     private string _lastFailureReason;
-    
+
     private void Awake()
     {
         // 过滤出有效的条件组件
@@ -21,11 +20,11 @@ public class ConditionGroup : MonoBehaviour, ICondition
             }
         }
     }
-    
+
     public bool IsMet()
     {
         if (_validConditions.Count == 0) return true;
-        
+
         if (requireAllConditions)
         {
             // 所有条件都必须满足
@@ -53,12 +52,12 @@ public class ConditionGroup : MonoBehaviour, ICondition
             return false;
         }
     }
-    
+
     public string GetFailureReason()
     {
         return _lastFailureReason;
     }
-    
+
     public void AddCondition(MonoBehaviour condition)
     {
         if (condition is ICondition validCondition)
@@ -67,7 +66,7 @@ public class ConditionGroup : MonoBehaviour, ICondition
             _validConditions.Add(validCondition);
         }
     }
-    
+
     public void RemoveCondition(MonoBehaviour condition)
     {
         conditions.Remove(condition);
@@ -76,4 +75,4 @@ public class ConditionGroup : MonoBehaviour, ICondition
             _validConditions.Remove(validCondition);
         }
     }
-} 
+}

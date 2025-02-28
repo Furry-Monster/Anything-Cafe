@@ -1,4 +1,3 @@
-#define VERBOSE_LOG
 using System;
 using System.Collections.Generic;
 using System.Linq;

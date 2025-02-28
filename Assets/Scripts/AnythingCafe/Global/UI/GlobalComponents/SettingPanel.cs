@@ -41,7 +41,7 @@ public class SettingPanel :
         gameObject.SetActive(false);
     }
 
-    public void UpdateOptionComponentView(OptionKey key)
+    private void UpdateOptionComponentView(OptionKey key)
     {
         switch (key)
         {

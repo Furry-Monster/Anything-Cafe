@@ -199,5 +199,89 @@ public class SoundPool : Singleton<SoundPool>
             source.UnPause();
         }
     }
+
+    /// <summary>
+    /// 设置音量
+    /// </summary>
+    /// <param name="volume"> 音量 </param>
+    public void SetVolume(float volume)
+    {
+#if VERBOSE_LOG
+        Debug.Log($"[SoundPool] Setting volume to: {volume}");  
+#endif
+        foreach (var soundType in Enum.GetValues(typeof(SoundType)).Cast<SoundType>())
+        {
+            foreach (var source in _idleSources[soundType])
+            {
+                source.volume = volume;
+            }
+            foreach (var source in _busySources[soundType])
+            {
+                source.volume = volume;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 设置音效类型音量
+    /// </summary>
+    /// <param name="soundType"> 音效类型 </param>
+    /// <param name="volume"> 音量 </param>
+    public void SetVolume(SoundType soundType, float volume)
+    {
+#if VERBOSE_LOG
+        Debug.Log($"[SoundPool] Setting {soundType} volume to: {volume}");
+#endif
+        foreach (var source in _idleSources[soundType])
+        {
+            source.volume = volume;
+        }
+        foreach (var source in _busySources[soundType])
+        {
+            source.volume = volume;
+        }
+    }
+
+    /// <summary>
+    /// 设置音效播放速度
+    /// </summary>
+    /// <param name="pitch"> 播放速度 </param>
+    public void SetPitch(float pitch)
+    {
+#if VERBOSE_LOG
+        Debug.Log($"[SoundPool] Setting pitch to: {pitch}");
+#endif
+        foreach (var soundType in Enum.GetValues(typeof(SoundType)).Cast<SoundType>())
+        {
+            foreach (var source in _idleSources[soundType])
+            {
+                source.pitch = pitch;
+            }
+            foreach (var source in _busySources[soundType])
+            {
+                source.pitch = pitch;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 设置音效类型播放速度
+    /// </summary>
+    /// <param name="soundType"> 音效类型 </param>
+    /// <param name="pitch"> 播放速度 </param>
+    public void SetPitch(SoundType soundType, float pitch)
+    {
+#if VERBOSE_LOG
+        Debug.Log($"[SoundPool] Setting {soundType} pitch to: {pitch}");    
+#endif
+        foreach (var source in _idleSources[soundType])
+        {
+            source.pitch = pitch;
+        }
+        foreach (var source in _busySources[soundType])
+        {
+            source.pitch = pitch;
+        }
+    }
     #endregion
 }

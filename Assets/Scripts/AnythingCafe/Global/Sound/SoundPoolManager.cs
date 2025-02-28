@@ -55,14 +55,12 @@ public class SoundPoolManager : Singleton<SoundPoolManager>
             // 如果提供了AudioMixer，设置混音器组
             if (audioMixer != null)
             {
-                // 替换以下代码行
-                // audioMixer.GetGroup(type.ToString(), out var group);
-                // _mixerGroups[type] = group;
-
-                // 使用以下代码
                 var group = audioMixer.FindMatchingGroups(type.ToString()).FirstOrDefault();
                 if (group != null)
                 {
+#if VERBOSE_LOG
+                    Debug.Log($"[SoundPoolManager] 设置{type}的AudioMixerGroup为{group.name}");
+#endif
                     _mixerGroups[type] = group;
                 }
             }

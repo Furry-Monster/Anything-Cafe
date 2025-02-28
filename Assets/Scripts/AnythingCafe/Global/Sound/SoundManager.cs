@@ -102,6 +102,24 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
 #endif
     }
 
+        Debug.Log("[SoundManager] Verifying AudioMixer setup...");
+
+        // 检查所有必需的参数是否存在
+        foreach (SoundType type in Enum.GetValues(typeof(SoundType)))
+        {
+            var paramName = $"{type}Volume";
+            if (_audioMixer.GetFloat(paramName, out var value))
+            {
+                Debug.Log($"[SoundManager] Found {paramName} parameter in AudioMixer, current value: {value}dB");
+            }
+            else
+            {
+                Debug.LogError($"[SoundManager] Missing {paramName} parameter in AudioMixer!");
+            }
+        }
+#endif
+    }
+
     private void LoadOptions(Enum optionEnum)
     {
         if (optionEnum is not OptionGroup and not OptionKey) return;

@@ -31,8 +31,7 @@ public class ButtonSound : MonoBehaviour
     {
         var entry = new EventTrigger.Entry { eventID = eventType };
         entry.callback.AddListener(_ =>
-            SoundManager.Instance
-                .PlaySound(_soundMeta.SoundType, sound, false, _soundMeta.DefaultVolume));
+            SoundManager.Instance.PlaySound(_soundMeta.SoundType, sound, false, _soundMeta.DefaultVolume));
         _trigger.triggers.Add(entry);
     }
 }

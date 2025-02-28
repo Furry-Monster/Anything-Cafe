@@ -23,9 +23,40 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
 
     public bool IsInitialized { get; set; }
 
+#if VERBOSE_LOG
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if (_audioMixer == null)
+        {
+            Debug.LogError("[SoundManager] AudioMixer not assigned!");
+        }
+
+        // 检查AudioListener
+        var listener = FindObjectOfType<AudioListener>();
+        if (listener == null)
+        {
+            Debug.LogError("[SoundManager] No AudioListener found in the scene!");
+        }
+        else
+        {
+            Debug.Log($"[SoundManager] Found AudioListener on {listener.gameObject.name}");
+        }
+    }
+#endif
+
     public void Init()
     {
-        if (IsInitialized) return;
+#if VERBOSE_LOG
+        if (IsInitialized)
+        {
+            Debug.Log("[SoundManager] Already initialized, skipping initialization.");
+            return;
+        }
+
+        Debug.Log("[SoundManager] Starting initialization...");
+#endif
 
         // 初始化音频池
         _sourceParent ??= gameObject;
@@ -38,6 +69,37 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
         OptionManager.Instance.OnOptionChanged += keyEnum => LoadOptions(keyEnum);
 
         IsInitialized = true;
+        Debug.Log("[SoundManager] Initialization completed.");
+
+        // 验证AudioMixer设置
+        VerifyAudioMixerSetup();
+    }
+
+    private void VerifyAudioMixerSetup()
+    {
+#if VERBOSE_LOG
+        if (_audioMixer == null)
+        {
+            Debug.LogError("[SoundManager] AudioMixer is null!");
+            return;
+        }
+
+        Debug.Log("[SoundManager] Verifying AudioMixer setup...");
+
+        // 检查所有必需的参数是否存在
+        foreach (SoundType type in Enum.GetValues(typeof(SoundType)))
+        {
+            var paramName = $"{type}Volume";
+            if (_audioMixer.GetFloat(paramName, out var value))
+            {
+                Debug.Log($"[SoundManager] Found {paramName} parameter in AudioMixer, current value: {value}dB");
+            }
+            else
+            {
+                Debug.LogError($"[SoundManager] Missing {paramName} parameter in AudioMixer!");
+            }
+        }
+#endif
     }
 
     private void LoadOptions(Enum optionEnum)
@@ -94,13 +156,42 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
 
     private void ApplyVolumeSettings()
     {
-        if (_audioMixer != null)
+#if VERBOSE_LOG
+        if (_audioMixer == null)
         {
-            foreach (SoundType type in Enum.GetValues(typeof(SoundType)))
+            Debug.LogError("[SoundManager] Cannot apply volume settings: AudioMixer is null!");
+            return;
+        }
+
+       Debug.Log("[SoundManager] Applying volume settings...");
+#endif
+
+        foreach (SoundType type in Enum.GetValues(typeof(SoundType)))
+        {
+            try
             {
                 var volumeFactor = GetVolumeFactorForType(type);
-                // 音量范围为0~1，需要转换为-80~0
-                _audioMixer.SetFloat($"{type}Volume", Mathf.Log10(volumeFactor * _globalVolumeFactor) * 20);
+                var dbValue = volumeFactor > 0 ? Mathf.Log10(volumeFactor * _globalVolumeFactor) * 20 : -80f;
+                var parameterName = $"{type}Volume";
+
+                _audioMixer.GetFloat(parameterName, out var currentValue);
+
+#if VERBOSE_LOG
+                Debug.Log($"[SoundManager] Updating {parameterName} from {currentValue}dB to {dbValue}dB (linear: {volumeFactor * _globalVolumeFactor})");
+
+                if (_audioMixer.SetFloat(parameterName, dbValue))
+                {
+                    Debug.Log($"[SoundManager] Successfully set {parameterName}");
+                }
+                else
+                {
+                    Debug.LogError($"[SoundManager] Failed to set {parameterName}!");
+                }
+#endif
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SoundManager] Error applying volume settings for {type}: {e.Message}");
             }
         }
     }
@@ -129,9 +220,22 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     /// <param name="delay"> 延迟播放 </param>
     public void PlaySound(SoundType type, AudioClip clip, bool loop = false, float volume = 1.0f, ulong delay = 0)
     {
-        if (!IsInitialized || clip == null) return;
+#if VERBOSE_LOG
+        if (!IsInitialized)
+        {
+            Debug.LogError("[SoundManager] Attempting to play sound before initialization!");
+            return;
+        }
 
+        if (clip == null)
+        {
+            Debug.LogError("[SoundManager] Attempting to play null AudioClip!");
+            return;
+        }
+#endif
         var finalVolume = volume * GetVolumeFactorForType(type) * _globalVolumeFactor;
+        Debug.Log($"[SoundManager] Playing sound '{clip.name}' of type {type} with volume {finalVolume} (base: {volume}, typeFactor: {GetVolumeFactorForType(type)}, global: {_globalVolumeFactor})");
+
         var soundItem = new SoundItem(type, clip, loop, finalVolume, delay);
         _soundPoolManager.PlaySound(soundItem);
     }

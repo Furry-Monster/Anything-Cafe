@@ -43,7 +43,6 @@ public class SoundPoolManager
             _created = true;
             _sourceParent = sourceParent;
 
-            // 初始化所有池
             foreach (SoundType type in Enum.GetValues(typeof(SoundType)))
             {
                 _idleSources[type] = new HashSet<AudioSource>();
@@ -56,15 +55,11 @@ public class SoundPoolManager
                     var group = audioMixer.FindMatchingGroups(type.ToString()).FirstOrDefault();
                     if (group != null)
                     {
-#if VERBOSE_LOG
-                        Debug.Log($"[SoundPoolManager] 设置{type}的AudioMixerGroup为{group.name}");
-#endif
                         _mixerGroups[type] = group;
                     }
                 }
             }
 
-            // 初始化音频源
             ExpandSourcePool();
         }
         catch (Exception e)
@@ -118,6 +113,7 @@ public class SoundPoolManager
                 Debug.LogWarning($"[SoundPoolManager] 达到音频源上限 ({MaxSourcesPerType}) for {soundType}");
                 return _busySources[soundType].First();
             }
+
             ExpandSourcePool(soundType);
         }
 
@@ -132,7 +128,12 @@ public class SoundPoolManager
     /// </summary>
     private void RecycleBusySources(SoundType soundType)
     {
-        var sourcesToRecycle = _busySources[soundType].Where(source => !source.isPlaying).ToList();
+        // 查询所有busySources中未播放的音频源
+        var sourcesToRecycle = _busySources[soundType]
+            .Where(source => !source.isPlaying)
+            .ToList();
+
+        // 回收到idleSources
         foreach (var source in sourcesToRecycle)
         {
             _busySources[soundType].Remove(source);
@@ -142,6 +143,9 @@ public class SoundPoolManager
         }
     }
 
+    /// <summary>
+    /// 重置音频源
+    /// </summary>
     private void ResetSource(AudioSource source)
     {
         source.clip = null;
@@ -181,7 +185,6 @@ public class SoundPoolManager
     /// <summary>
     /// 创建音频源
     /// </summary>
-    /// <param name="type"> 音频类型 </param>
     private void CreateSources(SoundType type)
     {
         for (var i = 0; i < DefaultPoolSize; i++)

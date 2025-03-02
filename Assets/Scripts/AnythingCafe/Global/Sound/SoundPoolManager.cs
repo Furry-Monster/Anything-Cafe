@@ -177,6 +177,9 @@ public class SoundPoolManager : Singleton<SoundPoolManager>
         }
 
         var source = GetSource(sound.SoundType);
+
+        sound.OutputAudioMixerGroup = source.outputAudioMixerGroup;
+
         sound.ApplyToSource(source);
 
         if (sound.Delay > 0)

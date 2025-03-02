@@ -132,7 +132,7 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
         if (!IsInitialized || clip == null) return;
 
         var finalVolume = volume * GetVolumeFactorForType(type) * _globalVolumeFactor;
-        var soundItem = new SoundItem(type, clip, loop, finalVolume, delay);
+        var soundItem = new SoundItem(type, clip, loop, finalVolume, 1f,0f,delay);
         _soundPoolManager.PlaySound(soundItem);
     }
 

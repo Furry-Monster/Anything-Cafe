@@ -25,6 +25,7 @@ public class SoundItem
         Vector3? position = null)
     {
         SoundType = soundType;
+
         AudioClip = audioClip;
         Loop = loop;
         Volume = volume;
@@ -32,6 +33,7 @@ public class SoundItem
         SpatialBlend = spatialBlend;
         Delay = delay;
         OutputAudioMixerGroup = outputAudioMixerGroup;
+
         Position = position;
     }
 

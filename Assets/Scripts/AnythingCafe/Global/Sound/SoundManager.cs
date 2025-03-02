@@ -11,7 +11,8 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     [SerializeField] private AudioMixer _audioMixer;
     [SerializeField] private GameObject _sourceParent;
 
-    private SoundPoolManager _soundPoolManager;
+    private IAudioSourcePool _sourcePool;
+    private ISoundPlayer _soundPlayer;
     private VolumeController _volumeController;
 
     public bool IsInitialized { get; set; }
@@ -20,15 +21,21 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     {
         if (IsInitialized)
         {
-            Debug.LogWarning("[SoundManager] SoundManager has already been initialized!");
+            Debug.LogWarning("[SoundManager] 音频管理器已经初始化过了");
             return;
         }
 
         try
         {
-            // 初始化音频池
+            // 初始化依赖组件
             _sourceParent ??= gameObject;
-            _soundPoolManager = new SoundPoolManager(_sourceParent, _audioMixer);
+            _audioMixer ??= Resources.Load<AudioMixer>("DefaultMixer");
+
+            // 初始化音频池
+            _sourcePool = new SoundPoolManager(_sourceParent, _audioMixer);
+
+            // 初始化音频播放器
+            _soundPlayer = new DefaultSoundPlayer(_sourcePool);
 
             // 初始化音量控制器
             _volumeController = new VolumeController(_audioMixer);
@@ -41,9 +48,9 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
 
             IsInitialized = true;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Debug.LogError($"[SoundManager] Failed to initialize SoundManager: {e}");
+            Debug.LogError($"[SoundManager] 初始化失败: {ex}");
             IsInitialized = false;
         }
     }
@@ -67,13 +74,13 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     {
         if (!IsInitialized)
         {
-            Debug.LogError("[SoundManager] SoundManager has not been initialized");
+            Debug.LogError("[SoundManager] 音频管理器未初始化");
             return;
         }
 
         if (clip == null)
         {
-            Debug.LogWarning("[SoundManager] Trying to play an empty AudioClip");
+            Debug.LogWarning("[SoundManager] 尝试播放空的AudioClip");
             return;
         }
 
@@ -81,11 +88,11 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
         {
             var finalVolume = _volumeController.GetFinalVolume(type, volume);
             var soundItem = new SoundItem(type, clip, loop, finalVolume, 1f, 0f, delay);
-            _soundPoolManager.PlaySound(soundItem);
+            _soundPlayer.PlaySound(soundItem);
         }
         catch (Exception e)
         {
-            Debug.LogError($"[SoundManager] Failed to play sound: {e}");
+            Debug.LogError($"[SoundManager] 播放音频失败: {e}");
         }
     }
 
@@ -102,13 +109,13 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     {
         if (!IsInitialized)
         {
-            Debug.LogError("[SoundManager] SoundManager has not been initialized");
+            Debug.LogError("[SoundManager] 音频管理器未初始化");
             return;
         }
 
         if (clip == null)
         {
-            Debug.LogWarning("[SoundManager] Trying to play an empty AudioClip");
+            Debug.LogWarning("[SoundManager] 尝试播放空的AudioClip");
             return;
         }
 
@@ -117,11 +124,11 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
             var finalVolume = _volumeController.GetFinalVolume(type, volume);
             var soundItem = new SoundItem(
                 type, clip, loop, finalVolume, 1f, 1f, delay, null, position);
-            _soundPoolManager.PlaySound(soundItem);
+            _soundPlayer.PlaySound(soundItem);
         }
         catch (Exception e)
         {
-            Debug.LogError($"[SoundManager] Failed to play sound at position: {e}");
+            Debug.LogError($"[SoundManager] 播放音频失败: {e}");
         }
     }
 
@@ -134,17 +141,17 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     {
         if (!IsInitialized)
         {
-            Debug.LogError("[SoundManager] SoundManager has not been initialized");
+            Debug.LogError("[SoundManager] 音频管理器未初始化");
             return;
         }
 
         try
         {
-            _soundPoolManager.StopSound(new SoundItem(type, clip));
+            _soundPlayer.StopSound(new SoundItem(type, clip));
         }
         catch (Exception e)
         {
-            Debug.LogError($"[SoundManager] Failed to stop sound: {e}");
+            Debug.LogError($"[SoundManager] 停止音频失败: {e}");
         }
     }
 
@@ -155,17 +162,17 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     {
         if (!IsInitialized)
         {
-            Debug.LogError("[SoundManager] Sound Manager has not been initialized");
+            Debug.LogError("[SoundManager] 音频管理器未初始化");
             return;
         }
 
         try
         {
-            _soundPoolManager.StopAllSounds();
+            _soundPlayer.StopAllSounds();
         }
         catch (Exception e)
         {
-            Debug.LogError($"[SoundManager] Failed to stop all sounds: {e}");
+            Debug.LogError($"[SoundManager] 停止所有音频失败: {e}");
         }
     }
 
@@ -178,17 +185,17 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     {
         if (!IsInitialized)
         {
-            Debug.LogError("[SoundManager] Sound Manager has not been initialized");
+            Debug.LogError("[SoundManager] 音频管理器未初始化");
             return;
         }
 
         try
         {
-            _soundPoolManager.PauseSound(new SoundItem(type, clip));
+            _soundPlayer.PauseSound(new SoundItem(type, clip));
         }
         catch (Exception e)
         {
-            Debug.LogError($"[SoundManager] Failed to pause sound: {e}");
+            Debug.LogError($"[SoundManager] 暂停音频失败: {e}");
         }
     }
 
@@ -201,17 +208,17 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     {
         if (!IsInitialized)
         {
-            Debug.LogError("[SoundManager] Sound Manager has not been initialized");
+            Debug.LogError("[SoundManager] 音频管理器未初始化");
             return;
         }
 
         try
         {
-            _soundPoolManager.ResumeSound(new SoundItem(type, clip));
+            _soundPlayer.ResumeSound(new SoundItem(type, clip));
         }
         catch (Exception e)
         {
-            Debug.LogError($"[SoundManager] Failed to resume sound: {e}");
+            Debug.LogError($"[SoundManager] 恢复音频失败: {e}");
         }
     }
 
@@ -225,17 +232,17 @@ public class SoundManager : PersistentSingleton<SoundManager>, IInitializable
     {
         if (!IsInitialized)
         {
-            Debug.LogError("[SoundManager] Sound Manager has not been initialized");
+            Debug.LogError("[SoundManager] 音频管理器未初始化");
             return false;
         }
 
         try
         {
-            return _soundPoolManager.IsPlaying(new SoundItem(type, clip));
+            return _soundPlayer.IsPlaying(new SoundItem(type, clip));
         }
         catch (Exception e)
         {
-            Debug.LogError($"[SoundManager] Failed to check if sound is playing: {e}");
+            Debug.LogError($"[SoundManager] 检查音频播放状态失败: {e}");
             return false;
         }
     }

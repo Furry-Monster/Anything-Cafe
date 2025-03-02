@@ -40,6 +40,7 @@ public class VolumeController
         ApplyVolumeSettings();
     }
 
+    #region 私有方法
     private void LoadAllVolumeSettings()
     {
         _globalVolumeFactor = OptionManager.Instance.GetValue<float>(OptionKey.GlobalVolume);
@@ -86,7 +87,9 @@ public class VolumeController
             _audioMixer.SetFloat($"{type}Volume", Mathf.Log10(volumeFactor * _globalVolumeFactor) * 20);
         }
     }
+    #endregion
 
+    #region 公有方法
     public float GetVolumeFactorForType(SoundType type)
     {
         return type switch
@@ -104,4 +107,5 @@ public class VolumeController
     {
         return baseVolume * GetVolumeFactorForType(type) * _globalVolumeFactor;
     }
+    #endregion
 }

@@ -1053,8 +1053,8 @@ GameObject:
   - component: {fileID: 465930478}
   - component: {fileID: 465930479}
   - component: {fileID: 465930480}
-  - component: {fileID: 465930481}
   - component: {fileID: 465930482}
+  - component: {fileID: 465930481}
   m_Layer: 8
   m_Name: Keyboard
   m_TagString: Untagged
@@ -1183,10 +1183,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 465930477}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b1a57a8c189b7f45ae9041dcfe685fa, type: 3}
+  m_Script: {fileID: 11500000, guid: 02f287a6b45e8d24e97f8010cd59950b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  glowMaterial: {fileID: 2100000, guid: c0390a6d1d8b1c04aaf9edd794e3d1c7, type: 2}
+  _conditions: []
+  _requireAllConditions: 1
 --- !u!114 &465930482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1196,9 +1197,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 465930477}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a967a49c97583845895509bd1b760a5, type: 3}
+  m_Script: {fileID: 11500000, guid: 6357be229d49e8c43a26e26e1da77d15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _checkConditionsOnStart: 1
+  _onInteractionStart:
+    m_PersistentCalls:
+      m_Calls: []
+  _onInteractionEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  _onConditionsFailed:
+    m_PersistentCalls:
+      m_Calls: []
+  _normalColor: {r: 1, g: 1, b: 1, a: 1}
+  _hoverColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  _disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!1 &508039621
 GameObject:
   m_ObjectHideFlags: 0
@@ -2503,8 +2517,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1504322607}
   - {fileID: 465930478}
+  - {fileID: 1504322607}
   m_Father: {fileID: 1606325965}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &974265692
@@ -4413,8 +4427,6 @@ GameObject:
   - component: {fileID: 1504322607}
   - component: {fileID: 1504322608}
   - component: {fileID: 1504322609}
-  - component: {fileID: 1504322610}
-  - component: {fileID: 1504322611}
   m_Layer: 8
   m_Name: Output
   m_TagString: Untagged
@@ -4534,31 +4546,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1504322610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1504322606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b1a57a8c189b7f45ae9041dcfe685fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  glowMaterial: {fileID: 2100000, guid: c0390a6d1d8b1c04aaf9edd794e3d1c7, type: 2}
---- !u!114 &1504322611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1504322606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa249bcaf831f1c439baa6b5a252f651, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1521896631
 GameObject:
   m_ObjectHideFlags: 0

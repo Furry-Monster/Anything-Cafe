@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "FrameMonster/Audio/SFXSound")]
+[CreateAssetMenu(menuName = "AnythingCafe/Audio/SFXSound")]
 public class SFXSoundMeta : ScriptableObject
 {
     public readonly SoundType Type = SoundType.SFX;

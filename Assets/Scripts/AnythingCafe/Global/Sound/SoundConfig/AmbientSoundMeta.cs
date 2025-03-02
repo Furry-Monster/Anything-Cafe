@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "FrameMonster/Audio/AmbientSound")]
+[CreateAssetMenu(menuName = "AnythingCafe/Audio/AmbientSound")]
 public class AmbientSoundMeta : ScriptableObject
 {
     public readonly SoundType Type = SoundType.Ambient;

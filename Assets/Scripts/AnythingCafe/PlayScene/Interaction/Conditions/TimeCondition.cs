@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
 
-public class TimeCondition : MonoBehaviour, ICondition
+[CreateAssetMenu(fileName = "New Time Condition", menuName = "AnythingCafe/GamePlay/Conditions/Time Condition")]
+public class TimeCondition : ScriptableObject, ICondition
 {
     [SerializeField] private int _startHour;
     [SerializeField] private int _endHour;

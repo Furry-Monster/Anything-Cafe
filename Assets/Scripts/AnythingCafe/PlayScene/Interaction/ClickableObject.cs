@@ -2,7 +2,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Collider2D))]
-public class ClickableArea : PlotObject,
+[AddComponentMenu("Anything Cafe/GamePlay/Interaction/Clickable Object")]
+public class ClickableObject : DynamicObject,
     IPointerClickHandler,
     IPointerEnterHandler,
     IPointerExitHandler
@@ -13,9 +14,9 @@ public class ClickableArea : PlotObject,
 
     private SpriteRenderer _spriteRenderer;
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         UpdateVisualState();
     }
@@ -26,6 +27,9 @@ public class ClickableArea : PlotObject,
         UpdateVisualState();
     }
 
+    /// <summary>
+    /// Note:这个方法仅仅用于拦截鼠标点击事件，具体的交互逻辑请重载OnInteractBegin()方法
+    /// </summary>
     public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (!Interactable) return;

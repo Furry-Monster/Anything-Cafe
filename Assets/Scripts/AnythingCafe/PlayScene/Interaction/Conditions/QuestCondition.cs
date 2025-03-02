@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class QuestCondition : MonoBehaviour, ICondition
+[CreateAssetMenu(fileName = "New Quest Condition", menuName = "AnythingCafe/GamePlay/Conditions/Quest Condition")]
+public class QuestCondition : ScriptableObject, ICondition
 {
     [SerializeField] private string _questId;
     [SerializeField] private bool _requireCompleted = true;

@@ -2,20 +2,19 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider2D))]
-public class PlotObject : MonoBehaviour, IInteractable, IConditionalShow
+public class DynamicObject : MonoBehaviour, IInteractable, ICanBeConditional
 {
     private bool _interactable = true;
     private bool _isInteracting;
-
-    [SerializeField] private bool _checkConditionsOnStart = true;
 
     [SerializeField] private UnityEvent _onInteractionStart = new();
     [SerializeField] private UnityEvent _onInteractionEnd = new();
     [SerializeField] private UnityEvent _onConditionsFailed = new();
 
+    private bool _isConditional;
     private ConditionGroup _conditionGroup;
 
-    public virtual bool Interactable
+    public bool Interactable
     {
         get => _interactable;
         set
@@ -37,41 +36,40 @@ public class PlotObject : MonoBehaviour, IInteractable, IConditionalShow
 
     protected virtual void Awake()
     {
-        _conditionGroup = GetComponent<ConditionGroup>();
-        if (_conditionGroup == null)
-        {
-            _conditionGroup = gameObject.AddComponent<ConditionGroup>();
-        }
-    }
-
-    protected virtual void Start()
-    {
         ValidateComponents();
-
-        if (_checkConditionsOnStart)
-            CheckConditions();
     }
 
+    /// <summary>
+    /// 组件验证
+    /// </summary>
     protected virtual void ValidateComponents()
     {
+        _conditionGroup = GetComponent<ConditionGroup>();
+
+        _isConditional = _conditionGroup != null;
+
         var colliderComponent = GetComponent<Collider2D>();
-        
+
         if (colliderComponent != null && !colliderComponent.isTrigger)
         {
             colliderComponent.isTrigger = true;
         }
     }
 
+    /// <summary>
+    /// 子类可以重写此方法来响应可交互状态的变化
+    /// </summary>
     protected virtual void OnInteractableChanged()
     {
-        // 子类可以重写此方法来响应可交互状态的变化
+        if (Interactable) Show();
+        else Hide();
     }
 
     public virtual void OnInteract()
     {
         if (!Interactable) return;
 
-        if (!CheckConditions())
+        if (_isConditional && !CheckConditions())
         {
             OnConditionsFailed?.Invoke();
             return;
@@ -109,6 +107,7 @@ public class PlotObject : MonoBehaviour, IInteractable, IConditionalShow
     public virtual void Hide()
     {
         gameObject.SetActive(false);
+
         if (IsInteracting)
         {
             OnInteractionCancel();
@@ -119,7 +118,7 @@ public class PlotObject : MonoBehaviour, IInteractable, IConditionalShow
 
     public string GetFailureReason() => _conditionGroup.GetFailureReason() ?? string.Empty;
 
-    public void AddCondition(MonoBehaviour condition) => _conditionGroup.AddCondition(condition);
+    public void AddCondition(ScriptableObject condition) => _conditionGroup.AddCondition(condition);
 
-    public void RemoveCondition(MonoBehaviour condition) => _conditionGroup.RemoveCondition(condition);
+    public void RemoveCondition(ScriptableObject condition) => _conditionGroup.RemoveCondition(condition);
 }

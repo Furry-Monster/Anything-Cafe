@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[AddComponentMenu("Anything Cafe/GamePlay/Interaction/Condition Group")]
 public class ConditionGroup : MonoBehaviour, ICondition
 {
-    [SerializeField] private List<MonoBehaviour> _conditions = new();
+    [SerializeField] private List<ScriptableObject> _conditions = new();
     [SerializeField] private bool _requireAllConditions = true;
 
     private List<ICondition> _validConditions = new();
@@ -58,7 +59,7 @@ public class ConditionGroup : MonoBehaviour, ICondition
     /// 添加一个条件
     /// </summary>
     /// <param name="condition"> 条件组件 </param>
-    public void AddCondition(MonoBehaviour condition)
+    public void AddCondition(ScriptableObject condition)
     {
         if (condition is ICondition validCondition)
         {
@@ -71,7 +72,7 @@ public class ConditionGroup : MonoBehaviour, ICondition
     /// 移除一个条件
     /// </summary>
     /// <param name="condition"> 条件组件 </param>
-    public void RemoveCondition(MonoBehaviour condition)
+    public void RemoveCondition(ScriptableObject condition)
     {
         _conditions.Remove(condition);
         if (condition is ICondition validCondition)

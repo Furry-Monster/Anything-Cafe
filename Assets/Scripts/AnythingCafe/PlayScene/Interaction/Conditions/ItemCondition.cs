@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class ItemCondition : MonoBehaviour, ICondition
+[CreateAssetMenu(fileName = "New Item Condition", menuName = "AnythingCafe/GamePlay/Conditions/Item Condition")]
+public class ItemCondition : ScriptableObject, ICondition
 {
     [SerializeField] private string _itemId;
     [SerializeField] private int _requiredAmount = 1;

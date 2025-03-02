@@ -132,10 +132,7 @@ public class DefaultSoundPlayer : ISoundPlayer
 
     private AudioSource[] GetPlayingSources(SoundItem sound)
     {
-        // 这里我们需要一个新的方法来获取正在播放指定音频的源
-        // 由于我们不再直接访问_busySources，所以这个实现可能需要改变
-        // 这是一个简化的实现，实际使用时可能需要更复杂的逻辑
-        return GameObject.FindObjectsOfType<AudioSource>()
+        return _sourcePool.GetAllSources(sound.SoundType)
             .Where(s => s.clip == sound.AudioClip)
             .ToArray();
     }

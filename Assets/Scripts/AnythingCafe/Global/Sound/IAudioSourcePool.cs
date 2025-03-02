@@ -7,9 +7,14 @@ using UnityEngine.Audio;
 public interface IAudioSourcePool
 {
     /// <summary>
-    /// 获取一个音频源
+    /// 获取一个可用的闲置音频源
     /// </summary>
     AudioSource GetSource(SoundType soundType);
+
+    /// <summary>
+    /// 获取所有对应类型音频源
+    /// </summary>
+    AudioSource[] GetAllSources(SoundType soundType);
 
     /// <summary>
     /// 回收音频源

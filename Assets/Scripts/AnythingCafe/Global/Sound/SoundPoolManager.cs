@@ -18,7 +18,6 @@ public class SoundPoolManager : IAudioSourcePool
     // 对象池
     private readonly Dictionary<SoundType, HashSet<AudioSource>> _idleSources = new();
     private readonly Dictionary<SoundType, HashSet<AudioSource>> _busySources = new();
-    private readonly Dictionary<SoundType, Stack<SoundItem>> _soundItemPool = new();
 
     // 音频混音器组
     private readonly Dictionary<SoundType, AudioMixerGroup> _mixerGroups = new();
@@ -45,7 +44,6 @@ public class SoundPoolManager : IAudioSourcePool
             {
                 _idleSources[type] = new HashSet<AudioSource>();
                 _busySources[type] = new HashSet<AudioSource>();
-                _soundItemPool[type] = new Stack<SoundItem>();
 
                 // 如果提供了AudioMixer，设置混音器组
                 if (audioMixer != null)
@@ -90,6 +88,13 @@ public class SoundPoolManager : IAudioSourcePool
         return source;
     }
 
+    public AudioSource[] GetAllSources(SoundType soundType)
+    {
+        var idleSources = _idleSources[soundType].ToArray();
+        var busySources = _busySources[soundType].ToArray();
+        return idleSources.Concat(busySources).ToArray();
+    }
+
     public void RecycleSource(AudioSource source, SoundType soundType)
     {
         if (source == null) return;
@@ -121,44 +126,6 @@ public class SoundPoolManager : IAudioSourcePool
         {
             RecycleAllSources(type);
         }
-    }
-    #endregion
-
-    #region SoundItem 对象池
-    public SoundItem GetSoundItem(
-        SoundType soundType,
-        AudioClip audioClip,
-        bool loop = false,
-        float volume = 1.0f,
-        float pitch = 1.0f,
-        float spatialBlend = 0f,
-        ulong delay = 0,
-        AudioMixerGroup outputAudioMixerGroup = null,
-        Vector3? position = null)
-    {
-        if (!_soundItemPool[soundType].TryPop(out var item))
-        {
-            item = new SoundItem(soundType, audioClip, loop, volume, pitch, spatialBlend, delay, outputAudioMixerGroup, position);
-        }
-        else
-        {
-            item.SoundType = soundType;
-            item.AudioClip = audioClip;
-            item.Loop = loop;
-            item.Volume = volume;
-            item.Pitch = pitch;
-            item.SpatialBlend = spatialBlend;
-            item.Delay = delay;
-            item.OutputAudioMixerGroup = outputAudioMixerGroup;
-            item.Position = position;
-        }
-        return item;
-    }
-
-    public void RecycleSoundItem(SoundItem item)
-    {
-        if (item == null) return;
-        _soundItemPool[item.SoundType].Push(item);
     }
     #endregion
 
